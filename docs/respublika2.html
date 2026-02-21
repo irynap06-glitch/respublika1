@@ -44,7 +44,7 @@
           </label>
 
           <label class="field tariff-field">
-            <span>Тариф достроково (%)</span>
+            <span>Базова ціна достроково</span>
             <input id="earlyTariffInput" type="number" step="0.01" min="1" max="200" />
           </label>
 
@@ -109,7 +109,6 @@
           <div class="legend" aria-label="Легенда статусів">
             <span class="legend-dot paid"></span>Оплачено
             <span class="legend-dot unpaid"></span>Не оплачено
-            <span class="legend-dot partial"></span>Частково
             <span class="legend-dot early"></span>Достроково
           </div>
 
@@ -133,7 +132,6 @@
               <span>Статус</span>
               <select id="statusInput">
                 <option value="unpaid">Не оплачено</option>
-                <option value="partial">Частково</option>
                 <option value="paid">Оплачено</option>
                 <option value="early">Достроково</option>
               </select>

@@ -14,11 +14,11 @@
   const STORAGE_SNAPSHOT_HISTORY = `payment_calendar_snapshot_history_v1_${PROJECT_KEY}`;
   const MAX_SNAPSHOT_HISTORY = 40;
 
-  const STATUS_ORDER = ["unpaid", "partial", "paid", "early"];
+  const STATUS_ORDER = ["unpaid", "paid", "early"];
   const STATUS_LABELS = {
     paid: "Оплачено",
     unpaid: "Не оплачено",
-    partial: "Частково",
+    partial: "Не оплачено",
     early: "Достроково",
   };
 
@@ -57,6 +57,7 @@
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+  const startOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
   const payments = source.payments.map((item) => ({ ...item }));
   const idToPayment = new Map(payments.map((item) => [String(item.id), item]));
@@ -74,17 +75,6 @@
   ].sort((a, b) => a - b);
   const fallbackYear = years[0] || new Date().getFullYear();
 
-  const summaryTotals = {
-    usd: numberOr(
-      getSummaryValue("total", "fact_usd"),
-      payments.reduce((sum, item) => sum + numberOr(item.fact_usd, 0), 0)
-    ),
-    uah: numberOr(
-      getSummaryValue("total", "fact_uah"),
-      payments.reduce((sum, item) => sum + numberOr(item.fact_uah, 0), 0)
-    ),
-  };
-
   const defaultFx = computeDefaultFx();
 
   const state = {
@@ -95,7 +85,8 @@
     selectedId: String(payments.length ? payments[0].id : ""),
     search: "",
     fxRate: defaultFx,
-    earlyTariffPercent: 100,
+    earlyUnitUsd: 0,
+    earlyUnitUah: 0,
     lastSavedAt: "",
   };
 
@@ -121,15 +112,6 @@
       const next = toNumber($fxRateInput.value);
       if (next !== null && next > 0) {
         state.fxRate = next;
-        persistSettings();
-        renderAll();
-      }
-    });
-
-    $earlyTariffInput.addEventListener("change", () => {
-      const next = toNumber($earlyTariffInput.value);
-      if (next !== null) {
-        state.earlyTariffPercent = clampTariff(next);
         persistSettings();
         renderAll();
       }
@@ -257,35 +239,63 @@
       btn.classList.toggle("active", btn.dataset.currency === state.currency);
     });
     $fxRateInput.value = state.fxRate.toFixed(4);
-    $earlyTariffInput.value = formatTariffPercent(state.earlyTariffPercent);
+    if ($earlyTariffInput) {
+      const baseValue = state.currency === "usd" ? state.earlyUnitUsd : state.earlyUnitUah;
+      $earlyTariffInput.value = round2(baseValue);
+      $earlyTariffInput.readOnly = true;
+      $earlyTariffInput.title = "Базова ціна для розрахунку дострокового закриття";
+    }
   }
 
   function renderSummary() {
-    const summaryPayments = payments.filter((payment) => !payment.exclude_from_summary);
-    const views = summaryPayments.map((payment) => buildView(payment));
+    const rows = payments
+      .filter((payment) => !payment.exclude_from_summary)
+      .map((payment) => ({ payment, view: buildView(payment) }));
 
-    const paid = views.reduce(
-      (sum, view) => sum + (state.currency === "usd" ? view.paidUsd : view.paidUah),
+    const paidRows = rows.filter(({ view }) => isSettledStatus(view.status));
+    const futureUnpaidRows = rows.filter(({ payment, view }) => {
+      if (!isCurrentOrFuturePeriod(payment)) return false;
+      if (view.status === "paid") return false;
+      if (view.status === "early") return false;
+      return true;
+    });
+    const payableFutureRows = futureUnpaidRows.filter(
+      ({ view }) => view.scheduleUsd > 0.009 || view.scheduleUah > 0.009
+    );
+
+    const paid = paidRows.reduce(
+      (sum, row) => sum + (state.currency === "usd" ? row.view.paidUsd : row.view.paidUah),
       0
     );
-    const total = state.currency === "usd" ? summaryTotals.usd : summaryTotals.uah;
-    const remainingPlan = Math.max(total - paid, 0);
-    const remainingEarly = remainingPlan * tariffCoefficient();
-    const saving = Math.max(remainingPlan - remainingEarly, 0);
+    const remainingPlan = futureUnpaidRows.reduce(
+      (sum, row) => sum + (state.currency === "usd" ? row.view.scheduleUsd : row.view.scheduleUah),
+      0
+    );
 
-    const paidCount = views.filter((view) => isSettledStatus(view.status)).length;
-    const overdueCount = views.filter((view) => view.overdue).length;
+    const earlyBaseRow = getEarliestPayableRow(payableFutureRows);
+    const earlyUnitUsd = earlyBaseRow ? earlyBaseRow.view.scheduleUsd : 0;
+    const earlyUnitUah = earlyBaseRow ? earlyBaseRow.view.scheduleUah : 0;
+    state.earlyUnitUsd = earlyUnitUsd;
+    state.earlyUnitUah = earlyUnitUah;
+
+    const futureCount = payableFutureRows.length;
+    const remainingEarlyUsd = futureCount * earlyUnitUsd;
+    const remainingEarlyUah = futureCount * earlyUnitUah;
+    const remainingEarly = state.currency === "usd" ? remainingEarlyUsd : remainingEarlyUah;
+    const total = paid + remainingPlan;
+
+    const paidCount = paidRows.length;
+    const allCount = rows.length;
+    const baseLabel = earlyBaseRow
+      ? readablePaymentTitle(earlyBaseRow.payment)
+      : "немає базового місяця";
 
     $summaryPaid.textContent = formatCurrency(paid, state.currency);
     $summaryRemainingPlan.textContent = formatCurrency(remainingPlan, state.currency);
     $summaryRemainingEarly.textContent = formatCurrency(remainingEarly, state.currency);
-    $summaryRemainingEarlyLabel.textContent = `Залишок достроково (${formatTariffPercent(
-      state.earlyTariffPercent
-    )}%)`;
+    $summaryRemainingEarlyLabel.textContent = `Залишок достроково (${futureCount} платежів, база: ${baseLabel})`;
     $summaryTotal.textContent = formatCurrency(total, state.currency);
-    $summaryCount.textContent = `${paidCount}/${summaryPayments.length} оплачено${
-      overdueCount ? `, прострочено: ${overdueCount}` : ""
-    }${saving > 0 ? `, економія: ${formatCurrency(saving, state.currency)}` : ""}`;
+    $summaryCount.textContent = `${paidCount}/${allCount} оплачено, майбутніх неоплачених: ${futureUnpaidRows.length}`;
   }
 
   function renderPeriodFilters() {
@@ -378,20 +388,14 @@
       const selected = state.selectedId === String(item.id) ? "selected" : "";
       const overdue = view.overdue ? "overdue" : "";
       const amount = state.currency === "usd" ? view.amountUsd : view.amountUah;
-      const scheduled = state.currency === "usd" ? view.scheduleUsd : view.scheduleUah;
-      const plannedText = Number.isFinite(scheduled)
-        ? `По графіку: ${formatCurrency(scheduled, state.currency)}`
-        : "По графіку: -";
-      const paidByCard = state.currency === "usd" ? view.paidUsd : view.paidUah;
-      const remainingForCard = Math.max(numberOr(scheduled, 0) - numberOr(paidByCard, 0), 0);
-      const earlyForCard = remainingForCard * tariffCoefficient();
-      const earlyText =
-        remainingForCard > 0
-          ? `Достроково (${formatTariffPercent(state.earlyTariffPercent)}%): ${formatCurrency(
-              earlyForCard,
-              state.currency
-            )}`
-          : "";
+      const plannedText = `По графіку: ${formatCurrency(view.scheduleUsd, "usd")} / ${formatCurrency(
+        view.scheduleUah,
+        "uah"
+      )}`;
+      const paidText = `Оплачено: ${formatCurrency(view.paidUsd, "usd")} / ${formatCurrency(
+        view.paidUah,
+        "uah"
+      )}`;
       const paymentDateText = view.paymentDate ? `Оплата: ${formatDate(view.paymentDate)}` : "Дата оплати не вказана";
       const note = view.note || (item.flags && item.flags.early ? "Позначено як достроково в джерелі." : "");
       const monthIndexText =
@@ -409,8 +413,8 @@
           </div>
           <div class="card-amount">${formatCurrency(amount, state.currency)}</div>
           <p class="card-meta">${plannedText}</p>
+          <p class="card-meta">${paidText}</p>
           ${monthIndexText ? `<p class="card-meta">${monthIndexText}</p>` : ""}
-          ${earlyText ? `<p class="card-meta">${earlyText}</p>` : ""}
           <p class="card-meta">${paymentDateText}</p>
           ${note ? `<p class="card-note">${escapeHtml(note)}</p>` : ""}
         </article>
@@ -436,20 +440,26 @@
 
     const view = buildView(item);
     const override = state.overrides[state.selectedId] || {};
-    const selectedSchedule = state.currency === "usd" ? view.scheduleUsd : view.scheduleUah;
-    const selectedPaid = state.currency === "usd" ? view.paidUsd : view.paidUah;
-    const selectedRemaining = Math.max(numberOr(selectedSchedule, 0) - numberOr(selectedPaid, 0), 0);
-    const selectedEarly = selectedRemaining * tariffCoefficient();
+    const selectedRemainingUsd = Math.max(numberOr(view.scheduleUsd, 0) - numberOr(view.paidUsd, 0), 0);
+    const selectedRemainingUah = Math.max(numberOr(view.scheduleUah, 0) - numberOr(view.paidUah, 0), 0);
 
     $detailTitle.textContent = readablePaymentTitle(item);
-    $detailMeta.textContent = `По графіку: ${formatCurrency(
-      selectedSchedule,
-      state.currency
-    )}, залишок: ${formatCurrency(selectedRemaining, state.currency)}, достроково (${formatTariffPercent(
-      state.earlyTariffPercent
-    )}%): ${formatCurrency(selectedEarly, state.currency)}${item.rate ? `, курс: ${item.rate}` : ""}`;
+    $detailMeta.textContent = `По графіку: ${formatCurrency(view.scheduleUsd, "usd")} / ${formatCurrency(
+      view.scheduleUah,
+      "uah"
+    )}, оплачено: ${formatCurrency(view.paidUsd, "usd")} / ${formatCurrency(
+      view.paidUah,
+      "uah"
+    )}, залишок: ${formatCurrency(selectedRemainingUsd, "usd")} / ${formatCurrency(
+      selectedRemainingUah,
+      "uah"
+    )}${item.rate ? `, курс: ${item.rate}` : ""}`;
 
     $statusInput.value = view.status;
+    $statusInput.disabled = isPastPeriod(item);
+    $statusInput.title = isPastPeriod(item)
+      ? "Минулі місяці автоматично позначаються як оплачені."
+      : "";
 
     $paidUsdInput.value =
       override.paid_usd !== undefined && override.paid_usd !== null ? String(override.paid_usd) : "";
@@ -504,11 +514,50 @@
     });
   }
 
+  function normalizeStatus(rawStatus, item) {
+    let status = String(rawStatus || "unpaid").trim().toLowerCase();
+    if (status === "partial") status = "unpaid";
+    if (status !== "paid" && status !== "unpaid" && status !== "early") {
+      status = "unpaid";
+    }
+    if (isPastPeriod(item)) {
+      return "paid";
+    }
+    return status;
+  }
+
+  function isPastPeriod(item) {
+    const dueDate = parseDate(item.due_date);
+    if (dueDate) return dueDate < startOfCurrentMonth;
+    const year = getPaymentYear(item);
+    const month = getPaymentMonth(item) || 1;
+    const currentYear = startOfCurrentMonth.getFullYear();
+    const currentMonth = startOfCurrentMonth.getMonth() + 1;
+    if (year < currentYear) return true;
+    if (year === currentYear && month < currentMonth) return true;
+    return false;
+  }
+
+  function isCurrentOrFuturePeriod(item) {
+    return !isPastPeriod(item);
+  }
+
+  function getEarliestPayableRow(rows) {
+    if (!rows || !rows.length) return null;
+    const sorted = [...rows].sort((a, b) => {
+      const da = parseDate(a.payment.due_date);
+      const db = parseDate(b.payment.due_date);
+      if (da && db) return da - db;
+      return a.payment.id - b.payment.id;
+    });
+    return sorted[0] || null;
+  }
+
   function buildView(item) {
     const key = String(item.id);
     const override = state.overrides[key] || {};
 
-    const status = override.status || item.status || "unpaid";
+    const status = normalizeStatus(override.status || item.status || "unpaid", item);
     const paymentDate = normalizeDateString(
       override.payment_date !== undefined && override.payment_date !== null
         ? override.payment_date
@@ -533,9 +582,7 @@
       if (status === "paid") {
         paidUsd = numberOr(item.fact_usd, numberOr(item.schedule_usd, 0));
       } else if (status === "early") {
-        paidUsd = numberOr(item.schedule_usd, numberOr(item.fact_usd, 0)) * tariffCoefficient();
-      } else if (status === "partial") {
-        paidUsd = numberOr(item.base_paid_usd, 0);
+        paidUsd = 0;
       } else {
         paidUsd = 0;
       }
@@ -549,17 +596,7 @@
           paidUah = usdToUah(item, paidUsd);
         }
       } else if (status === "early") {
-        paidUah = usdToUah(item, paidUsd);
-      } else if (status === "partial") {
-        if (
-          item.base_paid_uah !== null &&
-          item.base_paid_usd !== null &&
-          roughlyEqual(paidUsd, item.base_paid_usd)
-        ) {
-          paidUah = item.base_paid_uah;
-        } else {
-          paidUah = usdToUah(item, paidUsd);
-        }
+        paidUah = 0;
       } else {
         paidUah = 0;
       }
@@ -581,7 +618,7 @@
         : usdToUah(item, scheduleUsd);
 
     const dueDate = parseDate(item.due_date);
-    const overdue = Boolean(dueDate && dueDate < today && (status === "unpaid" || status === "partial"));
+    const overdue = Boolean(dueDate && dueDate < today && status === "unpaid");
 
     return {
       status,
@@ -593,6 +630,7 @@
       amountUah: round2(amountUah),
       scheduleUsd: round2(numberOr(scheduleUsd, 0)),
       scheduleUah: round2(numberOr(scheduleUah, 0)),
+      dueDate,
       overdue,
     };
   }
@@ -634,7 +672,7 @@
     }
 
     const base = idToPayment.get(key);
-    if (base && next.status === base.status) delete next.status;
+    if (base && next.status === normalizeStatus(base.status, base)) delete next.status;
 
     if (!Object.keys(next).length) {
       delete state.overrides[key];
@@ -760,25 +798,8 @@
     return Math.round(numberOr(value, 0) * 10000) / 10000;
   }
 
-  function clampTariff(value) {
-    const numeric = numberOr(toNumber(value), 100);
-    if (!Number.isFinite(numeric)) return 100;
-    if (numeric < 1) return 1;
-    if (numeric > 200) return 200;
-    return round2(numeric);
-  }
-
-  function tariffCoefficient() {
-    return clampTariff(state.earlyTariffPercent) / 100;
-  }
-
-  function formatTariffPercent(value) {
-    const normalized = clampTariff(value);
-    return Number.isInteger(normalized) ? String(normalized) : normalized.toFixed(2).replace(/\.?0+$/, "");
-  }
-
   function isSettledStatus(status) {
-    return status === "paid" || status === "early";
+    return status === "paid";
   }
 
   function roughlyEqual(a, b) {
@@ -797,7 +818,6 @@
       selectedMonth: state.selectedMonth,
       selectedId: state.selectedId,
       fxRate: state.fxRate,
-      earlyTariffPercent: state.earlyTariffPercent,
     };
     localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(payload));
     persistSnapshot();
@@ -810,12 +830,14 @@
 
     $searchInput.value = "";
     $fxRateInput.value = state.fxRate.toFixed(4);
-    $earlyTariffInput.value = formatTariffPercent(state.earlyTariffPercent);
+    if ($earlyTariffInput) {
+      $earlyTariffInput.value = "0";
+    }
   }
 
   function buildSnapshot() {
     const snapshot = {
-      version: 2,
+      version: 3,
       projectKey: PROJECT_KEY,
       sourcePdf: source.source_pdf || "",
       savedAt: new Date().toISOString(),
@@ -825,7 +847,6 @@
         selectedMonth: state.selectedMonth,
         selectedId: state.selectedId,
         fxRate: state.fxRate,
-        earlyTariffPercent: state.earlyTariffPercent,
       },
       overrides: state.overrides,
     };
@@ -848,9 +869,6 @@
     }
     if (toNumber(settings.fxRate) && toNumber(settings.fxRate) > 0) {
       state.fxRate = toNumber(settings.fxRate);
-    }
-    if (toNumber(settings.earlyTariffPercent) && toNumber(settings.earlyTariffPercent) > 0) {
-      state.earlyTariffPercent = clampTariff(toNumber(settings.earlyTariffPercent));
     }
   }
 
