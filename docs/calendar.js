@@ -5,10 +5,13 @@
     return;
   }
 
-  const STORAGE_OVERRIDES = "payment_calendar_overrides_v1";
-  const STORAGE_SETTINGS = "payment_calendar_settings_v1";
-  const STORAGE_SNAPSHOT = "payment_calendar_snapshot_v1";
-  const STORAGE_SNAPSHOT_HISTORY = "payment_calendar_snapshot_history_v1";
+  const PROJECT_KEY = normalizeProjectKey(
+    source.project_key || source.project_name || source.apartment || source.source_pdf || "default"
+  );
+  const STORAGE_OVERRIDES = `payment_calendar_overrides_v1_${PROJECT_KEY}`;
+  const STORAGE_SETTINGS = `payment_calendar_settings_v1_${PROJECT_KEY}`;
+  const STORAGE_SNAPSHOT = `payment_calendar_snapshot_v1_${PROJECT_KEY}`;
+  const STORAGE_SNAPSHOT_HISTORY = `payment_calendar_snapshot_history_v1_${PROJECT_KEY}`;
   const MAX_SNAPSHOT_HISTORY = 40;
 
   const STATUS_ORDER = ["unpaid", "partial", "paid", "early"];
@@ -215,7 +218,7 @@
         .replace("T", "-")
         .replace(/\..*$/, "");
       anchor.href = url;
-      anchor.download = `payment-calendar-backup-${stamp}.json`;
+      anchor.download = `payment-calendar-${PROJECT_KEY}-backup-${stamp}.json`;
       anchor.click();
       URL.revokeObjectURL(url);
     });
@@ -231,6 +234,9 @@
         const text = await file.text();
         const payload = JSON.parse(text);
         if (!payload || typeof payload !== "object") throw new Error("invalid payload");
+        if (payload.projectKey && payload.projectKey !== PROJECT_KEY) {
+          throw new Error("project mismatch");
+        }
         if (!window.confirm("Імпортувати backup і перезаписати поточні локальні зміни?")) return;
         applySnapshot(payload);
         persistOverrides();
@@ -775,6 +781,7 @@
   function buildSnapshot() {
     const snapshot = {
       version: 2,
+      projectKey: PROJECT_KEY,
       sourcePdf: source.source_pdf || "",
       savedAt: new Date().toISOString(),
       settings: {
@@ -845,5 +852,15 @@
     } catch (error) {
       return fallback;
     }
+  }
+
+  function normalizeProjectKey(input) {
+    return (
+      String(input || "default")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .slice(0, 80) || "default"
+    );
   }
 })();
