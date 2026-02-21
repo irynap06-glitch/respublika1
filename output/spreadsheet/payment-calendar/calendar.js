@@ -42,6 +42,7 @@
   const $summaryCount = document.getElementById("summaryCount");
 
   const $projectFilter = document.getElementById("projectFilter");
+  const $categoryFilter = document.getElementById("categoryFilter");
   const $viewModeSelect = document.getElementById("viewModeSelect");
   const $viewModeButtons = [...document.querySelectorAll(".mode-btn")];
   const $yearSelect = document.getElementById("yearSelect");
@@ -121,6 +122,7 @@
     overrides: loadJson(STORAGE_OVERRIDES, {}),
     currency: "usd",
     selectedProjects: [initialProject],
+    selectedCategories: [...categoryKeys],
     viewMode: "month",
     selectedYear: "all",
     selectedMonth: "all",
@@ -178,6 +180,31 @@
           state.selectedProjects = [...current].filter((key) => datasetKeys.includes(key));
         }
         ensureProjectSelection();
+        ensureSelectedMonthInRange();
+        persistSettings();
+        renderAll();
+      });
+    }
+
+    if ($categoryFilter) {
+      $categoryFilter.addEventListener("click", (event) => {
+        const btn = event.target.closest(".category-chip");
+        if (!btn) return;
+        const category = btn.dataset.category;
+        if (!category) return;
+        if (category === "all") {
+          state.selectedCategories = [...categoryKeys];
+        } else {
+          const current = new Set(state.selectedCategories);
+          if (current.has(category)) {
+            if (current.size === 1) return;
+            current.delete(category);
+          } else {
+            current.add(category);
+          }
+          state.selectedCategories = [...current].filter((key) => categoryKeys.includes(key));
+        }
+        ensureCategorySelection();
         ensureSelectedMonthInRange();
         persistSettings();
         renderAll();
@@ -308,7 +335,9 @@
 
   function renderAll() {
     ensureProjectSelection();
+    ensureCategorySelection();
     renderProjectFilters();
+    renderCategoryFilters();
     renderCurrencyControls();
     renderSummary();
     renderPeriodFilters();
@@ -332,6 +361,29 @@
       }),
     ];
     $projectFilter.innerHTML = chips.join("");
+  }
+
+  function renderCategoryFilters() {
+    if (!$categoryFilter) return;
+    const selectedProjects = new Set(state.selectedProjects);
+    const scopedItems = payments.filter((item) => selectedProjects.has(item.project_key));
+    const counts = new Map();
+    scopedItems.forEach((item) => {
+      counts.set(item.category_key, (counts.get(item.category_key) || 0) + 1);
+    });
+
+    const selected = new Set(state.selectedCategories);
+    const allActive = categoryKeys.every((key) => selected.has(key));
+    const chips = [
+      `<button type="button" class="category-chip ${allActive ? "active" : ""}" data-category="all">Всі</button>`,
+      ...categoryKeys.map((key) => {
+        const count = counts.get(key) || 0;
+        return `<button type="button" class="category-chip ${selected.has(key) ? "active" : ""}" data-category="${key}">${escapeHtml(
+          categoryLabelFromKey(key)
+        )} (${count})</button>`;
+      }),
+    ];
+    $categoryFilter.innerHTML = chips.join("");
   }
 
   function renderCurrencyControls() {
@@ -388,7 +440,7 @@
     $summaryPaid.textContent = formatCurrency(paid, state.currency);
     $summaryRemainingPlan.textContent = formatCurrency(remainingPlan, state.currency);
     $summaryRemainingEarly.textContent = formatCurrency(remainingEarly, state.currency);
-    $summaryRemainingEarlyLabel.textContent = earlyCalc.label || `Залишок достроково (${futureCount} платежів)`;
+    $summaryRemainingEarlyLabel.textContent = "Залишок достроково";
     $summaryTotal.textContent = formatCurrency(total, state.currency);
     $summaryCount.textContent = `${paidCount}/${allCount} оплачено, майбутніх неоплачених: ${futureUnpaidRows.length}`;
   }
@@ -883,8 +935,10 @@
 
   function getSelectedPayments() {
     ensureProjectSelection();
+    ensureCategorySelection();
     const selected = new Set(state.selectedProjects);
-    return payments.filter((item) => selected.has(item.project_key));
+    const selectedCategories = new Set(state.selectedCategories);
+    return payments.filter((item) => selected.has(item.project_key) && selectedCategories.has(item.category_key));
   }
 
   function getVisiblePayments() {
@@ -1271,6 +1325,7 @@
     const payload = {
       currency: state.currency,
       selectedProjects: state.selectedProjects,
+      selectedCategories: state.selectedCategories,
       viewMode: state.viewMode,
       selectedYear: state.selectedYear,
       selectedMonth: state.selectedMonth,
@@ -1303,6 +1358,7 @@
       settings: {
         currency: state.currency,
         selectedProjects: state.selectedProjects,
+        selectedCategories: state.selectedCategories,
         viewMode: state.viewMode,
         selectedYear: state.selectedYear,
         selectedMonth: state.selectedMonth,
@@ -1322,6 +1378,12 @@
     if (Array.isArray(settings.selectedProjects)) {
       state.selectedProjects = settings.selectedProjects.filter((key) => datasetKeys.includes(String(key)));
       ensureProjectSelection();
+    }
+    if (Array.isArray(settings.selectedCategories)) {
+      state.selectedCategories = settings.selectedCategories
+        .map((key) => normalizeCategoryKey(key))
+        .filter((key) => categoryKeys.includes(key));
+      ensureCategorySelection();
     }
     if (settings.viewMode === "month" || settings.viewMode === "quarter" || settings.viewMode === "year") {
       state.viewMode = settings.viewMode;
@@ -1404,6 +1466,15 @@
     state.selectedProjects = (state.selectedProjects || []).filter((key) => datasetKeys.includes(key));
     if (!state.selectedProjects.length) {
       state.selectedProjects = [datasetKeys[0]];
+    }
+  }
+
+  function ensureCategorySelection() {
+    state.selectedCategories = (state.selectedCategories || [])
+      .map((key) => normalizeCategoryKey(key))
+      .filter((key) => categoryKeys.includes(key));
+    if (!state.selectedCategories.length) {
+      state.selectedCategories = [...categoryKeys];
     }
   }
 

@@ -67,9 +67,21 @@
             <span>Пошук</span>
             <input id="searchInput" type="search" placeholder="Місяць, дата, статус, нотатка" />
           </label>
-          <label class="field project-top-field">
+          <div class="field project-top-field top-chip-field">
             <span>Проєкти</span>
             <div id="projectFilter" class="project-filter"></div>
+          </div>
+          <div class="field category-top-field top-chip-field">
+            <span>Категорії</span>
+            <div id="categoryFilter" class="category-filter"></div>
+          </div>
+          <label class="field mode-top-field">
+            <span>Режим</span>
+            <select id="viewModeSelect">
+              <option value="month">Місяці</option>
+              <option value="quarter">Квартали</option>
+              <option value="year">Роки</option>
+            </select>
           </label>
         </div>
       </header>
@@ -103,19 +115,6 @@
             <h2>Фільтри</h2>
           </div>
           <div class="filter-stack">
-            <label class="field compact-field">
-              <span>Режим</span>
-              <div class="mode-switch" role="group" aria-label="Режим перегляду">
-                <button type="button" class="mode-btn" data-view-mode="month">Місяці</button>
-                <button type="button" class="mode-btn" data-view-mode="quarter">Квартали</button>
-                <button type="button" class="mode-btn" data-view-mode="year">Роки</button>
-              </div>
-              <select id="viewModeSelect">
-                <option value="month">Місяці</option>
-                <option value="quarter">Квартали</option>
-                <option value="year">Роки</option>
-              </select>
-            </label>
             <label class="field compact-field">
               <span>Рік</span>
               <select id="yearSelect"></select>
