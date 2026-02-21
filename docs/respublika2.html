@@ -90,11 +90,19 @@
           </div>
           <div class="filter-stack">
             <label class="field compact-field">
+              <span>Режим</span>
+              <select id="viewModeSelect">
+                <option value="month">Місяці</option>
+                <option value="quarter">Квартали</option>
+                <option value="year">Роки</option>
+              </select>
+            </label>
+            <label class="field compact-field">
               <span>Рік</span>
               <select id="yearSelect"></select>
             </label>
             <label class="field compact-field">
-              <span>Місяць</span>
+              <span id="periodFilterLabel">Період</span>
               <select id="monthSelect"></select>
             </label>
           </div>
@@ -102,7 +110,7 @@
 
         <section class="panel calendar-panel" aria-label="Календар">
           <div class="panel-head">
-            <h2>Місяці</h2>
+            <h2 id="calendarTitle">Місяці</h2>
             <p class="panel-subline" id="monthInfo">Оберіть період</p>
           </div>
 

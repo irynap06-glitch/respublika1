@@ -14,6 +14,11 @@
   const STORAGE_SNAPSHOT_HISTORY = `payment_calendar_snapshot_history_v1_${PROJECT_KEY}`;
   const MAX_SNAPSHOT_HISTORY = 40;
   const NIVKI_ANNUAL_RATE = 0.07;
+  const VIEW_MODE_LABELS = {
+    month: "Місяці",
+    quarter: "Квартали",
+    year: "Роки",
+  };
 
   const STATUS_ORDER = ["unpaid", "paid", "early"];
   const STATUS_LABELS = {
@@ -30,8 +35,11 @@
   const $summaryTotal = document.getElementById("summaryTotal");
   const $summaryCount = document.getElementById("summaryCount");
 
+  const $viewModeSelect = document.getElementById("viewModeSelect");
   const $yearSelect = document.getElementById("yearSelect");
   const $monthSelect = document.getElementById("monthSelect");
+  const $periodFilterLabel = document.getElementById("periodFilterLabel");
+  const $calendarTitle = document.getElementById("calendarTitle");
   const $monthInfo = document.getElementById("monthInfo");
   const $calendarGrid = document.getElementById("calendarGrid");
 
@@ -81,6 +89,7 @@
   const state = {
     overrides: loadJson(STORAGE_OVERRIDES, {}),
     currency: "usd",
+    viewMode: "month",
     selectedYear: "all",
     selectedMonth: "all",
     selectedId: String(payments.length ? payments[0].id : ""),
@@ -118,6 +127,19 @@
       }
     });
 
+    if ($viewModeSelect) {
+      $viewModeSelect.addEventListener("change", () => {
+        const next = $viewModeSelect.value;
+        state.viewMode = next === "quarter" || next === "year" ? next : "month";
+        if (state.viewMode === "year") {
+          state.selectedYear = "all";
+        }
+        state.selectedMonth = "all";
+        persistSettings();
+        renderAll();
+      });
+    }
+
     $yearSelect.addEventListener("change", () => {
       state.selectedYear = $yearSelect.value || "all";
       ensureSelectedMonthInRange();
@@ -132,6 +154,7 @@
     });
 
     $calendarGrid.addEventListener("click", (event) => {
+      if (state.viewMode !== "month") return;
       const toggle = event.target.closest(".status-toggle");
       if (toggle) {
         const id = toggle.dataset.id;
@@ -368,12 +391,27 @@
   }
 
   function renderPeriodFilters() {
+    if ($calendarTitle) {
+      $calendarTitle.textContent = VIEW_MODE_LABELS[state.viewMode] || VIEW_MODE_LABELS.month;
+    }
+    if ($periodFilterLabel) {
+      if (state.viewMode === "month") $periodFilterLabel.textContent = "Місяць";
+      else if (state.viewMode === "quarter") $periodFilterLabel.textContent = "Квартал";
+      else $periodFilterLabel.textContent = "Рік";
+    }
+    if ($viewModeSelect) {
+      $viewModeSelect.value = state.viewMode;
+    }
+
     const yearCounts = new Map();
     payments.forEach((item) => {
       const year = getPaymentYear(item);
       yearCounts.set(year, (yearCounts.get(year) || 0) + 1);
     });
 
+    if (state.viewMode === "year") {
+      state.selectedYear = "all";
+    }
     if (state.selectedYear !== "all" && !years.includes(Number(state.selectedYear))) {
       state.selectedYear = "all";
     }
@@ -386,47 +424,88 @@
       }),
     ];
     $yearSelect.innerHTML = yearOptions.join("");
+    $yearSelect.disabled = state.viewMode === "year";
 
     ensureSelectedMonthInRange();
-    const monthOptionsData = getMonthCounts(state.selectedYear);
-    const totalInYear = monthOptionsData.reduce((sum, entry) => sum + entry.count, 0);
+    const periodOptionsData = getPeriodOptions(state.selectedYear, state.viewMode);
+    const totalInMode = periodOptionsData.reduce((sum, entry) => sum + entry.count, 0);
+    const allLabel =
+      state.viewMode === "month"
+        ? "Всі місяці"
+        : state.viewMode === "quarter"
+          ? "Всі квартали"
+          : "Всі роки";
     const monthOptions = [
-      `<option value="all"${state.selectedMonth === "all" ? " selected" : ""}>Всі місяці (${totalInYear})</option>`,
-      ...monthOptionsData.map((entry) => {
-        const selected = state.selectedMonth === String(entry.month) ? " selected" : "";
-        return `<option value="${entry.month}"${selected}>${escapeHtml(
-          monthLong(entry.month)
-        )} (${entry.count})</option>`;
+      `<option value="all"${state.selectedMonth === "all" ? " selected" : ""}>${allLabel} (${totalInMode})</option>`,
+      ...periodOptionsData.map((entry) => {
+        const selected = state.selectedMonth === String(entry.key) ? " selected" : "";
+        return `<option value="${entry.key}"${selected}>${escapeHtml(entry.label)} (${entry.count})</option>`;
       }),
     ];
     $monthSelect.innerHTML = monthOptions.join("");
 
     const visible = getVisiblePayments();
+    const groupCount = state.viewMode === "month" ? visible.length : buildAggregateGroups(visible, state.viewMode).length;
     const yearLabel = state.selectedYear === "all" ? "усі роки" : state.selectedYear;
-    const monthLabel = state.selectedMonth === "all" ? "усі місяці" : monthLong(Number(state.selectedMonth));
+    const periodLabel = describeSelectedPeriod(state.selectedMonth, state.selectedYear, state.viewMode);
     const searchLabel = state.search ? `, пошук: “${state.search}”` : "";
-    $monthInfo.textContent = `Показано ${visible.length} періодів: ${yearLabel}, ${monthLabel}${searchLabel}`;
+    const countLabel = state.viewMode === "month" ? "місяців" : state.viewMode === "quarter" ? "кварталів" : "років";
+    $monthInfo.textContent = `Показано ${groupCount} ${countLabel}: ${yearLabel}, ${periodLabel}${searchLabel}`;
   }
 
-  function getMonthCounts(yearValue) {
+  function getPeriodOptions(yearValue, mode) {
     const bucket = new Map();
     payments.forEach((item) => {
       const year = getPaymentYear(item);
-      if (yearValue !== "all" && year !== Number(yearValue)) return;
-      const month = getPaymentMonth(item);
-      if (!month) return;
-      bucket.set(month, (bucket.get(month) || 0) + 1);
+      if (mode !== "year" && yearValue !== "all" && year !== Number(yearValue)) return;
+
+      if (mode === "month") {
+        const month = getPaymentMonth(item);
+        if (!month) return;
+        const key = String(month);
+        const entry = bucket.get(key) || { key, label: monthLong(month), count: 0, sortA: month };
+        entry.count += 1;
+        bucket.set(key, entry);
+        return;
+      }
+
+      if (mode === "quarter") {
+        const month = getPaymentMonth(item);
+        if (!month) return;
+        const quarter = quarterOfMonth(month);
+        const scopedToYear = yearValue !== "all";
+        const key = scopedToYear ? `Q${quarter}` : `${year}-Q${quarter}`;
+        const label = scopedToYear ? `Q${quarter}` : `Q${quarter} ${year}`;
+        const entry = bucket.get(key) || {
+          key,
+          label,
+          count: 0,
+          sortA: year,
+          sortB: quarter,
+        };
+        entry.count += 1;
+        bucket.set(key, entry);
+        return;
+      }
+
+      const key = String(year);
+      const entry = bucket.get(key) || { key, label: String(year), count: 0, sortA: year };
+      entry.count += 1;
+      bucket.set(key, entry);
     });
 
-    return [...bucket.entries()]
-      .map(([month, count]) => ({ month, count }))
-      .sort((a, b) => a.month - b.month);
+    return [...bucket.values()].sort((a, b) => {
+      const a1 = numberOr(a.sortA, 0);
+      const b1 = numberOr(b.sortA, 0);
+      if (a1 !== b1) return a1 - b1;
+      return numberOr(a.sortB, 0) - numberOr(b.sortB, 0);
+    });
   }
 
   function ensureSelectedMonthInRange() {
     if (state.selectedMonth === "all") return;
-    const exists = getMonthCounts(state.selectedYear).some(
-      (entry) => String(entry.month) === String(state.selectedMonth)
+    const exists = getPeriodOptions(state.selectedYear, state.viewMode).some(
+      (entry) => String(entry.key) === String(state.selectedMonth)
     );
     if (!exists) {
       state.selectedMonth = "all";
@@ -434,6 +513,10 @@
   }
 
   function syncSelectedWithVisible() {
+    if (state.viewMode !== "month") {
+      state.selectedId = "";
+      return;
+    }
     const visible = getVisiblePayments();
     if (!visible.length) {
       state.selectedId = "";
@@ -449,6 +532,11 @@
 
     if (!visible.length) {
       $calendarGrid.innerHTML = '<div class="empty-note">Нічого не знайдено за поточним фільтром.</div>';
+      return;
+    }
+
+    if (state.viewMode !== "month") {
+      renderAggregateCalendar(visible, state.viewMode);
       return;
     }
 
@@ -493,10 +581,124 @@
     $calendarGrid.innerHTML = cards.join("");
   }
 
+  function renderAggregateCalendar(items, mode) {
+    const groups = buildAggregateGroups(items, mode);
+    const cards = groups.map((group) => {
+      const selectedAmount = state.currency === "usd" ? group.remainingUsd : group.remainingUah;
+      let statusClass = "unpaid";
+      if (group.unpaidCount === 0 && group.paidCount > 0) {
+        statusClass = "paid";
+      } else if (group.unpaidCount === 0 && group.paidCount === 0 && group.earlyCount > 0) {
+        statusClass = "early";
+      }
+
+      return `
+        <article class="payment-card" data-group="${escapeHtml(group.key)}">
+          <div class="card-top">
+            <h3 class="card-title">${escapeHtml(group.label)}</h3>
+            <span class="status-pill ${statusClass}">${
+              statusClass === "paid" ? "Оплачено" : statusClass === "early" ? "Достроково" : "Не оплачено"
+            }</span>
+          </div>
+          <div class="card-amount">${formatCurrency(selectedAmount, state.currency)}</div>
+          <p class="card-meta">По графіку: ${formatCurrency(group.scheduleUsd, "usd")} / ${formatCurrency(
+            group.scheduleUah,
+            "uah"
+          )}</p>
+          <p class="card-meta">Оплачено: ${formatCurrency(group.paidUsd, "usd")} / ${formatCurrency(
+            group.paidUah,
+            "uah"
+          )}</p>
+          <p class="card-meta">Залишок: ${formatCurrency(group.remainingUsd, "usd")} / ${formatCurrency(
+            group.remainingUah,
+            "uah"
+          )}</p>
+          <p class="card-meta">Періодів у групі: ${group.count}</p>
+        </article>
+      `;
+    });
+    $calendarGrid.innerHTML = cards.join("");
+  }
+
+  function buildAggregateGroups(items, mode) {
+    const bucket = new Map();
+    items.forEach((item) => {
+      const view = buildView(item);
+      const year = getPaymentYear(item);
+      const month = getPaymentMonth(item) || 1;
+      const quarter = quarterOfMonth(month);
+
+      let key = "";
+      let label = "";
+      let sortA = year;
+      let sortB = 0;
+      if (mode === "quarter") {
+        key = `${year}-Q${quarter}`;
+        label = `Q${quarter} ${year}`;
+        sortB = quarter;
+      } else {
+        key = String(year);
+        label = String(year);
+      }
+
+      const entry = bucket.get(key) || {
+        key,
+        label,
+        sortA,
+        sortB,
+        count: 0,
+        scheduleUsd: 0,
+        scheduleUah: 0,
+        paidUsd: 0,
+        paidUah: 0,
+        remainingUsd: 0,
+        remainingUah: 0,
+        paidCount: 0,
+        unpaidCount: 0,
+        earlyCount: 0,
+      };
+
+      const includeInRemaining = view.status !== "paid" && view.status !== "early";
+      entry.count += 1;
+      if (view.status === "paid") entry.paidCount += 1;
+      else if (view.status === "early") entry.earlyCount += 1;
+      else entry.unpaidCount += 1;
+      entry.scheduleUsd += view.scheduleUsd;
+      entry.scheduleUah += view.scheduleUah;
+      entry.paidUsd += view.paidUsd;
+      entry.paidUah += view.paidUah;
+      if (includeInRemaining) {
+        entry.remainingUsd += view.scheduleUsd;
+        entry.remainingUah += view.scheduleUah;
+      }
+      bucket.set(key, entry);
+    });
+
+    return [...bucket.values()]
+      .sort((a, b) => (a.sortA !== b.sortA ? a.sortA - b.sortA : a.sortB - b.sortB))
+      .map((entry) => ({
+        ...entry,
+        scheduleUsd: round2(entry.scheduleUsd),
+        scheduleUah: round2(entry.scheduleUah),
+        paidUsd: round2(entry.paidUsd),
+        paidUah: round2(entry.paidUah),
+        remainingUsd: round2(entry.remainingUsd),
+        remainingUah: round2(entry.remainingUah),
+      }));
+  }
+
   function renderDetail() {
+    if (state.viewMode !== "month") {
+      $detailForm.hidden = true;
+      $detailEmpty.hidden = false;
+      $detailEmpty.textContent = "У режимі кварталів/років картки агреговані. Для редагування відкрийте режим «Місяці».";
+      return;
+    }
+
     if (!state.selectedId) {
       $detailForm.hidden = true;
       $detailEmpty.hidden = false;
+      $detailEmpty.textContent = "Виберіть місяць або перший внесок, щоб змінити статус/суму.";
       return;
     }
 
@@ -504,6 +706,7 @@
     if (!item) {
       $detailForm.hidden = true;
       $detailEmpty.hidden = false;
+      $detailEmpty.textContent = "Виберіть місяць або перший внесок, щоб змінити статус/суму.";
       return;
     }
 
@@ -550,13 +753,32 @@
   function getVisiblePayments() {
     let list = [...payments];
 
-    if (state.selectedYear !== "all") {
+    if (state.viewMode !== "year" && state.selectedYear !== "all") {
       const year = Number(state.selectedYear);
       list = list.filter((item) => getPaymentYear(item) === year);
     }
     if (state.selectedMonth !== "all") {
-      const month = Number(state.selectedMonth);
-      list = list.filter((item) => getPaymentMonth(item) === month);
+      if (state.viewMode === "month") {
+        const month = Number(state.selectedMonth);
+        list = list.filter((item) => getPaymentMonth(item) === month);
+      } else if (state.viewMode === "quarter") {
+        if (state.selectedMonth.includes("-Q")) {
+          const [yearText, quarterText] = state.selectedMonth.split("-Q");
+          const targetYear = Number(yearText);
+          const targetQuarter = Number(quarterText);
+          list = list.filter((item) => {
+            const year = getPaymentYear(item);
+            const quarter = quarterOfMonth(getPaymentMonth(item) || 1);
+            return year === targetYear && quarter === targetQuarter;
+          });
+        } else {
+          const targetQuarter = Number(String(state.selectedMonth).replace("Q", ""));
+          list = list.filter((item) => quarterOfMonth(getPaymentMonth(item) || 1) === targetQuarter);
+        }
+      } else if (state.viewMode === "year") {
+        const targetYear = Number(state.selectedMonth);
+        list = list.filter((item) => getPaymentYear(item) === targetYear);
+      }
     }
 
     if (state.search) {
@@ -791,6 +1013,30 @@
     return `${monthLong(date.getMonth() + 1)} ${date.getFullYear()}`;
   }
 
+  function quarterOfMonth(month) {
+    return Math.floor((Number(month) - 1) / 3) + 1;
+  }
+
+  function describeSelectedPeriod(selectedValue, selectedYear, mode) {
+    if (selectedValue === "all") {
+      if (mode === "month") return "усі місяці";
+      if (mode === "quarter") return "усі квартали";
+      return "усі роки";
+    }
+    if (mode === "month") {
+      return monthLong(Number(selectedValue));
+    }
+    if (mode === "quarter") {
+      if (String(selectedValue).includes("-Q")) {
+        const [yearText, quarterText] = String(selectedValue).split("-Q");
+        return `Q${quarterText} ${yearText}`;
+      }
+      const yearLabel = selectedYear === "all" ? "" : ` ${selectedYear}`;
+      return `Q${String(selectedValue).replace("Q", "")}${yearLabel}`;
+    }
+    return String(selectedValue);
+  }
+
   function monthLong(month) {
     const label = new Intl.DateTimeFormat("uk-UA", { month: "long" }).format(
       new Date(2026, month - 1, 1)
@@ -883,6 +1129,7 @@
   function persistSettings() {
     const payload = {
       currency: state.currency,
+      viewMode: state.viewMode,
       selectedYear: state.selectedYear,
       selectedMonth: state.selectedMonth,
       selectedId: state.selectedId,
@@ -912,6 +1159,7 @@
       savedAt: new Date().toISOString(),
       settings: {
         currency: state.currency,
+        viewMode: state.viewMode,
         selectedYear: state.selectedYear,
         selectedMonth: state.selectedMonth,
         selectedId: state.selectedId,
@@ -927,10 +1175,17 @@
     if (settings.currency === "usd" || settings.currency === "uah") {
       state.currency = settings.currency;
     }
+    if (settings.viewMode === "month" || settings.viewMode === "quarter" || settings.viewMode === "year") {
+      state.viewMode = settings.viewMode;
+    }
     if (settings.selectedYear === "all" || years.includes(Number(settings.selectedYear))) {
       state.selectedYear = String(settings.selectedYear);
     }
-    if (settings.selectedMonth === "all" || (toNumber(settings.selectedMonth) || 0) >= 1) {
+    if (
+      settings.selectedMonth === "all" ||
+      typeof settings.selectedMonth === "string" ||
+      typeof settings.selectedMonth === "number"
+    ) {
       state.selectedMonth = String(settings.selectedMonth);
     }
     if (settings.selectedId && idToPayment.has(String(settings.selectedId))) {
