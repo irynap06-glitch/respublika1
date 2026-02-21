@@ -648,7 +648,14 @@
     const multipleProjects = groups.size > 1;
 
     groups.forEach((rows, projectKey) => {
-      const calc = projectKey === "nivki" ? computeNivkiEarlySettlement(rows) : computeGenericEarlySettlement(rows);
+      let calc;
+      if (projectKey === "nivki") {
+        calc = computeNivkiEarlySettlement(rows);
+      } else if (projectKey === "respublika2") {
+        calc = computePlanEquivalentEarlySettlement(rows);
+      } else {
+        calc = computeGenericEarlySettlement(rows);
+      }
       totalUsd += numberOr(calc.totalUsd, 0);
       totalUah += numberOr(calc.totalUah, 0);
       if (groups.size === 1) {
@@ -689,6 +696,21 @@
       totalUsd: futureCount * unitUsd,
       totalUah: futureCount * unitUah,
       label: `${futureCount} платежів, база: ${baseLabel}`,
+    };
+  }
+
+  function computePlanEquivalentEarlySettlement(payableFutureRows) {
+    const earlyBaseRow = getEarliestPayableRow(payableFutureRows);
+    const unitUsd = earlyBaseRow ? earlyBaseRow.view.scheduleUsd : 0;
+    const unitUah = earlyBaseRow ? earlyBaseRow.view.scheduleUah : 0;
+    const totalUsd = payableFutureRows.reduce((sum, row) => sum + numberOr(row.view.scheduleUsd, 0), 0);
+    const totalUah = payableFutureRows.reduce((sum, row) => sum + numberOr(row.view.scheduleUah, 0), 0);
+    return {
+      unitUsd,
+      unitUah,
+      totalUsd,
+      totalUah,
+      label: `${payableFutureRows.length} платежів, без знижки (як план)`,
     };
   }
 
