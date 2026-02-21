@@ -1,13 +1,13 @@
 (() => {
-  const source = window.PAYMENTS_DATA;
-  if (!source || !Array.isArray(source.payments)) {
+  const sources = Array.isArray(window.PAYMENTS_SOURCES) && window.PAYMENTS_SOURCES.length
+    ? window.PAYMENTS_SOURCES
+    : [window.PAYMENTS_DATA].filter(Boolean);
+  if (!sources.length || !sources.some((entry) => Array.isArray(entry.payments))) {
     document.body.innerHTML = '<p style="padding:24px">Не знайдено дані платежів.</p>';
     return;
   }
 
-  const PROJECT_KEY = normalizeProjectKey(
-    source.project_key || source.project_name || source.apartment || source.source_pdf || "default"
-  );
+  const PROJECT_KEY = "multi";
   const STORAGE_OVERRIDES = `payment_calendar_overrides_v1_${PROJECT_KEY}`;
   const STORAGE_SETTINGS = `payment_calendar_settings_v1_${PROJECT_KEY}`;
   const STORAGE_SNAPSHOT = `payment_calendar_snapshot_v1_${PROJECT_KEY}`;
@@ -64,12 +64,31 @@
   const $importBackupFile = document.getElementById("importBackupFile");
   const $resetAllBtn = document.getElementById("resetAllBtn");
   const $currencyButtons = [...document.querySelectorAll(".currency-btn")];
+  const $projectFilterButtons = [...document.querySelectorAll(".project-filter")];
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const startOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
-  const payments = source.payments.map((item) => ({ ...item }));
+  const defaultSelectedProjects = ($projectFilterButtons.length
+    ? $projectFilterButtons.filter((btn) => btn.dataset.projectKey).map((btn) => btn.dataset.projectKey)
+    : sources.map((entry) => normalizeProjectKey(entry.project_key || entry.project_name || "project"))
+  ).filter((value, index, arr) => value && arr.indexOf(value) === index);
+
+  const payments = sources.flatMap((entry) => {
+    const projectKey = normalizeProjectKey(entry.project_key || entry.project_name || "project");
+    const projectName = entry.project_name || projectKey;
+    return (Array.isArray(entry.payments) ? entry.payments : []).map((item, index) => {
+      const rawId = item.id !== undefined && item.id !== null ? item.id : index;
+      return {
+        ...item,
+        source_id: rawId,
+        id: `${projectKey}:${rawId}`,
+        project_key: projectKey,
+        project_name: projectName,
+      };
+    });
+  });
   const idToPayment = new Map(payments.map((item) => [String(item.id), item]));
 
   const years = [
@@ -95,6 +114,7 @@
     selectedMonth: "all",
     selectedId: String(payments.length ? payments[0].id : ""),
     search: "",
+    selectedProjects: [...defaultSelectedProjects],
     fxRate: defaultFx,
     earlyUnitUsd: 0,
     earlyUnitUah: 0,
@@ -117,6 +137,24 @@
     $searchInput.addEventListener("input", () => {
       state.search = ($searchInput.value || "").trim().toLowerCase();
       renderAll();
+    });
+
+    $projectFilterButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.projectKey;
+        if (!key) return;
+        const selected = new Set(state.selectedProjects);
+        if (selected.has(key)) {
+          selected.delete(key);
+          if (!selected.size) selected.add(key);
+        } else {
+          selected.add(key);
+        }
+        state.selectedProjects = [...selected];
+        ensureSelectedMonthInRange();
+        persistSettings();
+        renderAll();
+      });
     });
 
     $fxRateInput.addEventListener("change", () => {
@@ -251,12 +289,28 @@
   }
 
   function renderAll() {
+    renderProjectFilters();
     renderCurrencyControls();
     renderSummary();
     renderPeriodFilters();
     syncSelectedWithVisible();
     renderCalendar();
     renderDetail();
+  }
+
+  function renderProjectFilters() {
+    const selected = new Set(state.selectedProjects);
+    $projectFilterButtons.forEach((btn) => {
+      const key = btn.dataset.projectKey;
+      const active = selected.has(key);
+      btn.classList.toggle("active", active);
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+  }
+
+  function getActivePayments() {
+    const selected = new Set(state.selectedProjects);
+    return payments.filter((item) => selected.has(item.project_key));
   }
 
   function renderCurrencyControls() {
@@ -273,7 +327,7 @@
   }
 
   function renderSummary() {
-    const rows = payments
+    const rows = getActivePayments()
       .filter((payment) => !payment.exclude_from_summary)
       .map((payment) => ({ payment, view: buildView(payment) }));
 
@@ -388,7 +442,8 @@
   }
 
   function isNivkiProject() {
-    return PROJECT_KEY.includes("nivki");
+    const selected = new Set(state.selectedProjects);
+    return selected.size === 1 && selected.has("nivki");
   }
 
   function renderPeriodFilters() {
@@ -407,8 +462,9 @@
       btn.classList.toggle("active", btn.dataset.viewMode === state.viewMode);
     });
 
+    const activePayments = getActivePayments();
     const yearCounts = new Map();
-    payments.forEach((item) => {
+    activePayments.forEach((item) => {
       const year = getPaymentYear(item);
       yearCounts.set(year, (yearCounts.get(year) || 0) + 1);
     });
@@ -421,7 +477,7 @@
     }
 
     const yearOptions = [
-      `<option value="all"${state.selectedYear === "all" ? " selected" : ""}>Всі роки (${payments.length})</option>`,
+      `<option value="all"${state.selectedYear === "all" ? " selected" : ""}>Всі роки (${activePayments.length})</option>`,
       ...years.map((year) => {
         const selected = state.selectedYear === String(year) ? " selected" : "";
         return `<option value="${year}"${selected}>${year} (${yearCounts.get(year) || 0})</option>`;
@@ -470,7 +526,7 @@
 
   function getPeriodOptions(yearValue, mode) {
     const bucket = new Map();
-    payments.forEach((item) => {
+    getActivePayments().forEach((item) => {
       const year = getPaymentYear(item);
       if (mode !== "year" && yearValue !== "all" && year !== Number(yearValue)) return;
 
@@ -766,7 +822,7 @@
   }
 
   function getVisiblePayments() {
-    let list = [...payments];
+    let list = getActivePayments();
 
     if (state.viewMode !== "year" && state.selectedYear !== "all") {
       const year = Number(state.selectedYear);
@@ -990,9 +1046,9 @@
   }
 
   function computeDefaultFx() {
-    const fromSummary =
-      numberOr(getSummaryValue("total", "fact_uah"), 0) /
-      numberOr(getSummaryValue("total", "fact_usd"), 1);
+    const summaryUah = sources.reduce((sum, entry) => sum + numberOr(getSummaryValue(entry, "total", "fact_uah"), 0), 0);
+    const summaryUsd = sources.reduce((sum, entry) => sum + numberOr(getSummaryValue(entry, "total", "fact_usd"), 0), 0);
+    const fromSummary = summaryUsd > 0 ? summaryUah / summaryUsd : 0;
     if (Number.isFinite(fromSummary) && fromSummary > 0) return round4(fromSummary);
 
     const rates = payments.map((p) => p.rate).filter((v) => typeof v === "number" && v > 0);
@@ -1025,7 +1081,7 @@
     if (item.flags && item.flags.initial) return "Перший внесок";
     const date = parseDate(item.due_date);
     if (!date) return item.due_label || `Платіж #${item.id}`;
-    return `${monthLong(date.getMonth() + 1)} ${date.getFullYear()}`;
+    return `${item.project_name}: ${monthLong(date.getMonth() + 1)} ${date.getFullYear()}`;
   }
 
   function quarterOfMonth(month) {
@@ -1111,8 +1167,8 @@
       .replace(/'/g, "&#039;");
   }
 
-  function getSummaryValue(group, key) {
-    const summary = source.summary;
+  function getSummaryValue(sourceEntry, group, key) {
+    const summary = sourceEntry && sourceEntry.summary;
     if (!summary || typeof summary !== "object") return null;
     const section = summary[group];
     if (!section || typeof section !== "object") return null;
@@ -1148,6 +1204,7 @@
       selectedYear: state.selectedYear,
       selectedMonth: state.selectedMonth,
       selectedId: state.selectedId,
+      selectedProjects: state.selectedProjects,
       fxRate: state.fxRate,
     };
     localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(payload));
@@ -1170,7 +1227,7 @@
     const snapshot = {
       version: 3,
       projectKey: PROJECT_KEY,
-      sourcePdf: source.source_pdf || "",
+      sourcePdf: sources.map((entry) => entry.source_pdf).filter(Boolean).join(", "),
       savedAt: new Date().toISOString(),
       settings: {
         currency: state.currency,
@@ -1178,6 +1235,7 @@
         selectedYear: state.selectedYear,
         selectedMonth: state.selectedMonth,
         selectedId: state.selectedId,
+        selectedProjects: state.selectedProjects,
         fxRate: state.fxRate,
       },
       overrides: state.overrides,
@@ -1205,6 +1263,10 @@
     }
     if (settings.selectedId && idToPayment.has(String(settings.selectedId))) {
       state.selectedId = String(settings.selectedId);
+    }
+    if (Array.isArray(settings.selectedProjects)) {
+      const valid = settings.selectedProjects.filter((key) => defaultSelectedProjects.includes(String(key)));
+      if (valid.length) state.selectedProjects = [...new Set(valid.map(String))];
     }
     if (toNumber(settings.fxRate) && toNumber(settings.fxRate) > 0) {
       state.fxRate = toNumber(settings.fxRate);

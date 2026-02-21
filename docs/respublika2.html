@@ -11,7 +11,21 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <script>
+      window.PAYMENTS_SOURCES = [];
+    </script>
+    <script src="payments-data.js"></script>
+    <script>
+      window.PAYMENTS_SOURCES.push(window.PAYMENTS_DATA);
+    </script>
     <script src="payments-data-republika2.js"></script>
+    <script>
+      window.PAYMENTS_SOURCES.push(window.PAYMENTS_DATA);
+    </script>
+    <script src="payments-data-nivki.js"></script>
+    <script>
+      window.PAYMENTS_SOURCES.push(window.PAYMENTS_DATA);
+    </script>
     <script src="calendar.js" defer></script>
   </head>
   <body>
@@ -26,10 +40,10 @@
           Клікайте по місяцях, змінюйте статус, додавайте нотатки і контролюйте залишок оплат у
           гривнях або доларах.
         </p>
-        <nav class="project-tabs" aria-label="Вибір об'єкта">
-          <a class="project-tab" href="./index.html">Республіка 1</a>
-          <a class="project-tab active" href="./respublika2.html">Республіка 2</a>
-          <a class="project-tab" href="./nivki.html">Нивки</a>
+        <nav class="project-tabs" aria-label="Фільтр об'єктів">
+          <button class="project-tab project-filter active" type="button" data-project-key="respublika1" aria-pressed="true">Республіка 1</button>
+          <button class="project-tab project-filter active" type="button" data-project-key="respublika2" aria-pressed="true">Республіка 2</button>
+          <button class="project-tab project-filter active" type="button" data-project-key="nivki" aria-pressed="true">Нивки</button>
         </nav>
 
         <div class="controls-row">
