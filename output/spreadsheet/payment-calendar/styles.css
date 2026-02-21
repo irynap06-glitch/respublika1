@@ -304,6 +304,30 @@ h1 {
   letter-spacing: 0.08em;
 }
 
+.mode-switch {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.mode-btn {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 7px 6px;
+  cursor: pointer;
+}
+
+.mode-btn.active {
+  background: #0f786b;
+  border-color: #0f786b;
+  color: #fff;
+}
+
 .calendar-panel {
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr);
@@ -569,6 +593,11 @@ h1 {
 
   .filter-stack {
     grid-template-columns: 1fr;
+  }
+
+  .mode-btn {
+    font-size: 0.8rem;
+    padding: 8px 4px;
   }
 
   .calendar-grid {

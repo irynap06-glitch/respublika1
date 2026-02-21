@@ -36,6 +36,7 @@
   const $summaryCount = document.getElementById("summaryCount");
 
   const $viewModeSelect = document.getElementById("viewModeSelect");
+  const $viewModeButtons = [...document.querySelectorAll(".mode-btn")];
   const $yearSelect = document.getElementById("yearSelect");
   const $monthSelect = document.getElementById("monthSelect");
   const $periodFilterLabel = document.getElementById("periodFilterLabel");
@@ -128,30 +129,30 @@
     });
 
     if ($viewModeSelect) {
-      $viewModeSelect.addEventListener("change", () => {
-        const next = $viewModeSelect.value;
-        state.viewMode = next === "quarter" || next === "year" ? next : "month";
-        if (state.viewMode === "year") {
-          state.selectedYear = "all";
-        }
-        state.selectedMonth = "all";
-        persistSettings();
-        renderAll();
-      });
+      const onModeSelect = () => applyViewMode($viewModeSelect.value);
+      $viewModeSelect.addEventListener("change", onModeSelect);
+      $viewModeSelect.addEventListener("input", onModeSelect);
     }
+    $viewModeButtons.forEach((btn) => {
+      btn.addEventListener("click", () => applyViewMode(btn.dataset.viewMode));
+    });
 
-    $yearSelect.addEventListener("change", () => {
+    const onYearChange = () => {
       state.selectedYear = $yearSelect.value || "all";
       ensureSelectedMonthInRange();
       persistSettings();
       renderAll();
-    });
+    };
+    $yearSelect.addEventListener("change", onYearChange);
+    $yearSelect.addEventListener("input", onYearChange);
 
-    $monthSelect.addEventListener("change", () => {
+    const onPeriodChange = () => {
       state.selectedMonth = $monthSelect.value || "all";
       persistSettings();
       renderAll();
-    });
+    };
+    $monthSelect.addEventListener("change", onPeriodChange);
+    $monthSelect.addEventListener("input", onPeriodChange);
 
     $calendarGrid.addEventListener("click", (event) => {
       if (state.viewMode !== "month") return;
@@ -402,6 +403,9 @@
     if ($viewModeSelect) {
       $viewModeSelect.value = state.viewMode;
     }
+    $viewModeButtons.forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.viewMode === state.viewMode);
+    });
 
     const yearCounts = new Map();
     payments.forEach((item) => {
@@ -451,6 +455,17 @@
     const searchLabel = state.search ? `, пошук: “${state.search}”` : "";
     const countLabel = state.viewMode === "month" ? "місяців" : state.viewMode === "quarter" ? "кварталів" : "років";
     $monthInfo.textContent = `Показано ${groupCount} ${countLabel}: ${yearLabel}, ${periodLabel}${searchLabel}`;
+  }
+
+  function applyViewMode(nextMode) {
+    const normalized = nextMode === "quarter" || nextMode === "year" ? nextMode : "month";
+    state.viewMode = normalized;
+    if (state.viewMode === "year") {
+      state.selectedYear = "all";
+    }
+    state.selectedMonth = "all";
+    persistSettings();
+    renderAll();
   }
 
   function getPeriodOptions(yearValue, mode) {
