@@ -599,7 +599,7 @@
   function renderAggregateCalendar(items, mode) {
     const groups = buildAggregateGroups(items, mode);
     const cards = groups.map((group) => {
-      const selectedAmount = state.currency === "usd" ? group.remainingUsd : group.remainingUah;
+      const selectedAmount = state.currency === "usd" ? group.scheduleUsd : group.scheduleUah;
       let statusClass = "unpaid";
       if (group.unpaidCount === 0 && group.paidCount > 0) {
         statusClass = "paid";
