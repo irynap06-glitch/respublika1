@@ -67,11 +67,10 @@
             <span>Пошук</span>
             <input id="searchInput" type="search" placeholder="Місяць, дата, статус, нотатка" />
           </label>
-
-          <button id="exportBackupBtn" class="ghost-btn" type="button">Експорт backup</button>
-          <button id="importBackupBtn" class="ghost-btn" type="button">Імпорт backup</button>
-          <button id="resetAllBtn" class="ghost-btn" type="button">Скинути мої зміни</button>
-          <input id="importBackupFile" type="file" accept="application/json" hidden />
+          <label class="field project-top-field">
+            <span>Проєкти</span>
+            <div id="projectFilter" class="project-filter"></div>
+          </label>
         </div>
       </header>
 
@@ -104,14 +103,6 @@
             <h2>Фільтри</h2>
           </div>
           <div class="filter-stack">
-            <label class="field compact-field">
-              <span>Проєкти</span>
-              <div id="projectFilter" class="project-filter"></div>
-            </label>
-            <label class="field compact-field">
-              <span>Категорії</span>
-              <div id="categoryFilter" class="category-filter"></div>
-            </label>
             <label class="field compact-field">
               <span>Режим</span>
               <div class="mode-switch" role="group" aria-label="Режим перегляду">
@@ -199,6 +190,18 @@
             </div>
           </form>
         </aside>
+      </section>
+
+      <section class="service-tools" aria-label="Сервісні інструменти">
+        <details>
+          <summary>Сервісні інструменти</summary>
+          <div class="service-tools-grid">
+            <button id="exportBackupBtn" class="ghost-btn" type="button">Експорт backup</button>
+            <button id="importBackupBtn" class="ghost-btn" type="button">Імпорт backup</button>
+            <button id="resetAllBtn" class="ghost-btn" type="button">Скинути мої зміни</button>
+            <input id="importBackupFile" type="file" accept="application/json" hidden />
+          </div>
+        </details>
       </section>
     </main>
   </body>
