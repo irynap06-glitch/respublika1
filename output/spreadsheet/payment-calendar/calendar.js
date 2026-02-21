@@ -1,7 +1,9 @@
 (() => {
-  const datasets = resolveDatasets();
-  const datasetKeys = orderProjectKeys(Object.keys(datasets || {}));
-  if (!datasetKeys.length) {
+  const reportDb = resolveReportDatabase();
+  const payments = normalizeDatabaseRows(reportDb);
+  const projectsByKey = buildProjectMap(reportDb, payments);
+  const datasetKeys = orderProjectKeys(Object.keys(projectsByKey || {}));
+  if (!payments.length || !datasetKeys.length) {
     document.body.innerHTML = '<p style="padding:24px">Не знайдено дані платежів.</p>';
     return;
   }
@@ -78,31 +80,14 @@
   const $importBackupBtn = document.getElementById("importBackupBtn");
   const $importBackupFile = document.getElementById("importBackupFile");
   const $resetAllBtn = document.getElementById("resetAllBtn");
+  const $exportDbCsvBtn = document.getElementById("exportDbCsvBtn");
+  const $exportDbTxtBtn = document.getElementById("exportDbTxtBtn");
   const $currencyButtons = [...document.querySelectorAll(".currency-btn")];
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const startOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
-  const payments = [];
-  datasetKeys.forEach((projectKey) => {
-    const dataset = datasets[projectKey];
-    const rows = Array.isArray(dataset && dataset.payments) ? dataset.payments : [];
-    rows.forEach((item, idx) => {
-      const rawId = item && item.id !== undefined && item.id !== null ? String(item.id) : String(idx);
-      const uid = `${projectKey}:${rawId}`;
-      const categoryKey = normalizeCategoryKey(item.category_key || item.category || item.category_name);
-      payments.push({
-        ...item,
-        uid,
-        raw_id: rawId,
-        project_key: projectKey,
-        project_name: dataset.project_name || projectKey,
-        category_key: categoryKey,
-        category_name: item.category_name || categoryLabelFromKey(categoryKey),
-      });
-    });
-  });
   const idToPayment = new Map(payments.map((item) => [item.uid, item]));
   const categoryKeys = orderCategoryKeys([
     ...new Set(payments.map((item) => normalizeCategoryKey(item.category_key || CATEGORY_DEFAULT))),
@@ -297,6 +282,17 @@
       renderAll();
     });
 
+    if ($exportDbCsvBtn) {
+      $exportDbCsvBtn.addEventListener("click", () => {
+        exportDatabase("csv");
+      });
+    }
+    if ($exportDbTxtBtn) {
+      $exportDbTxtBtn.addEventListener("click", () => {
+        exportDatabase("txt");
+      });
+    }
+
     $exportBackupBtn.addEventListener("click", () => {
       const snapshot = buildSnapshot();
       const json = JSON.stringify(snapshot, null, 2);
@@ -340,6 +336,158 @@
     });
   }
 
+  function exportDatabase(format) {
+    const normalizedFormat = format === "txt" ? "txt" : "csv";
+    const rows = buildDatabaseExportRows();
+    if (!rows.length) {
+      window.alert("Немає даних для експорту.");
+      return;
+    }
+
+    const stamp = new Date().toISOString().replace(/[-:]/g, "").replace("T", "-").replace(/\..*$/, "");
+    if (normalizedFormat === "txt") {
+      const header = [
+        "row_id",
+        "project_key",
+        "project_name",
+        "date",
+        "month",
+        "quarter",
+        "year",
+        "entry_kind",
+        "category_key",
+        "category_name",
+        "status",
+        "currency_mode",
+        "fx_rate_uah_per_usd",
+        "scheduled_amount_usd",
+        "scheduled_amount_uah",
+        "paid_amount_usd",
+        "paid_amount_uah",
+        "exclude_from_summary",
+        "payment_date",
+        "title",
+        "note",
+      ];
+      const lines = [header.join("\t")];
+      rows.forEach((row) => {
+        lines.push(
+          [
+            row.row_id,
+            row.project_key,
+            row.project_name,
+            row.date,
+            row.month,
+            row.quarter,
+            row.year,
+            row.entry_kind,
+            row.category_key,
+            row.category_name,
+            row.status,
+            row.currency_mode,
+            row.fx_rate_uah_per_usd,
+            row.scheduled_amount_usd,
+            row.scheduled_amount_uah,
+            row.paid_amount_usd,
+            row.paid_amount_uah,
+            row.exclude_from_summary,
+            row.payment_date,
+            row.title,
+            row.note,
+          ]
+            .map((v) => String(v === null || v === undefined ? "" : v))
+            .join("\t")
+        );
+      });
+      downloadFile(`payment-db-${PROJECT_KEY}-${stamp}.txt`, lines.join("\n"), "text/plain;charset=utf-8");
+      return;
+    }
+
+    const csvColumns = [
+      "row_id",
+      "project_key",
+      "project_name",
+      "date",
+      "month",
+      "quarter",
+      "year",
+      "entry_kind",
+      "category_key",
+      "category_name",
+      "status",
+      "currency_mode",
+      "fx_rate_uah_per_usd",
+      "scheduled_amount_usd",
+      "scheduled_amount_uah",
+      "paid_amount_usd",
+      "paid_amount_uah",
+      "exclude_from_summary",
+      "payment_date",
+      "title",
+      "note",
+    ];
+    const csvLines = [csvColumns.join(",")];
+    rows.forEach((row) => {
+      const line = csvColumns.map((key) => toCsvCell(row[key])).join(",");
+      csvLines.push(line);
+    });
+    downloadFile(`payment-db-${PROJECT_KEY}-${stamp}.csv`, csvLines.join("\n"), "text/csv;charset=utf-8");
+  }
+
+  function buildDatabaseExportRows() {
+    const sorted = [...payments].sort((a, b) => {
+      const da = parseDate(a.due_date);
+      const db = parseDate(b.due_date);
+      if (da && db) return da - db;
+      return String(a.uid).localeCompare(String(b.uid), "uk");
+    });
+
+    return sorted.map((item) => {
+      const view = buildView(item);
+      const year = getPaymentYear(item);
+      const month = getPaymentMonth(item) || 1;
+      return {
+        row_id: item.uid,
+        project_key: item.project_key,
+        project_name: item.project_name || item.project_key,
+        date: item.due_date || "",
+        month,
+        quarter: quarterOfMonth(month),
+        year,
+        entry_kind: normalizeCategoryKey(item.category_key) === "income" ? "income" : "expense",
+        category_key: normalizeCategoryKey(item.category_key),
+        category_name: item.category_name || categoryLabelFromKey(item.category_key),
+        status: view.status,
+        currency_mode: String(item.currency_mode || "USD"),
+        fx_rate_uah_per_usd: round4(effectiveRate(item)),
+        scheduled_amount_usd: round2(view.scheduleUsd),
+        scheduled_amount_uah: round2(view.scheduleUah),
+        paid_amount_usd: round2(view.paidUsd),
+        paid_amount_uah: round2(view.paidUah),
+        exclude_from_summary: Boolean(item.exclude_from_summary),
+        payment_date: view.paymentDate || "",
+        title: item.title || readablePaymentTitle(item),
+        note: view.note || "",
+      };
+    });
+  }
+
+  function toCsvCell(value) {
+    const text = String(value === null || value === undefined ? "" : value);
+    if (!/[",\n]/.test(text)) return text;
+    return `"${text.replace(/"/g, "\"\"")}"`;
+  }
+
+  function downloadFile(filename, content, mimeType) {
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = filename;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
   function renderAll() {
     ensureProjectSelection();
     ensureCategorySelection();
@@ -360,7 +508,7 @@
     const chips = [
       `<button type="button" class="project-chip ${allActive ? "active" : ""}" data-project="all">Всі</button>`,
       ...datasetKeys.map((key) => {
-        const name = datasets[key] && datasets[key].project_name ? datasets[key].project_name : key;
+        const name = projectsByKey[key] && projectsByKey[key].project_name ? projectsByKey[key].project_name : key;
         const count = payments.filter((item) => item.project_key === key).length;
         return `<button type="button" class="project-chip ${selected.has(key) ? "active" : ""}" data-project="${key}">${escapeHtml(
           name
@@ -476,7 +624,10 @@
         unitUsd = numberOr(calc.unitUsd, 0);
         unitUah = numberOr(calc.unitUah, 0);
       }
-      const projectName = datasets[projectKey] && datasets[projectKey].project_name ? datasets[projectKey].project_name : projectKey;
+      const projectName =
+        projectsByKey[projectKey] && projectsByKey[projectKey].project_name
+          ? projectsByKey[projectKey].project_name
+          : projectKey;
       labels.push(multipleProjects ? `${projectName}: ${calc.label}` : calc.label);
     });
 
@@ -1596,7 +1747,59 @@
       .join(" ");
   }
 
-  function resolveDatasets() {
+  function resolveReportDatabase() {
+    if (window.PAYMENTS_DB && Array.isArray(window.PAYMENTS_DB.rows)) {
+      return window.PAYMENTS_DB;
+    }
+
+    const datasets = resolveLegacyDatasets();
+    const rows = [];
+    const projects = {};
+    Object.keys(datasets).forEach((projectKey) => {
+      const dataset = datasets[projectKey] || {};
+      const projectName = dataset.project_name || projectKey;
+      projects[projectKey] = {
+        project_key: projectKey,
+        project_name: projectName,
+      };
+
+      const sourceRows = Array.isArray(dataset.payments) ? dataset.payments : [];
+      sourceRows.forEach((item, idx) => {
+        const rawId = item && item.id !== undefined && item.id !== null ? String(item.id) : String(idx);
+        const dueDate = item.due_date || null;
+        const year = numberOr(item.period_year, dueDate ? Number(String(dueDate).slice(0, 4)) : null);
+        const month = numberOr(item.period_month, dueDate ? Number(String(dueDate).slice(5, 7)) : null);
+        const categoryKey = normalizeCategoryKey(item.category_key || item.category || item.category_name);
+        const entryKind = categoryKey === "income" ? "income" : "expense";
+        rows.push({
+          ...item,
+          row_id: `${projectKey}:${rawId}`,
+          source_id: rawId,
+          project_key: projectKey,
+          project_name: projectName,
+          date: dueDate,
+          year,
+          month,
+          quarter: month ? quarterOfMonth(month) : null,
+          category_key: categoryKey,
+          category_name: item.category_name || categoryLabelFromKey(categoryKey),
+          entry_kind: entryKind,
+          fx_rate_uah_per_usd: item.rate ?? null,
+          paid_usd: item.fact_usd ?? null,
+          paid_uah: item.fact_uah ?? null,
+        });
+      });
+    });
+
+    return {
+      schema_version: 1,
+      generated_at: new Date().toISOString(),
+      projects,
+      rows,
+    };
+  }
+
+  function resolveLegacyDatasets() {
     const out = {};
     const primary = window.PAYMENTS_DATA;
     const existing = window.PAYMENTS_DATASETS;
@@ -1611,6 +1814,75 @@
       if (!out[key]) out[key] = primary;
     }
     return out;
+  }
+
+  function normalizeDatabaseRows(reportDatabase) {
+    const rows = Array.isArray(reportDatabase && reportDatabase.rows) ? reportDatabase.rows : [];
+    return rows.map((item, idx) => {
+      const projectKey = String(item.project_key || inferKeyFromName(item.project_name) || "default");
+      const rawId =
+        item && item.raw_id !== undefined && item.raw_id !== null
+          ? String(item.raw_id)
+          : item && item.source_id !== undefined && item.source_id !== null
+            ? String(item.source_id)
+            : item && item.id !== undefined && item.id !== null
+              ? String(item.id)
+              : String(idx);
+      const uid = String(item.row_id || `${projectKey}:${rawId}`);
+
+      const dueDate = item.due_date || item.date || null;
+      const periodYear = numberOr(item.period_year, numberOr(item.year, dueDate ? Number(String(dueDate).slice(0, 4)) : null));
+      const periodMonth = numberOr(
+        item.period_month,
+        numberOr(item.month, dueDate ? Number(String(dueDate).slice(5, 7)) : null)
+      );
+      const categoryKey = normalizeCategoryKey(item.category_key || item.category || item.category_name);
+
+      return {
+        ...item,
+        uid,
+        raw_id: rawId,
+        id: item.id !== undefined && item.id !== null ? item.id : rawId,
+        project_key: projectKey,
+        project_name: item.project_name || projectKey,
+        due_date: dueDate,
+        due_label: item.due_label || (dueDate ? formatDate(dueDate) : ""),
+        period_year: periodYear,
+        period_month: periodMonth,
+        category_key: categoryKey,
+        category_name: item.category_name || categoryLabelFromKey(categoryKey),
+        status: item.status || "unpaid",
+        payment_date: item.payment_date || null,
+        schedule_usd: numberOr(toNumber(item.schedule_usd), numberOr(toNumber(item.fact_usd), 0)),
+        fact_usd: toNumber(item.fact_usd),
+        fact_uah: toNumber(item.fact_uah),
+        rate: numberOr(toNumber(item.rate), toNumber(item.fx_rate_uah_per_usd)),
+        exclude_from_summary: Boolean(item.exclude_from_summary),
+      };
+    });
+  }
+
+  function buildProjectMap(reportDatabase, rows) {
+    const projects = {};
+    if (reportDatabase && reportDatabase.projects && typeof reportDatabase.projects === "object") {
+      Object.keys(reportDatabase.projects).forEach((key) => {
+        const project = reportDatabase.projects[key] || {};
+        projects[key] = {
+          project_key: key,
+          project_name: project.project_name || key,
+        };
+      });
+    }
+    rows.forEach((row) => {
+      const key = String(row.project_key || "default");
+      if (!projects[key]) {
+        projects[key] = {
+          project_key: key,
+          project_name: row.project_name || key,
+        };
+      }
+    });
+    return projects;
   }
 
   function inferKeyFromName(name) {

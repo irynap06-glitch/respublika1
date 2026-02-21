@@ -11,22 +11,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
-    <script src="payments-data.js"></script>
-    <script>
-      window.PAYMENTS_DATASETS = window.PAYMENTS_DATASETS || {};
-      window.PAYMENTS_DATASETS.respublika1 = window.PAYMENTS_DATA;
-    </script>
-    <script src="payments-data-republika2.js"></script>
-    <script>
-      window.PAYMENTS_DATASETS = window.PAYMENTS_DATASETS || {};
-      window.PAYMENTS_DATASETS.respublika2 = window.PAYMENTS_DATA;
-    </script>
-    <script src="payments-data-nivki.js"></script>
-    <script>
-      window.PAYMENTS_DATASETS = window.PAYMENTS_DATASETS || {};
-      window.PAYMENTS_DATASETS.nivki = window.PAYMENTS_DATA;
-      window.PAYMENTS_DATA = window.PAYMENTS_DATASETS.respublika1 || window.PAYMENTS_DATA;
-    </script>
+    <script src="report-db.js"></script>
     <script src="calendar.js" defer></script>
   </head>
   <body>
@@ -199,6 +184,8 @@
           <summary>Сервісні інструменти</summary>
           <div class="service-tools-grid">
             <button id="exportBackupBtn" class="ghost-btn" type="button">Експорт backup</button>
+            <button id="exportDbCsvBtn" class="ghost-btn" type="button">Експорт БД CSV</button>
+            <button id="exportDbTxtBtn" class="ghost-btn" type="button">Експорт БД TXT</button>
             <button id="importBackupBtn" class="ghost-btn" type="button">Імпорт backup</button>
             <button id="resetAllBtn" class="ghost-btn" type="button">Скинути мої зміни</button>
             <input id="importBackupFile" type="file" accept="application/json" hidden />
