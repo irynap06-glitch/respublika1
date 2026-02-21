@@ -730,14 +730,10 @@
       const projectText =
         state.selectedProjects.length > 1 ? `Проєкт: ${escapeHtml(item.project_name || item.project_key)}` : "";
       const categoryText = `Категорія: ${escapeHtml(item.category_name || categoryLabelFromKey(item.category_key))}`;
-      const plannedText = `По графіку: ${formatCurrency(view.scheduleUsd, "usd", {
-        alwaysSign: incomeCategory,
-      })} / ${formatCurrency(view.scheduleUah, "uah", { alwaysSign: incomeCategory })}`;
-      const paidText = `Оплачено: ${formatCurrency(view.paidUsd, "usd", { alwaysSign: incomeCategory })} / ${formatCurrency(
-        view.paidUah,
-        "uah",
-        { alwaysSign: incomeCategory }
-      )}`;
+      const plannedAmount = state.currency === "usd" ? view.scheduleUsd : view.scheduleUah;
+      const paidAmount = state.currency === "usd" ? view.paidUsd : view.paidUah;
+      const plannedText = `По графіку: ${formatCurrency(plannedAmount, state.currency, { alwaysSign: incomeCategory })}`;
+      const paidText = `Оплачено: ${formatCurrency(paidAmount, state.currency, { alwaysSign: incomeCategory })}`;
       const paymentDateText = view.paymentDate ? `Оплата: ${formatDate(view.paymentDate)}` : "Дата оплати не вказана";
       const note = view.note || (item.flags && item.flags.early ? "Позначено як достроково в джерелі." : "");
       const monthIndexText =
@@ -772,6 +768,9 @@
     const groups = buildAggregateGroups(items, mode);
     const cards = groups.map((group) => {
       const selectedAmount = state.currency === "usd" ? group.remainingUsd : group.remainingUah;
+      const scheduleAmount = state.currency === "usd" ? group.scheduleUsd : group.scheduleUah;
+      const paidAmount = state.currency === "usd" ? group.paidUsd : group.paidUah;
+      const remainingAmount = state.currency === "usd" ? group.remainingUsd : group.remainingUah;
       let statusClass = "unpaid";
       if (group.unpaidCount === 0 && group.paidCount > 0) {
         statusClass = "paid";
@@ -788,18 +787,9 @@
             }</span>
           </div>
           <div class="card-amount">${formatCurrency(selectedAmount, state.currency)}</div>
-          <p class="card-meta">По графіку: ${formatCurrency(group.scheduleUsd, "usd")} / ${formatCurrency(
-            group.scheduleUah,
-            "uah"
-          )}</p>
-          <p class="card-meta">Оплачено: ${formatCurrency(group.paidUsd, "usd")} / ${formatCurrency(
-            group.paidUah,
-            "uah"
-          )}</p>
-          <p class="card-meta">Залишок: ${formatCurrency(group.remainingUsd, "usd")} / ${formatCurrency(
-            group.remainingUah,
-            "uah"
-          )}</p>
+          <p class="card-meta">По графіку: ${formatCurrency(scheduleAmount, state.currency)}</p>
+          <p class="card-meta">Оплачено: ${formatCurrency(paidAmount, state.currency)}</p>
+          <p class="card-meta">Залишок: ${formatCurrency(remainingAmount, state.currency)}</p>
           <p class="card-meta">Періодів у групі: ${group.count}</p>
         </article>
       `;
@@ -899,22 +889,23 @@
 
     const view = buildView(item);
     const override = state.overrides[state.selectedId] || {};
+    const incomeCategory = normalizeCategoryKey(item.category_key) === "income";
     const selectedRemainingUsd = Math.max(numberOr(view.scheduleUsd, 0) - numberOr(view.paidUsd, 0), 0);
     const selectedRemainingUah = Math.max(numberOr(view.scheduleUah, 0) - numberOr(view.paidUah, 0), 0);
+    const selectedSchedule = state.currency === "usd" ? view.scheduleUsd : view.scheduleUah;
+    const selectedPaid = state.currency === "usd" ? view.paidUsd : view.paidUah;
+    const selectedRemaining = state.currency === "usd" ? selectedRemainingUsd : selectedRemainingUah;
 
     const projectPrefix = state.selectedProjects.length > 1 ? `[${item.project_name}] ` : "";
     const categoryPrefix = categoryKeys.length > 1 ? `[${item.category_name || categoryLabelFromKey(item.category_key)}] ` : "";
     $detailTitle.textContent = `${projectPrefix}${categoryPrefix}${readablePaymentTitle(item)}`;
-    $detailMeta.textContent = `По графіку: ${formatCurrency(view.scheduleUsd, "usd")} / ${formatCurrency(
-      view.scheduleUah,
-      "uah"
-    )}, оплачено: ${formatCurrency(view.paidUsd, "usd")} / ${formatCurrency(
-      view.paidUah,
-      "uah"
-    )}, залишок: ${formatCurrency(selectedRemainingUsd, "usd")} / ${formatCurrency(
-      selectedRemainingUah,
-      "uah"
-    )}${item.rate ? `, курс: ${item.rate}` : ""}, категорія: ${item.category_name || categoryLabelFromKey(item.category_key)}`;
+    $detailMeta.textContent = `По графіку: ${formatCurrency(selectedSchedule, state.currency, {
+      alwaysSign: incomeCategory,
+    })}, оплачено: ${formatCurrency(selectedPaid, state.currency, {
+      alwaysSign: incomeCategory,
+    })}, залишок: ${formatCurrency(selectedRemaining, state.currency, {
+      alwaysSign: incomeCategory,
+    })}${item.rate ? `, курс: ${item.rate}` : ""}, категорія: ${item.category_name || categoryLabelFromKey(item.category_key)}`;
 
     $statusInput.value = view.status;
     $statusInput.disabled = isPastPeriod(item);
