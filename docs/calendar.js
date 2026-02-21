@@ -268,7 +268,8 @@
   }
 
   function renderSummary() {
-    const views = payments.map((payment) => buildView(payment));
+    const summaryPayments = payments.filter((payment) => !payment.exclude_from_summary);
+    const views = summaryPayments.map((payment) => buildView(payment));
 
     const paid = views.reduce(
       (sum, view) => sum + (state.currency === "usd" ? view.paidUsd : view.paidUah),
@@ -289,7 +290,7 @@
       state.earlyTariffPercent
     )}%)`;
     $summaryTotal.textContent = formatCurrency(total, state.currency);
-    $summaryCount.textContent = `${paidCount}/${views.length} оплачено${
+    $summaryCount.textContent = `${paidCount}/${summaryPayments.length} оплачено${
       overdueCount ? `, прострочено: ${overdueCount}` : ""
     }${saving > 0 ? `, економія: ${formatCurrency(saving, state.currency)}` : ""}`;
   }
