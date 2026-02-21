@@ -177,18 +177,23 @@ h1 {
 }
 
 .currency-switch {
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1px;
+  min-width: 0;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 12px;
   overflow: hidden;
-  background: #fff;
+  background: var(--line);
 }
 
 .currency-btn {
   border: 0;
-  padding: 10px 18px;
-  background: transparent;
+  padding: 9px 10px;
+  background: #fff;
   font-weight: 700;
+  font-size: 0.8rem;
+  line-height: 1.1;
   color: var(--ink-soft);
   cursor: pointer;
 }
@@ -588,6 +593,10 @@ h1 {
   .mode-top-field {
     grid-column: 1 / -1;
   }
+
+  .currency-switch {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 920px) {
@@ -609,6 +618,10 @@ h1 {
   .category-top-field,
   .mode-top-field {
     grid-column: 1 / -1;
+  }
+
+  .currency-switch {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .workspace {
@@ -656,6 +669,10 @@ h1 {
   .category-top-field,
   .mode-top-field {
     grid-column: auto;
+  }
+
+  .currency-switch {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .field input,

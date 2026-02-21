@@ -50,7 +50,10 @@
         <div class="controls-row">
           <div class="currency-switch" role="group" aria-label="Валюта">
             <button type="button" class="currency-btn" data-currency="usd">USD</button>
+            <button type="button" class="currency-btn" data-currency="usd_thousand">тис. USD</button>
             <button type="button" class="currency-btn" data-currency="uah">UAH</button>
+            <button type="button" class="currency-btn" data-currency="uah_thousand">тис. UAH</button>
+            <button type="button" class="currency-btn" data-currency="uah_million">млн UAH</button>
           </div>
 
           <label class="field fx-field">
@@ -165,12 +168,12 @@
 
             <label class="field">
               <span>Оплачено (USD)</span>
-              <input id="paidUsdInput" type="number" step="0.01" min="0" placeholder="Авто" />
+              <input id="paidUsdInput" type="number" step="1" min="0" placeholder="Авто" />
             </label>
 
             <label class="field">
               <span>Оплачено (UAH)</span>
-              <input id="paidUahInput" type="number" step="0.01" min="0" placeholder="Авто" />
+              <input id="paidUahInput" type="number" step="1" min="0" placeholder="Авто" />
             </label>
 
             <label class="field">

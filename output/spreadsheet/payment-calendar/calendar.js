@@ -25,6 +25,13 @@
     tax_notary: "Податки і нотаріус",
     income: "Доходи",
   };
+  const CURRENCY_MODES = {
+    usd: { base: "usd", scale: 1, suffix: "" },
+    usd_thousand: { base: "usd", scale: 1000, suffix: " тис." },
+    uah: { base: "uah", scale: 1, suffix: "" },
+    uah_thousand: { base: "uah", scale: 1000, suffix: " тис." },
+    uah_million: { base: "uah", scale: 1000000, suffix: " млн" },
+  };
 
   const STATUS_ORDER = ["unpaid", "paid", "early"];
   const STATUS_LABELS = {
@@ -141,7 +148,7 @@
   function bindEvents() {
     $currencyButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
-        state.currency = btn.dataset.currency === "uah" ? "uah" : "usd";
+        state.currency = normalizeCurrencyMode(btn.dataset.currency);
         persistSettings();
         renderAll();
       });
@@ -387,15 +394,19 @@
   }
 
   function renderCurrencyControls() {
+    const mode = normalizeCurrencyMode(state.currency);
+    state.currency = mode;
     $currencyButtons.forEach((btn) => {
-      btn.classList.toggle("active", btn.dataset.currency === state.currency);
+      btn.classList.toggle("active", normalizeCurrencyMode(btn.dataset.currency) === mode);
     });
     $fxRateInput.value = state.fxRate.toFixed(4);
     if ($earlyTariffInput) {
-      const baseValue = state.currency === "usd" ? state.earlyUnitUsd : state.earlyUnitUah;
-      $earlyTariffInput.value = round2(baseValue);
+      const baseValue = selectByCurrencyMode(state.earlyUnitUsd, state.earlyUnitUah, mode);
+      const scaled = convertDisplayAmount(baseValue, mode);
+      $earlyTariffInput.value = round0(scaled);
       $earlyTariffInput.readOnly = true;
-      $earlyTariffInput.title = "Базова ціна для розрахунку дострокового закриття";
+      const unitLabel = currencyModeLabel(mode);
+      $earlyTariffInput.title = `Базова ціна для розрахунку дострокового закриття (${unitLabel})`;
     }
   }
 
@@ -416,12 +427,9 @@
         isEarlySettlementEligible(payment) && (view.scheduleUsd > 0.009 || view.scheduleUah > 0.009)
     );
 
-    const paid = paidRows.reduce(
-      (sum, row) => sum + (state.currency === "usd" ? row.view.paidUsd : row.view.paidUah),
-      0
-    );
+    const paid = paidRows.reduce((sum, row) => sum + selectByCurrencyMode(row.view.paidUsd, row.view.paidUah), 0);
     const remainingPlan = futureUnpaidRows.reduce(
-      (sum, row) => sum + (state.currency === "usd" ? row.view.scheduleUsd : row.view.scheduleUah),
+      (sum, row) => sum + selectByCurrencyMode(row.view.scheduleUsd, row.view.scheduleUah),
       0
     );
 
@@ -429,10 +437,9 @@
     state.earlyUnitUsd = earlyCalc.unitUsd;
     state.earlyUnitUah = earlyCalc.unitUah;
 
-    const futureCount = payableFutureRows.length;
     const remainingEarlyUsd = earlyCalc.totalUsd;
     const remainingEarlyUah = earlyCalc.totalUah;
-    const remainingEarly = state.currency === "usd" ? remainingEarlyUsd : remainingEarlyUah;
+    const remainingEarly = selectByCurrencyMode(remainingEarlyUsd, remainingEarlyUah);
     const total = paid + remainingPlan;
 
     const paidCount = paidRows.length;
@@ -725,13 +732,13 @@
       const selected = state.selectedId === item.uid ? "selected" : "";
       const overdue = view.overdue ? "overdue" : "";
       const incomeCategory = normalizeCategoryKey(item.category_key) === "income";
-      const amount = state.currency === "usd" ? view.amountUsd : view.amountUah;
+      const amount = selectByCurrencyMode(view.amountUsd, view.amountUah);
       const amountText = formatCurrency(amount, state.currency, { alwaysSign: incomeCategory });
       const projectText =
         state.selectedProjects.length > 1 ? `Проєкт: ${escapeHtml(item.project_name || item.project_key)}` : "";
       const categoryText = `Категорія: ${escapeHtml(item.category_name || categoryLabelFromKey(item.category_key))}`;
-      const plannedAmount = state.currency === "usd" ? view.scheduleUsd : view.scheduleUah;
-      const paidAmount = state.currency === "usd" ? view.paidUsd : view.paidUah;
+      const plannedAmount = selectByCurrencyMode(view.scheduleUsd, view.scheduleUah);
+      const paidAmount = selectByCurrencyMode(view.paidUsd, view.paidUah);
       const plannedText = `По графіку: ${formatCurrency(plannedAmount, state.currency, { alwaysSign: incomeCategory })}`;
       const paidText = `Оплачено: ${formatCurrency(paidAmount, state.currency, { alwaysSign: incomeCategory })}`;
       const paymentDateText = view.paymentDate ? `Оплата: ${formatDate(view.paymentDate)}` : "Дата оплати не вказана";
@@ -767,9 +774,9 @@
   function renderAggregateCalendar(items, mode) {
     const groups = buildAggregateGroups(items, mode);
     const cards = groups.map((group) => {
-      const scheduleAmount = state.currency === "usd" ? group.scheduleUsd : group.scheduleUah;
-      const paidAmount = state.currency === "usd" ? group.paidUsd : group.paidUah;
-      const remainingAmount = state.currency === "usd" ? group.remainingUsd : group.remainingUah;
+      const scheduleAmount = selectByCurrencyMode(group.scheduleUsd, group.scheduleUah);
+      const paidAmount = selectByCurrencyMode(group.paidUsd, group.paidUah);
+      const remainingAmount = selectByCurrencyMode(group.remainingUsd, group.remainingUah);
       const primaryIsPaid = group.unpaidCount === 0;
       const selectedAmount = primaryIsPaid ? paidAmount : remainingAmount;
       const primaryLabel = primaryIsPaid ? "Оплачено" : "Залишок";
@@ -895,9 +902,9 @@
     const incomeCategory = normalizeCategoryKey(item.category_key) === "income";
     const selectedRemainingUsd = Math.max(numberOr(view.scheduleUsd, 0) - numberOr(view.paidUsd, 0), 0);
     const selectedRemainingUah = Math.max(numberOr(view.scheduleUah, 0) - numberOr(view.paidUah, 0), 0);
-    const selectedSchedule = state.currency === "usd" ? view.scheduleUsd : view.scheduleUah;
-    const selectedPaid = state.currency === "usd" ? view.paidUsd : view.paidUah;
-    const selectedRemaining = state.currency === "usd" ? selectedRemainingUsd : selectedRemainingUah;
+    const selectedSchedule = selectByCurrencyMode(view.scheduleUsd, view.scheduleUah);
+    const selectedPaid = selectByCurrencyMode(view.paidUsd, view.paidUah);
+    const selectedRemaining = selectByCurrencyMode(selectedRemainingUsd, selectedRemainingUah);
 
     const projectPrefix = state.selectedProjects.length > 1 ? `[${item.project_name}] ` : "";
     const categoryPrefix = categoryKeys.length > 1 ? `[${item.category_name || categoryLabelFromKey(item.category_key)}] ` : "";
@@ -926,8 +933,8 @@
         : item.payment_date || "";
     $noteInput.value = override.note || "";
 
-    $paidUsdInput.placeholder = view.paidUsd > 0 ? String(round2(view.paidUsd)) : "Авто";
-    $paidUahInput.placeholder = view.paidUah > 0 ? String(round2(view.paidUah)) : "Авто";
+    $paidUsdInput.placeholder = view.paidUsd > 0 ? String(round0(view.paidUsd)) : "Авто";
+    $paidUahInput.placeholder = view.paidUah > 0 ? String(round0(view.paidUah)) : "Авто";
 
     $detailEmpty.hidden = true;
     $detailForm.hidden = false;
@@ -1267,15 +1274,21 @@
     return `${dd}.${mm}.${yyyy}`;
   }
 
-  function formatCurrency(value, currencyKey, options = {}) {
+  function formatCurrency(value, currencyMode, options = {}) {
     const alwaysSign = Boolean(options.alwaysSign);
-    const code = currencyKey === "uah" ? "UAH" : "USD";
-    return new Intl.NumberFormat("uk-UA", {
+    const mode = normalizeCurrencyMode(currencyMode);
+    const meta = CURRENCY_MODES[mode] || CURRENCY_MODES.usd;
+    const code = meta.base === "uah" ? "UAH" : "USD";
+    const scaledValue = convertDisplayAmount(value, mode);
+    const roundedValue = round0(scaledValue);
+    const formatted = new Intl.NumberFormat("uk-UA", {
       style: "currency",
       currency: code,
-      maximumFractionDigits: 2,
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0,
       signDisplay: alwaysSign ? "always" : "auto",
-    }).format(numberOr(value, 0));
+    }).format(roundedValue);
+    return meta.suffix ? `${formatted}${meta.suffix}` : formatted;
   }
 
   function numberOr(value, fallback) {
@@ -1306,6 +1319,37 @@
 
   function round4(value) {
     return Math.round(numberOr(value, 0) * 10000) / 10000;
+  }
+
+  function round0(value) {
+    return Math.round(numberOr(value, 0));
+  }
+
+  function normalizeCurrencyMode(raw) {
+    const key = String(raw || "").trim().toLowerCase();
+    return CURRENCY_MODES[key] ? key : "usd";
+  }
+
+  function currencyModeLabel(mode) {
+    const normalized = normalizeCurrencyMode(mode);
+    if (normalized === "usd") return "USD";
+    if (normalized === "usd_thousand") return "тис. USD";
+    if (normalized === "uah") return "UAH";
+    if (normalized === "uah_thousand") return "тис. UAH";
+    if (normalized === "uah_million") return "млн UAH";
+    return "USD";
+  }
+
+  function selectByCurrencyMode(usdValue, uahValue, mode = state.currency) {
+    const normalized = normalizeCurrencyMode(mode);
+    const meta = CURRENCY_MODES[normalized] || CURRENCY_MODES.usd;
+    return meta.base === "uah" ? numberOr(uahValue, 0) : numberOr(usdValue, 0);
+  }
+
+  function convertDisplayAmount(value, mode = state.currency) {
+    const normalized = normalizeCurrencyMode(mode);
+    const meta = CURRENCY_MODES[normalized] || CURRENCY_MODES.usd;
+    return numberOr(value, 0) / numberOr(meta.scale, 1);
   }
 
   function isSettledStatus(status) {
@@ -1372,8 +1416,8 @@
 
   function applySettings(settings) {
     if (!settings || typeof settings !== "object") return;
-    if (settings.currency === "usd" || settings.currency === "uah") {
-      state.currency = settings.currency;
+    if (typeof settings.currency === "string") {
+      state.currency = normalizeCurrencyMode(settings.currency);
     }
     if (Array.isArray(settings.selectedProjects)) {
       state.selectedProjects = settings.selectedProjects.filter((key) => datasetKeys.includes(String(key)));
