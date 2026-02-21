@@ -2,7 +2,7 @@ window.PAYMENTS_DATA = {
   "project_key": "respublika2",
   "project_name": "Республіка 2",
   "apartment": "33.3 м², 32%",
-  "source_pdf": "/Users/irynaparfeniuk/Downloads/33,3м2 графік оплат 32% .pdf",
+  "source_pdf": "SRC-R2-33.3M2-32-PAYMENT-SCHEDULE.pdf",
   "generated_at": "2026-02-21",
   "summary": {
     "total": {
@@ -1459,4 +1459,5 @@ window.PAYMENTS_DATA = {
     }
   ],
   "summary_basis": "summary excludes rows where exclude_from_summary=true"
-};
+}
+;

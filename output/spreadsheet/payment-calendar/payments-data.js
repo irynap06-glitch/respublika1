@@ -1,9 +1,9 @@
 window.PAYMENTS_DATA = {
   "project_key": "respublika1",
   "project_name": "Республіка 1",
-  "apartment": "Парфенюк Ірина Вадимівна: акт звірки + 30408-287 (2025+)",
-  "source_pdf": "/Users/irynaparfeniuk/Downloads/Парфенюк_Ірина_Вадимівна_акт_звірки.pdf",
-  "source_pdf_future": "/Users/irynaparfeniuk/Downloads/30408-287 Парфенюк І.В._звірка оплат.pdf",
+  "apartment": "OWNER-R1 (ANON): act + 30408-287 (2025+)",
+  "source_pdf": "SRC-R1-ACT-RECONCILIATION.pdf",
+  "source_pdf_future": "SRC-R1-30408-287-RECONCILIATION.pdf",
   "generated_at": "2026-02-21T15:40:31",
   "summary_basis": "summary excludes rows where exclude_from_summary=true",
   "summary": {
@@ -2837,4 +2837,5 @@ window.PAYMENTS_DATA = {
       "id": 102
     }
   ]
-};
+}
+;
