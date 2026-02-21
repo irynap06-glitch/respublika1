@@ -306,13 +306,15 @@ h1 {
   letter-spacing: 0.08em;
 }
 
-.project-filter {
+.project-filter,
+.category-filter {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 6px;
 }
 
-.project-chip {
+.project-chip,
+.category-chip {
   border: 1px solid var(--line);
   border-radius: 9px;
   background: #fff;
@@ -328,6 +330,12 @@ h1 {
 .project-chip.active {
   background: #eb5e28;
   border-color: #eb5e28;
+  color: #fff;
+}
+
+.category-chip.active {
+  background: #0f786b;
+  border-color: #0f786b;
   color: #fff;
 }
 
@@ -627,7 +635,8 @@ h1 {
     padding: 8px 4px;
   }
 
-  .project-chip {
+  .project-chip,
+  .category-chip {
     font-size: 0.76rem;
     padding: 8px 4px;
   }

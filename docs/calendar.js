@@ -18,6 +18,13 @@
     quarter: "Квартали",
     year: "Роки",
   };
+  const CATEGORY_DEFAULT = "mortgage";
+  const CATEGORY_LABELS = {
+    mortgage: "Іпотека",
+    repair: "Ремонт",
+    tax_notary: "Податки і нотаріус",
+    income: "Доходи",
+  };
 
   const STATUS_ORDER = ["unpaid", "paid", "early"];
   const STATUS_LABELS = {
@@ -35,6 +42,7 @@
   const $summaryCount = document.getElementById("summaryCount");
 
   const $projectFilter = document.getElementById("projectFilter");
+  const $categoryFilter = document.getElementById("categoryFilter");
   const $viewModeSelect = document.getElementById("viewModeSelect");
   const $viewModeButtons = [...document.querySelectorAll(".mode-btn")];
   const $yearSelect = document.getElementById("yearSelect");
@@ -76,16 +84,22 @@
     rows.forEach((item, idx) => {
       const rawId = item && item.id !== undefined && item.id !== null ? String(item.id) : String(idx);
       const uid = `${projectKey}:${rawId}`;
+      const categoryKey = normalizeCategoryKey(item.category_key || item.category || item.category_name);
       payments.push({
         ...item,
         uid,
         raw_id: rawId,
         project_key: projectKey,
         project_name: dataset.project_name || projectKey,
+        category_key: categoryKey,
+        category_name: item.category_name || categoryLabelFromKey(categoryKey),
       });
     });
   });
   const idToPayment = new Map(payments.map((item) => [item.uid, item]));
+  const categoryKeys = orderCategoryKeys([
+    ...new Set(payments.map((item) => normalizeCategoryKey(item.category_key || CATEGORY_DEFAULT))),
+  ]);
 
   const years = [
     ...new Set(
@@ -108,6 +122,7 @@
     overrides: loadJson(STORAGE_OVERRIDES, {}),
     currency: "usd",
     selectedProjects: [initialProject],
+    selectedCategories: [...categoryKeys],
     viewMode: "month",
     selectedYear: "all",
     selectedMonth: "all",
@@ -165,6 +180,31 @@
           state.selectedProjects = [...current].filter((key) => datasetKeys.includes(key));
         }
         ensureProjectSelection();
+        ensureSelectedMonthInRange();
+        persistSettings();
+        renderAll();
+      });
+    }
+
+    if ($categoryFilter) {
+      $categoryFilter.addEventListener("click", (event) => {
+        const btn = event.target.closest(".category-chip");
+        if (!btn) return;
+        const category = btn.dataset.category;
+        if (!category) return;
+        if (category === "all") {
+          state.selectedCategories = [...categoryKeys];
+        } else {
+          const current = new Set(state.selectedCategories);
+          if (current.has(category)) {
+            if (current.size === 1) return;
+            current.delete(category);
+          } else {
+            current.add(category);
+          }
+          state.selectedCategories = [...current].filter((key) => categoryKeys.includes(key));
+        }
+        ensureCategorySelection();
         ensureSelectedMonthInRange();
         persistSettings();
         renderAll();
@@ -295,7 +335,9 @@
 
   function renderAll() {
     ensureProjectSelection();
+    ensureCategorySelection();
     renderProjectFilters();
+    renderCategoryFilters();
     renderCurrencyControls();
     renderSummary();
     renderPeriodFilters();
@@ -319,6 +361,29 @@
       }),
     ];
     $projectFilter.innerHTML = chips.join("");
+  }
+
+  function renderCategoryFilters() {
+    if (!$categoryFilter) return;
+    const selectedProjects = new Set(state.selectedProjects);
+    const scopedItems = payments.filter((item) => selectedProjects.has(item.project_key));
+    const counts = new Map();
+    scopedItems.forEach((item) => {
+      counts.set(item.category_key, (counts.get(item.category_key) || 0) + 1);
+    });
+
+    const selected = new Set(state.selectedCategories);
+    const allActive = categoryKeys.every((key) => selected.has(key));
+    const chips = [
+      `<button type="button" class="category-chip ${allActive ? "active" : ""}" data-category="all">Всі</button>`,
+      ...categoryKeys.map((key) => {
+        const count = counts.get(key) || 0;
+        return `<button type="button" class="category-chip ${selected.has(key) ? "active" : ""}" data-category="${key}">${escapeHtml(
+          categoryLabelFromKey(key)
+        )} (${count})</button>`;
+      }),
+    ];
+    $categoryFilter.innerHTML = chips.join("");
   }
 
   function renderCurrencyControls() {
@@ -347,7 +412,8 @@
       return true;
     });
     const payableFutureRows = futureUnpaidRows.filter(
-      ({ view }) => view.scheduleUsd > 0.009 || view.scheduleUah > 0.009
+      ({ payment, view }) =>
+        isEarlySettlementEligible(payment) && (view.scheduleUsd > 0.009 || view.scheduleUah > 0.009)
     );
 
     const paid = paidRows.reduce(
@@ -658,16 +724,19 @@
       const view = buildView(item);
       const selected = state.selectedId === item.uid ? "selected" : "";
       const overdue = view.overdue ? "overdue" : "";
+      const incomeCategory = normalizeCategoryKey(item.category_key) === "income";
       const amount = state.currency === "usd" ? view.amountUsd : view.amountUah;
+      const amountText = formatCurrency(amount, state.currency, { alwaysSign: incomeCategory });
       const projectText =
         state.selectedProjects.length > 1 ? `Проєкт: ${escapeHtml(item.project_name || item.project_key)}` : "";
-      const plannedText = `По графіку: ${formatCurrency(view.scheduleUsd, "usd")} / ${formatCurrency(
-        view.scheduleUah,
-        "uah"
-      )}`;
-      const paidText = `Оплачено: ${formatCurrency(view.paidUsd, "usd")} / ${formatCurrency(
+      const categoryText = `Категорія: ${escapeHtml(item.category_name || categoryLabelFromKey(item.category_key))}`;
+      const plannedText = `По графіку: ${formatCurrency(view.scheduleUsd, "usd", {
+        alwaysSign: incomeCategory,
+      })} / ${formatCurrency(view.scheduleUah, "uah", { alwaysSign: incomeCategory })}`;
+      const paidText = `Оплачено: ${formatCurrency(view.paidUsd, "usd", { alwaysSign: incomeCategory })} / ${formatCurrency(
         view.paidUah,
-        "uah"
+        "uah",
+        { alwaysSign: incomeCategory }
       )}`;
       const paymentDateText = view.paymentDate ? `Оплата: ${formatDate(view.paymentDate)}` : "Дата оплати не вказана";
       const note = view.note || (item.flags && item.flags.early ? "Позначено як достроково в джерелі." : "");
@@ -684,7 +753,8 @@
               <span class="status-pill ${view.status}">${escapeHtml(STATUS_LABELS[view.status])}</span>
             </button>
           </div>
-          <div class="card-amount">${formatCurrency(amount, state.currency)}</div>
+          <div class="card-amount">${amountText}</div>
+          <p class="card-meta">${categoryText}</p>
           ${projectText ? `<p class="card-meta">${projectText}</p>` : ""}
           <p class="card-meta">${plannedText}</p>
           <p class="card-meta">${paidText}</p>
@@ -833,7 +903,8 @@
     const selectedRemainingUah = Math.max(numberOr(view.scheduleUah, 0) - numberOr(view.paidUah, 0), 0);
 
     const projectPrefix = state.selectedProjects.length > 1 ? `[${item.project_name}] ` : "";
-    $detailTitle.textContent = `${projectPrefix}${readablePaymentTitle(item)}`;
+    const categoryPrefix = categoryKeys.length > 1 ? `[${item.category_name || categoryLabelFromKey(item.category_key)}] ` : "";
+    $detailTitle.textContent = `${projectPrefix}${categoryPrefix}${readablePaymentTitle(item)}`;
     $detailMeta.textContent = `По графіку: ${formatCurrency(view.scheduleUsd, "usd")} / ${formatCurrency(
       view.scheduleUah,
       "uah"
@@ -843,7 +914,7 @@
     )}, залишок: ${formatCurrency(selectedRemainingUsd, "usd")} / ${formatCurrency(
       selectedRemainingUah,
       "uah"
-    )}${item.rate ? `, курс: ${item.rate}` : ""}`;
+    )}${item.rate ? `, курс: ${item.rate}` : ""}, категорія: ${item.category_name || categoryLabelFromKey(item.category_key)}`;
 
     $statusInput.value = view.status;
     $statusInput.disabled = isPastPeriod(item);
@@ -870,8 +941,10 @@
 
   function getSelectedPayments() {
     ensureProjectSelection();
+    ensureCategorySelection();
     const selected = new Set(state.selectedProjects);
-    return payments.filter((item) => selected.has(item.project_key));
+    const selectedCategories = new Set(state.selectedCategories);
+    return payments.filter((item) => selected.has(item.project_key) && selectedCategories.has(item.category_key));
   }
 
   function getVisiblePayments() {
@@ -910,6 +983,7 @@
         const view = buildView(item);
         const text = [
           item.project_name,
+          item.category_name,
           readablePaymentTitle(item),
           item.due_label,
           view.paymentDate,
@@ -956,6 +1030,10 @@
 
   function isCurrentOrFuturePeriod(item) {
     return !isPastPeriod(item);
+  }
+
+  function isEarlySettlementEligible(item) {
+    return normalizeCategoryKey(item && item.category_key) === "mortgage";
   }
 
   function getEarliestPayableRow(rows) {
@@ -1195,12 +1273,14 @@
     return `${dd}.${mm}.${yyyy}`;
   }
 
-  function formatCurrency(value, currencyKey) {
+  function formatCurrency(value, currencyKey, options = {}) {
+    const alwaysSign = Boolean(options.alwaysSign);
     const code = currencyKey === "uah" ? "UAH" : "USD";
     return new Intl.NumberFormat("uk-UA", {
       style: "currency",
       currency: code,
       maximumFractionDigits: 2,
+      signDisplay: alwaysSign ? "always" : "auto",
     }).format(numberOr(value, 0));
   }
 
@@ -1235,7 +1315,7 @@
   }
 
   function isSettledStatus(status) {
-    return status === "paid";
+    return status === "paid" || status === "early";
   }
 
   function roughlyEqual(a, b) {
@@ -1251,6 +1331,7 @@
     const payload = {
       currency: state.currency,
       selectedProjects: state.selectedProjects,
+      selectedCategories: state.selectedCategories,
       viewMode: state.viewMode,
       selectedYear: state.selectedYear,
       selectedMonth: state.selectedMonth,
@@ -1276,13 +1357,14 @@
 
   function buildSnapshot() {
     const snapshot = {
-      version: 4,
+      version: 5,
       projectKey: PROJECT_KEY,
       sourceProjects: state.selectedProjects,
       savedAt: new Date().toISOString(),
       settings: {
         currency: state.currency,
         selectedProjects: state.selectedProjects,
+        selectedCategories: state.selectedCategories,
         viewMode: state.viewMode,
         selectedYear: state.selectedYear,
         selectedMonth: state.selectedMonth,
@@ -1302,6 +1384,12 @@
     if (Array.isArray(settings.selectedProjects)) {
       state.selectedProjects = settings.selectedProjects.filter((key) => datasetKeys.includes(String(key)));
       ensureProjectSelection();
+    }
+    if (Array.isArray(settings.selectedCategories)) {
+      state.selectedCategories = settings.selectedCategories
+        .map((key) => normalizeCategoryKey(key))
+        .filter((key) => categoryKeys.includes(key));
+      ensureCategorySelection();
     }
     if (settings.viewMode === "month" || settings.viewMode === "quarter" || settings.viewMode === "year") {
       state.viewMode = settings.viewMode;
@@ -1387,6 +1475,15 @@
     }
   }
 
+  function ensureCategorySelection() {
+    state.selectedCategories = (state.selectedCategories || [])
+      .map((key) => normalizeCategoryKey(key))
+      .filter((key) => categoryKeys.includes(key));
+    if (!state.selectedCategories.length) {
+      state.selectedCategories = [...categoryKeys];
+    }
+  }
+
   function inferInitialProjectKey(keys) {
     const path = String(window.location.pathname || "").toLowerCase();
     if (path.includes("respublika2") && keys.includes("respublika2")) return "respublika2";
@@ -1403,6 +1500,48 @@
       if (!ordered.includes(k)) ordered.push(k);
     });
     return ordered;
+  }
+
+  function orderCategoryKeys(keys) {
+    const preferred = ["mortgage", "repair", "tax_notary", "income"];
+    const normalized = keys.map((key) => normalizeCategoryKey(key));
+    const set = new Set(normalized);
+    const ordered = preferred.filter((key) => set.has(key));
+    normalized.forEach((key) => {
+      if (!ordered.includes(key)) ordered.push(key);
+    });
+    return ordered;
+  }
+
+  function normalizeCategoryKey(raw) {
+    const text = String(raw || "")
+      .trim()
+      .toLowerCase();
+    if (!text) return CATEGORY_DEFAULT;
+    if (text === "mortgage" || text === "іпотека" || text === "ipoteka") return "mortgage";
+    if (text === "repair" || text === "ремонт" || text === "renovation") return "repair";
+    if (
+      text === "tax_notary" ||
+      text === "taxes" ||
+      text === "tax" ||
+      text === "податки" ||
+      text === "нотаріус" ||
+      text === "податки і нотаріус"
+    ) {
+      return "tax_notary";
+    }
+    if (text === "income" || text === "дохід" || text === "доходи") return "income";
+    return text.replace(/\s+/g, "_");
+  }
+
+  function categoryLabelFromKey(key) {
+    const normalized = normalizeCategoryKey(key);
+    if (CATEGORY_LABELS[normalized]) return CATEGORY_LABELS[normalized];
+    return normalized
+      .split("_")
+      .filter(Boolean)
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(" ");
   }
 
   function resolveDatasets() {

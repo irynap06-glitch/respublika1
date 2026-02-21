@@ -1459,5 +1459,4 @@ window.PAYMENTS_DATA = {
     }
   ],
   "summary_basis": "summary excludes rows where exclude_from_summary=true"
-}
-;
+};
