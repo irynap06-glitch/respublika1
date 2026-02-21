@@ -287,55 +287,27 @@ h1 {
   font-size: 1.18rem;
 }
 
-.year-list {
+.panel-subline {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+.filter-stack {
   margin-top: 10px;
   display: grid;
-  gap: 8px;
+  gap: 10px;
 }
 
-.year-btn {
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 8px 14px;
-  background: #fff;
-  color: var(--ink);
-  font-weight: 700;
-  text-align: left;
-  cursor: pointer;
-  transition: transform 120ms ease, border-color 120ms ease;
-}
-
-.year-btn:hover {
-  transform: translateX(2px);
-  border-color: rgba(17, 92, 82, 0.35);
-}
-
-.year-btn.active {
-  background: #0f786b;
-  border-color: #0f786b;
-  color: #fff;
+.compact-field span {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
 }
 
 .calendar-panel {
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr);
   gap: 12px;
-}
-
-.month-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  justify-content: flex-end;
-}
-
-.month-link-btn {
-  border: 1px solid var(--line);
-  background: #fff;
-  border-radius: 999px;
-  padding: 5px 10px;
-  font-size: 0.8rem;
-  cursor: pointer;
 }
 
 .legend {
@@ -510,21 +482,40 @@ h1 {
   }
 
   .controls-row {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
   }
 
+  .currency-switch,
   .search-field {
-    grid-column: span 3;
+    grid-column: 1 / -1;
   }
 }
 
 @media (max-width: 920px) {
+  .app {
+    width: min(100%, 95vw);
+  }
+
   .summary {
     grid-template-columns: 1fr 1fr;
   }
 
+  .controls-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .currency-switch,
+  .search-field {
+    grid-column: 1 / -1;
+  }
+
+  .controls-row .ghost-btn {
+    width: 100%;
+  }
+
   .workspace {
     grid-template-columns: 1fr;
+    min-height: auto;
   }
 
   .years-panel {
@@ -539,12 +530,58 @@ h1 {
     order: 3;
   }
 
-  .year-list {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  .filter-stack {
+    grid-template-columns: 1fr 1fr;
   }
 
-  .year-btn {
-    text-align: center;
+  .calendar-grid {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .hero {
+    padding: 14px;
+  }
+
+  .panel {
+    padding: 12px;
+  }
+
+  .controls-row {
+    grid-template-columns: 1fr;
+  }
+
+  .currency-switch,
+  .search-field {
+    grid-column: auto;
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    font-size: 16px;
+  }
+
+  .summary {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-stack {
+    grid-template-columns: 1fr;
+  }
+
+  .calendar-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .payment-card {
+    padding: 10px;
+  }
+
+  .currency-btn {
+    padding: 9px 12px;
   }
 }
 

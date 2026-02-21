@@ -1,33 +1,34 @@
 {
   "project_key": "respublika1",
   "project_name": "Республіка 1",
-  "apartment": "Парфенюк Ірина Вадимівна, акт звірки + планові періоди 2025-2030",
+  "apartment": "Парфенюк Ірина Вадимівна: акт звірки + 30408-287 (2025+)",
   "source_pdf": "/Users/irynaparfeniuk/Downloads/Парфенюк_Ірина_Вадимівна_акт_звірки.pdf",
-  "generated_at": "2026-02-21T15:28:49",
+  "source_pdf_future": "/Users/irynaparfeniuk/Downloads/30408-287 Парфенюк І.В._звірка оплат.pdf",
+  "generated_at": "2026-02-21T15:40:31",
+  "summary_basis": "summary excludes rows where exclude_from_summary=true",
   "summary": {
     "total": {
-      "schedule_usd": 85793.02,
-      "fact_uah": 3183246.59,
-      "fact_usd": 85793.02,
-      "meters": 36.9
+      "schedule_usd": 97388.39,
+      "fact_uah": 3998899.71,
+      "fact_usd": 97388.39,
+      "meters": null
     },
     "paid": {
-      "schedule_usd": 42896.37,
-      "fact_uah": 1507064.09,
-      "fact_usd": 42896.37,
-      "meters": 18.45
+      "schedule_usd": 94844.45,
+      "fact_uah": 3717654.1,
+      "fact_usd": 94844.45,
+      "meters": null
     },
     "remaining": {
-      "schedule_usd": 42896.65,
-      "fact_uah": 1676182.5,
-      "fact_usd": 42896.65,
-      "meters": 18.45
+      "schedule_usd": 2543.94,
+      "fact_uah": 281245.61,
+      "fact_usd": 2543.94,
+      "meters": null
     }
   },
   "payments": [
     {
-      "invoice": 1,
-      "title": "Рахунок #1 (частина 1)",
+      "title": "Факт #1 (ч.1)",
       "due_label": "31.12.2021",
       "due_date": "2021-12-30",
       "payment_date": "2021-12-30",
@@ -44,17 +45,17 @@
       "status": "paid",
       "flags": {
         "early": false,
-        "initial": true
+        "initial": true,
+        "source": "act"
       },
       "base_paid_usd": 8579.16,
       "base_paid_uah": 233554.85,
-      "source_due_date": "2021-12-31",
-      "id": 0,
-      "exclude_from_summary": false
+      "exclude_from_summary": false,
+      "month_index": 1,
+      "id": 0
     },
     {
-      "invoice": 1,
-      "title": "Рахунок #1 (частина 2)",
+      "title": "Факт #1 (ч.2)",
       "due_label": "31.12.2021",
       "due_date": "2022-01-17",
       "payment_date": "2022-01-17",
@@ -71,17 +72,17 @@
       "status": "paid",
       "flags": {
         "early": false,
-        "initial": true
+        "initial": true,
+        "source": "act"
       },
       "base_paid_usd": 852.88,
       "base_paid_uah": 23839.1,
-      "source_due_date": "2021-12-31",
-      "id": 1,
-      "exclude_from_summary": false
+      "exclude_from_summary": false,
+      "month_index": 2,
+      "id": 1
     },
     {
-      "invoice": 2,
-      "title": "Рахунок #2 (частина 1)",
+      "title": "Факт #2 (ч.1)",
       "due_label": "30.01.2022",
       "due_date": "2022-02-14",
       "payment_date": "2022-02-14",
@@ -98,17 +99,101 @@
       "status": "paid",
       "flags": {
         "early": false,
-        "initial": false
+        "initial": false,
+        "source": "act"
       },
       "base_paid_usd": 867.74,
       "base_paid_uah": 24326.86,
-      "source_due_date": "2022-01-30",
-      "id": 2,
-      "exclude_from_summary": false
+      "exclude_from_summary": false,
+      "month_index": 3,
+      "id": 2
     },
     {
-      "invoice": 2,
-      "title": "Рахунок #2 (частина 2)",
+      "title": "Нульовий місяць 03.2022",
+      "due_label": "01.03.2022",
+      "due_date": "2022-03-01",
+      "payment_date": null,
+      "period_year": 2022,
+      "period_month": 3,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 4,
+      "id": 3
+    },
+    {
+      "title": "Нульовий місяць 04.2022",
+      "due_label": "01.04.2022",
+      "due_date": "2022-04-01",
+      "payment_date": null,
+      "period_year": 2022,
+      "period_month": 4,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 5,
+      "id": 4
+    },
+    {
+      "title": "Нульовий місяць 05.2022",
+      "due_label": "01.05.2022",
+      "due_date": "2022-05-01",
+      "payment_date": null,
+      "period_year": 2022,
+      "period_month": 5,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 6,
+      "id": 5
+    },
+    {
+      "title": "Факт #2 (ч.2)",
       "due_label": "30.01.2022",
       "due_date": "2022-06-28",
       "payment_date": "2022-06-28",
@@ -125,17 +210,17 @@
       "status": "paid",
       "flags": {
         "early": false,
-        "initial": false
+        "initial": false,
+        "source": "act"
       },
       "base_paid_usd": 857.83,
       "base_paid_uah": 30195.47,
-      "source_due_date": "2022-01-30",
-      "id": 3,
-      "exclude_from_summary": false
+      "exclude_from_summary": false,
+      "month_index": 7,
+      "id": 6
     },
     {
-      "invoice": 4,
-      "title": "Рахунок #4 (оплата)",
+      "title": "Факт #4",
       "due_label": "30.03.2022",
       "due_date": "2022-07-22",
       "payment_date": "2022-07-22",
@@ -152,17 +237,325 @@
       "status": "paid",
       "flags": {
         "early": false,
-        "initial": false
+        "initial": false,
+        "source": "act"
       },
       "base_paid_usd": 830.05,
       "base_paid_uah": 30711.73,
-      "source_due_date": "2022-03-30",
-      "id": 4,
-      "exclude_from_summary": false
+      "exclude_from_summary": false,
+      "month_index": 8,
+      "id": 7
     },
     {
-      "invoice": 5,
-      "title": "Рахунок #5 (оплата)",
+      "title": "Нульовий місяць 08.2022",
+      "due_label": "01.08.2022",
+      "due_date": "2022-08-01",
+      "payment_date": null,
+      "period_year": 2022,
+      "period_month": 8,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 9,
+      "id": 8
+    },
+    {
+      "title": "Нульовий місяць 09.2022",
+      "due_label": "01.09.2022",
+      "due_date": "2022-09-01",
+      "payment_date": null,
+      "period_year": 2022,
+      "period_month": 9,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 10,
+      "id": 9
+    },
+    {
+      "title": "Нульовий місяць 10.2022",
+      "due_label": "01.10.2022",
+      "due_date": "2022-10-01",
+      "payment_date": null,
+      "period_year": 2022,
+      "period_month": 10,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 11,
+      "id": 10
+    },
+    {
+      "title": "Нульовий місяць 11.2022",
+      "due_label": "01.11.2022",
+      "due_date": "2022-11-01",
+      "payment_date": null,
+      "period_year": 2022,
+      "period_month": 11,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 12,
+      "id": 11
+    },
+    {
+      "title": "Нульовий місяць 12.2022",
+      "due_label": "01.12.2022",
+      "due_date": "2022-12-01",
+      "payment_date": null,
+      "period_year": 2022,
+      "period_month": 12,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 13,
+      "id": 12
+    },
+    {
+      "title": "Нульовий місяць 01.2023",
+      "due_label": "01.01.2023",
+      "due_date": "2023-01-01",
+      "payment_date": null,
+      "period_year": 2023,
+      "period_month": 1,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 14,
+      "id": 13
+    },
+    {
+      "title": "Нульовий місяць 02.2023",
+      "due_label": "01.02.2023",
+      "due_date": "2023-02-01",
+      "payment_date": null,
+      "period_year": 2023,
+      "period_month": 2,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 15,
+      "id": 14
+    },
+    {
+      "title": "Нульовий місяць 03.2023",
+      "due_label": "01.03.2023",
+      "due_date": "2023-03-01",
+      "payment_date": null,
+      "period_year": 2023,
+      "period_month": 3,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 16,
+      "id": 15
+    },
+    {
+      "title": "Нульовий місяць 04.2023",
+      "due_label": "01.04.2023",
+      "due_date": "2023-04-01",
+      "payment_date": null,
+      "period_year": 2023,
+      "period_month": 4,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 17,
+      "id": 16
+    },
+    {
+      "title": "Нульовий місяць 05.2023",
+      "due_label": "01.05.2023",
+      "due_date": "2023-05-01",
+      "payment_date": null,
+      "period_year": 2023,
+      "period_month": 5,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 18,
+      "id": 17
+    },
+    {
+      "title": "Нульовий місяць 06.2023",
+      "due_label": "01.06.2023",
+      "due_date": "2023-06-01",
+      "payment_date": null,
+      "period_year": 2023,
+      "period_month": 6,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 19,
+      "id": 18
+    },
+    {
+      "title": "Факт #5",
       "due_label": "29.04.2022",
       "due_date": "2023-07-30",
       "payment_date": "2023-07-30",
@@ -179,17 +572,17 @@
       "status": "paid",
       "flags": {
         "early": false,
-        "initial": false
+        "initial": false,
+        "source": "act"
       },
       "base_paid_usd": 997.28,
       "base_paid_uah": 36700.0,
-      "source_due_date": "2022-04-29",
-      "id": 5,
-      "exclude_from_summary": false
+      "exclude_from_summary": false,
+      "month_index": 20,
+      "id": 19
     },
     {
-      "invoice": 7,
-      "title": "Рахунок #7 (оплата)",
+      "title": "Факт #7",
       "due_label": "28.06.2022",
       "due_date": "2023-08-31",
       "payment_date": "2023-08-31",
@@ -206,17 +599,17 @@
       "status": "paid",
       "flags": {
         "early": false,
-        "initial": false
+        "initial": false,
+        "source": "act"
       },
       "base_paid_usd": 1006.67,
       "base_paid_uah": 37750.0,
-      "source_due_date": "2022-06-28",
-      "id": 6,
-      "exclude_from_summary": false
+      "exclude_from_summary": false,
+      "month_index": 21,
+      "id": 20
     },
     {
-      "invoice": 8,
-      "title": "Рахунок #8 (оплата)",
+      "title": "Факт #8",
       "due_label": "28.07.2022",
       "due_date": "2023-09-26",
       "payment_date": "2023-09-26",
@@ -233,17 +626,17 @@
       "status": "paid",
       "flags": {
         "early": false,
-        "initial": false
+        "initial": false,
+        "source": "act"
       },
       "base_paid_usd": 1013.3,
       "base_paid_uah": 38100.0,
-      "source_due_date": "2022-07-28",
-      "id": 7,
-      "exclude_from_summary": false
+      "exclude_from_summary": false,
+      "month_index": 22,
+      "id": 21
     },
     {
-      "invoice": 9,
-      "title": "Рахунок #9 (оплата)",
+      "title": "Факт #9",
       "due_label": "27.08.2022",
       "due_date": "2023-10-27",
       "payment_date": "2023-10-27",
@@ -260,17 +653,17 @@
       "status": "paid",
       "flags": {
         "early": false,
-        "initial": false
+        "initial": false,
+        "source": "act"
       },
       "base_paid_usd": 1000.0,
       "base_paid_uah": 37500.0,
-      "source_due_date": "2022-08-27",
-      "id": 8,
-      "exclude_from_summary": false
+      "exclude_from_summary": false,
+      "month_index": 23,
+      "id": 22
     },
     {
-      "invoice": 10,
-      "title": "Рахунок #10 (частина 1)",
+      "title": "Факт #10 (ч.1)",
       "due_label": "26.09.2022",
       "due_date": "2023-11-22",
       "payment_date": "2023-11-22",
@@ -287,17 +680,17 @@
       "status": "paid",
       "flags": {
         "early": false,
-        "initial": false
+        "initial": false,
+        "source": "act"
       },
       "base_paid_usd": 14919.08,
       "base_paid_uah": 554989.7,
-      "source_due_date": "2022-09-26",
-      "id": 9,
-      "exclude_from_summary": false
+      "exclude_from_summary": false,
+      "month_index": 24,
+      "id": 23
     },
     {
-      "invoice": 10,
-      "title": "Рахунок #10 (частина 2)",
+      "title": "Факт #10 (ч.2)",
       "due_label": "26.09.2022",
       "due_date": "2023-12-29",
       "payment_date": "2023-12-29",
@@ -314,44 +707,17 @@
       "status": "paid",
       "flags": {
         "early": false,
-        "initial": false
+        "initial": false,
+        "source": "act"
       },
       "base_paid_usd": 1724.11,
       "base_paid_uah": 65861.08,
-      "source_due_date": "2022-09-26",
-      "id": 10,
-      "exclude_from_summary": false
+      "exclude_from_summary": false,
+      "month_index": 25,
+      "id": 24
     },
     {
-      "invoice": 26,
-      "title": "Рахунок #26",
-      "due_label": "01.01.2024",
-      "due_date": "2024-01-01",
-      "payment_date": null,
-      "period_year": 2024,
-      "period_month": 1,
-      "schedule_usd": 42896.65,
-      "fact_usd": null,
-      "fact_uah": null,
-      "rate": 39.0749,
-      "meters": 18.45,
-      "percent_increase": "50,00%",
-      "raw_fact_uah": "1 676 182,50",
-      "raw_fact_usd": "42 896,65",
-      "status": "unpaid",
-      "flags": {
-        "early": false,
-        "initial": false
-      },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2024-01-01",
-      "id": 11,
-      "exclude_from_summary": false
-    },
-    {
-      "invoice": 21,
-      "title": "Рахунок #21 (оплата)",
+      "title": "Факт #21",
       "due_label": "22.08.2023",
       "due_date": "2024-01-27",
       "payment_date": "2024-01-27",
@@ -368,17 +734,17 @@
       "status": "paid",
       "flags": {
         "early": false,
-        "initial": false
+        "initial": false,
+        "source": "act"
       },
       "base_paid_usd": 2583.63,
       "base_paid_uah": 97532.06,
-      "source_due_date": "2023-08-22",
-      "id": 12,
-      "exclude_from_summary": false
+      "exclude_from_summary": false,
+      "month_index": 26,
+      "id": 25
     },
     {
-      "invoice": 22,
-      "title": "Рахунок #22 (оплата)",
+      "title": "Факт #22",
       "due_label": "21.09.2023",
       "due_date": "2024-02-29",
       "payment_date": "2024-02-29",
@@ -395,17 +761,17 @@
       "status": "paid",
       "flags": {
         "early": false,
-        "initial": false
+        "initial": false,
+        "source": "act"
       },
       "base_paid_usd": 3140.73,
       "base_paid_uah": 120000.0,
-      "source_due_date": "2023-09-21",
-      "id": 13,
-      "exclude_from_summary": false
+      "exclude_from_summary": false,
+      "month_index": 27,
+      "id": 26
     },
     {
-      "invoice": 24,
-      "title": "Рахунок #24 (оплата)",
+      "title": "Факт #24",
       "due_label": "20.11.2023",
       "due_date": "2024-03-14",
       "payment_date": "2024-03-14",
@@ -422,17 +788,17 @@
       "status": "paid",
       "flags": {
         "early": false,
-        "initial": false
+        "initial": false,
+        "source": "act"
       },
       "base_paid_usd": 3300.01,
       "base_paid_uah": 128000.0,
-      "source_due_date": "2023-11-20",
-      "id": 14,
-      "exclude_from_summary": false
+      "exclude_from_summary": false,
+      "month_index": 28,
+      "id": 27
     },
     {
-      "invoice": 25,
-      "title": "Рахунок #25 (оплата)",
+      "title": "Факт #25",
       "due_label": "20.12.2023",
       "due_date": "2024-03-29",
       "payment_date": "2024-03-29",
@@ -449,17 +815,409 @@
       "status": "paid",
       "flags": {
         "early": false,
-        "initial": false
+        "initial": false,
+        "source": "act"
       },
       "base_paid_usd": 1223.9,
       "base_paid_uah": 48003.24,
-      "source_due_date": "2023-12-20",
-      "id": 15,
-      "exclude_from_summary": false
+      "exclude_from_summary": false,
+      "month_index": 28,
+      "id": 28
     },
     {
-      "invoice": null,
-      "title": "План: 01.06.2025",
+      "title": "Нульовий місяць 04.2024",
+      "due_label": "01.04.2024",
+      "due_date": "2024-04-01",
+      "payment_date": null,
+      "period_year": 2024,
+      "period_month": 4,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 29,
+      "id": 29
+    },
+    {
+      "title": "Нульовий місяць 05.2024",
+      "due_label": "01.05.2024",
+      "due_date": "2024-05-01",
+      "payment_date": null,
+      "period_year": 2024,
+      "period_month": 5,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 30,
+      "id": 30
+    },
+    {
+      "title": "Нульовий місяць 06.2024",
+      "due_label": "01.06.2024",
+      "due_date": "2024-06-01",
+      "payment_date": null,
+      "period_year": 2024,
+      "period_month": 6,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 31,
+      "id": 31
+    },
+    {
+      "title": "Нульовий місяць 07.2024",
+      "due_label": "01.07.2024",
+      "due_date": "2024-07-01",
+      "payment_date": null,
+      "period_year": 2024,
+      "period_month": 7,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 32,
+      "id": 32
+    },
+    {
+      "title": "Нульовий місяць 08.2024",
+      "due_label": "01.08.2024",
+      "due_date": "2024-08-01",
+      "payment_date": null,
+      "period_year": 2024,
+      "period_month": 8,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 33,
+      "id": 33
+    },
+    {
+      "title": "Нульовий місяць 09.2024",
+      "due_label": "01.09.2024",
+      "due_date": "2024-09-01",
+      "payment_date": null,
+      "period_year": 2024,
+      "period_month": 9,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 34,
+      "id": 34
+    },
+    {
+      "title": "Нульовий місяць 10.2024",
+      "due_label": "01.10.2024",
+      "due_date": "2024-10-01",
+      "payment_date": null,
+      "period_year": 2024,
+      "period_month": 10,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 35,
+      "id": 35
+    },
+    {
+      "title": "Нульовий місяць 11.2024",
+      "due_label": "01.11.2024",
+      "due_date": "2024-11-01",
+      "payment_date": null,
+      "period_year": 2024,
+      "period_month": 11,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 36,
+      "id": 36
+    },
+    {
+      "title": "Нульовий місяць 12.2024",
+      "due_label": "01.12.2024",
+      "due_date": "2024-12-01",
+      "payment_date": null,
+      "period_year": 2024,
+      "period_month": 12,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 37,
+      "id": 37
+    },
+    {
+      "title": "Нульовий місяць 01.2025",
+      "due_label": "01.01.2025",
+      "due_date": "2025-01-01",
+      "payment_date": null,
+      "period_year": 2025,
+      "period_month": 1,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 38,
+      "id": 38
+    },
+    {
+      "title": "Нульовий місяць 02.2025",
+      "due_label": "01.02.2025",
+      "due_date": "2025-02-01",
+      "payment_date": null,
+      "period_year": 2025,
+      "period_month": 2,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 39,
+      "id": 39
+    },
+    {
+      "title": "Нульовий місяць 03.2025",
+      "due_label": "01.03.2025",
+      "due_date": "2025-03-01",
+      "payment_date": null,
+      "period_year": 2025,
+      "period_month": 3,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 40,
+      "id": 40
+    },
+    {
+      "title": "Нульовий місяць 04.2025",
+      "due_label": "01.04.2025",
+      "due_date": "2025-04-01",
+      "payment_date": null,
+      "period_year": 2025,
+      "period_month": 4,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 41,
+      "id": 41
+    },
+    {
+      "title": "Нульовий місяць 05.2025",
+      "due_label": "01.05.2025",
+      "due_date": "2025-05-01",
+      "payment_date": null,
+      "period_year": 2025,
+      "period_month": 5,
+      "schedule_usd": 0.0,
+      "fact_usd": null,
+      "fact_uah": null,
+      "rate": null,
+      "meters": null,
+      "percent_increase": "0,00%",
+      "raw_fact_uah": null,
+      "raw_fact_usd": null,
+      "status": "unpaid",
+      "flags": {
+        "early": false,
+        "initial": false,
+        "zero_month": true,
+        "source": "auto"
+      },
+      "base_paid_usd": 0.0,
+      "base_paid_uah": 0.0,
+      "exclude_from_summary": true,
+      "month_index": 42,
+      "id": 42
+    },
+    {
+      "title": "План 01.06.2025",
       "due_label": "01.06.2025",
       "due_date": "2025-06-01",
       "payment_date": "2025-05-30",
@@ -469,7 +1227,7 @@
       "fact_usd": 1391.12,
       "fact_uah": 57771.13,
       "rate": 41.5285,
-      "meters": 59.83,
+      "meters": null,
       "percent_increase": "0,00%",
       "raw_fact_uah": "57 771,13",
       "raw_fact_usd": "1 391,12",
@@ -477,17 +1235,16 @@
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
       "base_paid_usd": 1391.12,
       "base_paid_uah": 57771.13,
-      "source_due_date": "2025-06-01",
-      "exclude_from_summary": true,
-      "id": 16
+      "exclude_from_summary": false,
+      "month_index": 43,
+      "id": 43
     },
     {
-      "invoice": null,
-      "title": "План: 01.07.2025",
+      "title": "План 01.07.2025",
       "due_label": "01.07.2025",
       "due_date": "2025-07-01",
       "payment_date": "2025-07-01",
@@ -497,7 +1254,7 @@
       "fact_usd": 699.29,
       "fact_uah": 29215.67,
       "rate": 41.7788,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "29 215,67",
       "raw_fact_usd": "699,29",
@@ -505,17 +1262,16 @@
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
       "base_paid_usd": 699.29,
       "base_paid_uah": 29215.67,
-      "source_due_date": "2025-07-01",
-      "exclude_from_summary": true,
-      "id": 17
+      "exclude_from_summary": false,
+      "month_index": 44,
+      "id": 44
     },
     {
-      "invoice": null,
-      "title": "План: 01.08.2025",
+      "title": "План 01.08.2025",
       "due_label": "01.08.2025",
       "due_date": "2025-08-01",
       "payment_date": "2025-07-30",
@@ -525,7 +1281,7 @@
       "fact_usd": 709.92,
       "fact_uah": 29666.76,
       "rate": 41.7886,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "29 666,76",
       "raw_fact_usd": "709,92",
@@ -533,17 +1289,16 @@
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
       "base_paid_usd": 709.92,
       "base_paid_uah": 29666.76,
-      "source_due_date": "2025-08-01",
-      "exclude_from_summary": true,
-      "id": 18
+      "exclude_from_summary": false,
+      "month_index": 45,
+      "id": 45
     },
     {
-      "invoice": null,
-      "title": "План: 01.09.2025",
+      "title": "План 01.09.2025",
       "due_label": "01.09.2025",
       "due_date": "2025-09-01",
       "payment_date": "2025-08-30",
@@ -553,7 +1308,7 @@
       "fact_usd": 4285.79,
       "fact_uah": 176832.57,
       "rate": 41.2602,
-      "meters": 179.5,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "176 832,57",
       "raw_fact_usd": "4 285,79",
@@ -561,17 +1316,16 @@
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
       "base_paid_usd": 4285.79,
       "base_paid_uah": 176832.57,
-      "source_due_date": "2025-09-01",
-      "exclude_from_summary": true,
-      "id": 19
+      "exclude_from_summary": false,
+      "month_index": 46,
+      "id": 46
     },
     {
-      "invoice": null,
-      "title": "План: 01.10.2025",
+      "title": "План 01.10.2025",
       "due_label": "01.10.2025",
       "due_date": "2025-10-01",
       "payment_date": "2025-09-27",
@@ -581,7 +1335,7 @@
       "fact_usd": 717.62,
       "fact_uah": 29776.85,
       "rate": 41.4939,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "29 776,85",
       "raw_fact_usd": "717,62",
@@ -589,17 +1343,16 @@
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
       "base_paid_usd": 717.62,
       "base_paid_uah": 29776.85,
-      "source_due_date": "2025-10-01",
-      "exclude_from_summary": true,
-      "id": 20
+      "exclude_from_summary": false,
+      "month_index": 47,
+      "id": 47
     },
     {
-      "invoice": null,
-      "title": "План: 01.11.2025",
+      "title": "План 01.11.2025",
       "due_label": "01.11.2025",
       "due_date": "2025-11-01",
       "payment_date": "2025-10-31",
@@ -609,7 +1362,7 @@
       "fact_usd": 728.08,
       "fact_uah": 30557.41,
       "rate": 41.9701,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "30 557,41",
       "raw_fact_usd": "728,08",
@@ -617,17 +1370,16 @@
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
       "base_paid_usd": 728.08,
       "base_paid_uah": 30557.41,
-      "source_due_date": "2025-11-01",
-      "exclude_from_summary": true,
-      "id": 21
+      "exclude_from_summary": false,
+      "month_index": 48,
+      "id": 48
     },
     {
-      "invoice": null,
-      "title": "План: 01.12.2025",
+      "title": "План 01.12.2025",
       "due_label": "01.12.2025",
       "due_date": "2025-12-01",
       "payment_date": "2025-11-30",
@@ -637,7 +1389,7 @@
       "fact_usd": 728.74,
       "fact_uah": 30747.68,
       "rate": 42.1928,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "30 747,68",
       "raw_fact_usd": "728,74",
@@ -645,17 +1397,16 @@
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
       "base_paid_usd": 728.74,
       "base_paid_uah": 30747.68,
-      "source_due_date": "2025-12-01",
-      "exclude_from_summary": true,
-      "id": 22
+      "exclude_from_summary": false,
+      "month_index": 49,
+      "id": 49
     },
     {
-      "invoice": null,
-      "title": "План: 01.01.2026",
+      "title": "План 01.01.2026",
       "due_label": "01.01.2026",
       "due_date": "2026-01-01",
       "payment_date": "2025-12-16",
@@ -665,7 +1416,7 @@
       "fact_usd": 740.31,
       "fact_uah": 31274.32,
       "rate": 42.2451,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "31 274,32",
       "raw_fact_usd": "740,31",
@@ -673,17 +1424,16 @@
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
       "base_paid_usd": 740.31,
       "base_paid_uah": 31274.32,
-      "source_due_date": "2026-01-01",
-      "exclude_from_summary": true,
-      "id": 23
+      "exclude_from_summary": false,
+      "month_index": 50,
+      "id": 50
     },
     {
-      "invoice": null,
-      "title": "План: 01.02.2026",
+      "title": "План 01.02.2026",
       "due_label": "01.02.2026",
       "due_date": "2026-02-01",
       "payment_date": "2026-01-13",
@@ -693,7 +1443,7 @@
       "fact_usd": 1463.04,
       "fact_uah": 63284.2,
       "rate": 43.2552,
-      "meters": 59.84,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "63 284,20",
       "raw_fact_usd": "1 463,04",
@@ -701,17 +1451,16 @@
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
       "base_paid_usd": 1463.04,
       "base_paid_uah": 63284.2,
-      "source_due_date": "2026-02-01",
-      "exclude_from_summary": true,
-      "id": 24
+      "exclude_from_summary": false,
+      "month_index": 51,
+      "id": 51
     },
     {
-      "invoice": null,
-      "title": "План: 01.03.2026",
+      "title": "План 01.03.2026",
       "due_label": "01.03.2026",
       "due_date": "2026-03-01",
       "payment_date": null,
@@ -721,7 +1470,7 @@
       "fact_usd": 35.27,
       "fact_uah": 1508.46,
       "rate": 42.7689,
-      "meters": 1.4,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "1 508,46",
       "raw_fact_usd": "35,27",
@@ -729,17 +1478,16 @@
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2026-03-01",
-      "exclude_from_summary": true,
-      "id": 25
+      "base_paid_usd": 35.27,
+      "base_paid_uah": 1508.46,
+      "exclude_from_summary": false,
+      "month_index": 52,
+      "id": 52
     },
     {
-      "invoice": null,
-      "title": "План: 01.04.2026",
+      "title": "План 01.04.2026",
       "due_label": "01.04.2026",
       "due_date": "2026-04-01",
       "payment_date": null,
@@ -749,25 +1497,24 @@
       "fact_usd": 758.49,
       "fact_uah": 32439.78,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "32 439,78",
       "raw_fact_usd": "758,49",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2026-04-01",
-      "exclude_from_summary": true,
-      "id": 26
+      "base_paid_usd": 758.49,
+      "base_paid_uah": 32439.78,
+      "exclude_from_summary": false,
+      "month_index": 53,
+      "id": 53
     },
     {
-      "invoice": null,
-      "title": "План: 01.05.2026",
+      "title": "План 01.05.2026",
       "due_label": "01.05.2026",
       "due_date": "2026-05-01",
       "payment_date": null,
@@ -777,25 +1524,24 @@
       "fact_usd": 765.09,
       "fact_uah": 32722.06,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "32 722,06",
       "raw_fact_usd": "765,09",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2026-05-01",
-      "exclude_from_summary": true,
-      "id": 27
+      "base_paid_usd": 765.09,
+      "base_paid_uah": 32722.06,
+      "exclude_from_summary": false,
+      "month_index": 54,
+      "id": 54
     },
     {
-      "invoice": null,
-      "title": "План: 01.06.2026",
+      "title": "План 01.06.2026",
       "due_label": "01.06.2026",
       "due_date": "2026-06-01",
       "payment_date": null,
@@ -805,25 +1551,24 @@
       "fact_usd": 771.75,
       "fact_uah": 33006.9,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "33 006,90",
       "raw_fact_usd": "771,75",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2026-06-01",
-      "exclude_from_summary": true,
-      "id": 28
+      "base_paid_usd": 771.75,
+      "base_paid_uah": 33006.9,
+      "exclude_from_summary": false,
+      "month_index": 55,
+      "id": 55
     },
     {
-      "invoice": null,
-      "title": "План: 01.07.2026",
+      "title": "План 01.07.2026",
       "due_label": "01.07.2026",
       "due_date": "2026-07-01",
       "payment_date": null,
@@ -833,25 +1578,24 @@
       "fact_usd": 778.46,
       "fact_uah": 33293.88,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "33 293,88",
       "raw_fact_usd": "778,46",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2026-07-01",
-      "exclude_from_summary": true,
-      "id": 29
+      "base_paid_usd": 778.46,
+      "base_paid_uah": 33293.88,
+      "exclude_from_summary": false,
+      "month_index": 56,
+      "id": 56
     },
     {
-      "invoice": null,
-      "title": "План: 01.08.2026",
+      "title": "План 01.08.2026",
       "due_label": "01.08.2026",
       "due_date": "2026-08-01",
       "payment_date": null,
@@ -861,25 +1605,24 @@
       "fact_usd": 785.23,
       "fact_uah": 33583.42,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "33 583,42",
       "raw_fact_usd": "785,23",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2026-08-01",
-      "exclude_from_summary": true,
-      "id": 30
+      "base_paid_usd": 785.23,
+      "base_paid_uah": 33583.42,
+      "exclude_from_summary": false,
+      "month_index": 57,
+      "id": 57
     },
     {
-      "invoice": null,
-      "title": "План: 01.09.2026",
+      "title": "План 01.09.2026",
       "due_label": "01.09.2026",
       "due_date": "2026-09-01",
       "payment_date": null,
@@ -889,25 +1632,24 @@
       "fact_usd": 792.06,
       "fact_uah": 33875.53,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "33 875,53",
       "raw_fact_usd": "792,06",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2026-09-01",
-      "exclude_from_summary": true,
-      "id": 31
+      "base_paid_usd": 792.06,
+      "base_paid_uah": 33875.53,
+      "exclude_from_summary": false,
+      "month_index": 58,
+      "id": 58
     },
     {
-      "invoice": null,
-      "title": "План: 01.10.2026",
+      "title": "План 01.10.2026",
       "due_label": "01.10.2026",
       "due_date": "2026-10-01",
       "payment_date": null,
@@ -917,25 +1659,24 @@
       "fact_usd": 798.95,
       "fact_uah": 34170.21,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "34 170,21",
       "raw_fact_usd": "798,95",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2026-10-01",
-      "exclude_from_summary": true,
-      "id": 32
+      "base_paid_usd": 798.95,
+      "base_paid_uah": 34170.21,
+      "exclude_from_summary": false,
+      "month_index": 59,
+      "id": 59
     },
     {
-      "invoice": null,
-      "title": "План: 01.11.2026",
+      "title": "План 01.11.2026",
       "due_label": "01.11.2026",
       "due_date": "2026-11-01",
       "payment_date": null,
@@ -945,25 +1686,24 @@
       "fact_usd": 805.9,
       "fact_uah": 34467.46,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "34 467,46",
       "raw_fact_usd": "805,90",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2026-11-01",
-      "exclude_from_summary": true,
-      "id": 33
+      "base_paid_usd": 805.9,
+      "base_paid_uah": 34467.46,
+      "exclude_from_summary": false,
+      "month_index": 60,
+      "id": 60
     },
     {
-      "invoice": null,
-      "title": "План: 01.12.2026",
+      "title": "План 01.12.2026",
       "due_label": "01.12.2026",
       "due_date": "2026-12-01",
       "payment_date": null,
@@ -973,25 +1713,24 @@
       "fact_usd": 812.91,
       "fact_uah": 34767.27,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "34 767,27",
       "raw_fact_usd": "812,91",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2026-12-01",
-      "exclude_from_summary": true,
-      "id": 34
+      "base_paid_usd": 812.91,
+      "base_paid_uah": 34767.27,
+      "exclude_from_summary": false,
+      "month_index": 61,
+      "id": 61
     },
     {
-      "invoice": null,
-      "title": "План: 01.01.2027",
+      "title": "План 01.01.2027",
       "due_label": "01.01.2027",
       "due_date": "2027-01-01",
       "payment_date": null,
@@ -1001,25 +1740,24 @@
       "fact_usd": 819.98,
       "fact_uah": 35069.64,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "35 069,64",
       "raw_fact_usd": "819,98",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2027-01-01",
-      "exclude_from_summary": true,
-      "id": 35
+      "base_paid_usd": 819.98,
+      "base_paid_uah": 35069.64,
+      "exclude_from_summary": false,
+      "month_index": 62,
+      "id": 62
     },
     {
-      "invoice": null,
-      "title": "План: 01.02.2027",
+      "title": "План 01.02.2027",
       "due_label": "01.02.2027",
       "due_date": "2027-02-01",
       "payment_date": null,
@@ -1029,25 +1767,24 @@
       "fact_usd": 827.11,
       "fact_uah": 35374.58,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "35 374,58",
       "raw_fact_usd": "827,11",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2027-02-01",
-      "exclude_from_summary": true,
-      "id": 36
+      "base_paid_usd": 827.11,
+      "base_paid_uah": 35374.58,
+      "exclude_from_summary": false,
+      "month_index": 63,
+      "id": 63
     },
     {
-      "invoice": null,
-      "title": "План: 01.03.2027",
+      "title": "План 01.03.2027",
       "due_label": "01.03.2027",
       "due_date": "2027-03-01",
       "payment_date": null,
@@ -1057,25 +1794,24 @@
       "fact_usd": 834.31,
       "fact_uah": 35682.52,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "35 682,52",
       "raw_fact_usd": "834,31",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2027-03-01",
-      "exclude_from_summary": true,
-      "id": 37
+      "base_paid_usd": 834.31,
+      "base_paid_uah": 35682.52,
+      "exclude_from_summary": false,
+      "month_index": 64,
+      "id": 64
     },
     {
-      "invoice": null,
-      "title": "План: 01.04.2027",
+      "title": "План 01.04.2027",
       "due_label": "01.04.2027",
       "due_date": "2027-04-01",
       "payment_date": null,
@@ -1085,25 +1821,24 @@
       "fact_usd": 841.57,
       "fact_uah": 35993.02,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "35 993,02",
       "raw_fact_usd": "841,57",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2027-04-01",
-      "exclude_from_summary": true,
-      "id": 38
+      "base_paid_usd": 841.57,
+      "base_paid_uah": 35993.02,
+      "exclude_from_summary": false,
+      "month_index": 65,
+      "id": 65
     },
     {
-      "invoice": null,
-      "title": "План: 01.05.2027",
+      "title": "План 01.05.2027",
       "due_label": "01.05.2027",
       "due_date": "2027-05-01",
       "payment_date": null,
@@ -1113,25 +1848,24 @@
       "fact_usd": 848.89,
       "fact_uah": 36306.09,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "36 306,09",
       "raw_fact_usd": "848,89",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2027-05-01",
-      "exclude_from_summary": true,
-      "id": 39
+      "base_paid_usd": 848.89,
+      "base_paid_uah": 36306.09,
+      "exclude_from_summary": false,
+      "month_index": 66,
+      "id": 66
     },
     {
-      "invoice": null,
-      "title": "План: 01.06.2027",
+      "title": "План 01.06.2027",
       "due_label": "01.06.2027",
       "due_date": "2027-06-01",
       "payment_date": null,
@@ -1141,25 +1875,24 @@
       "fact_usd": 856.28,
       "fact_uah": 36622.15,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "36 622,15",
       "raw_fact_usd": "856,28",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2027-06-01",
-      "exclude_from_summary": true,
-      "id": 40
+      "base_paid_usd": 856.28,
+      "base_paid_uah": 36622.15,
+      "exclude_from_summary": false,
+      "month_index": 67,
+      "id": 67
     },
     {
-      "invoice": null,
-      "title": "План: 01.07.2027",
+      "title": "План 01.07.2027",
       "due_label": "01.07.2027",
       "due_date": "2027-07-01",
       "payment_date": null,
@@ -1169,25 +1902,24 @@
       "fact_usd": 863.73,
       "fact_uah": 36940.78,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "36 940,78",
       "raw_fact_usd": "863,73",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2027-07-01",
-      "exclude_from_summary": true,
-      "id": 41
+      "base_paid_usd": 863.73,
+      "base_paid_uah": 36940.78,
+      "exclude_from_summary": false,
+      "month_index": 68,
+      "id": 68
     },
     {
-      "invoice": null,
-      "title": "План: 01.08.2027",
+      "title": "План 01.08.2027",
       "due_label": "01.08.2027",
       "due_date": "2027-08-01",
       "payment_date": null,
@@ -1197,25 +1929,24 @@
       "fact_usd": 871.24,
       "fact_uah": 37261.98,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "37 261,98",
       "raw_fact_usd": "871,24",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2027-08-01",
-      "exclude_from_summary": true,
-      "id": 42
+      "base_paid_usd": 871.24,
+      "base_paid_uah": 37261.98,
+      "exclude_from_summary": false,
+      "month_index": 69,
+      "id": 69
     },
     {
-      "invoice": null,
-      "title": "План: 01.09.2027",
+      "title": "План 01.09.2027",
       "due_label": "01.09.2027",
       "due_date": "2027-09-01",
       "payment_date": null,
@@ -1225,25 +1956,24 @@
       "fact_usd": 878.82,
       "fact_uah": 37586.16,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "37 586,16",
       "raw_fact_usd": "878,82",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2027-09-01",
-      "exclude_from_summary": true,
-      "id": 43
+      "base_paid_usd": 878.82,
+      "base_paid_uah": 37586.16,
+      "exclude_from_summary": false,
+      "month_index": 70,
+      "id": 70
     },
     {
-      "invoice": null,
-      "title": "План: 01.10.2027",
+      "title": "План 01.10.2027",
       "due_label": "01.10.2027",
       "due_date": "2027-10-01",
       "payment_date": null,
@@ -1253,25 +1983,24 @@
       "fact_usd": 886.47,
       "fact_uah": 37913.35,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "37 913,35",
       "raw_fact_usd": "886,47",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2027-10-01",
-      "exclude_from_summary": true,
-      "id": 44
+      "base_paid_usd": 886.47,
+      "base_paid_uah": 37913.35,
+      "exclude_from_summary": false,
+      "month_index": 71,
+      "id": 71
     },
     {
-      "invoice": null,
-      "title": "План: 01.11.2027",
+      "title": "План 01.11.2027",
       "due_label": "01.11.2027",
       "due_date": "2027-11-01",
       "payment_date": null,
@@ -1281,25 +2010,24 @@
       "fact_usd": 894.18,
       "fact_uah": 38243.1,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "38 243,10",
       "raw_fact_usd": "894,18",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2027-11-01",
-      "exclude_from_summary": true,
-      "id": 45
+      "base_paid_usd": 894.18,
+      "base_paid_uah": 38243.1,
+      "exclude_from_summary": false,
+      "month_index": 72,
+      "id": 72
     },
     {
-      "invoice": null,
-      "title": "План: 01.12.2027",
+      "title": "План 01.12.2027",
       "due_label": "01.12.2027",
       "due_date": "2027-12-01",
       "payment_date": null,
@@ -1309,25 +2037,24 @@
       "fact_usd": 901.96,
       "fact_uah": 38575.84,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "38 575,84",
       "raw_fact_usd": "901,96",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2027-12-01",
-      "exclude_from_summary": true,
-      "id": 46
+      "base_paid_usd": 901.96,
+      "base_paid_uah": 38575.84,
+      "exclude_from_summary": false,
+      "month_index": 73,
+      "id": 73
     },
     {
-      "invoice": null,
-      "title": "План: 01.01.2028",
+      "title": "План 01.01.2028",
       "due_label": "01.01.2028",
       "due_date": "2028-01-01",
       "payment_date": null,
@@ -1337,25 +2064,24 @@
       "fact_usd": 909.81,
       "fact_uah": 38911.57,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "38 911,57",
       "raw_fact_usd": "909,81",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2028-01-01",
-      "exclude_from_summary": true,
-      "id": 47
+      "base_paid_usd": 909.81,
+      "base_paid_uah": 38911.57,
+      "exclude_from_summary": false,
+      "month_index": 74,
+      "id": 74
     },
     {
-      "invoice": null,
-      "title": "План: 01.02.2028",
+      "title": "План 01.02.2028",
       "due_label": "01.02.2028",
       "due_date": "2028-02-01",
       "payment_date": null,
@@ -1365,25 +2091,24 @@
       "fact_usd": 917.73,
       "fact_uah": 39250.3,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "39 250,30",
       "raw_fact_usd": "917,73",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2028-02-01",
-      "exclude_from_summary": true,
-      "id": 48
+      "base_paid_usd": 917.73,
+      "base_paid_uah": 39250.3,
+      "exclude_from_summary": false,
+      "month_index": 75,
+      "id": 75
     },
     {
-      "invoice": null,
-      "title": "План: 01.03.2028",
+      "title": "План 01.03.2028",
       "due_label": "01.03.2028",
       "due_date": "2028-03-01",
       "payment_date": null,
@@ -1393,25 +2118,24 @@
       "fact_usd": 925.71,
       "fact_uah": 39591.6,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "39 591,60",
       "raw_fact_usd": "925,71",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2028-03-01",
-      "exclude_from_summary": true,
-      "id": 49
+      "base_paid_usd": 925.71,
+      "base_paid_uah": 39591.6,
+      "exclude_from_summary": false,
+      "month_index": 76,
+      "id": 76
     },
     {
-      "invoice": null,
-      "title": "План: 01.04.2028",
+      "title": "План 01.04.2028",
       "due_label": "01.04.2028",
       "due_date": "2028-04-01",
       "payment_date": null,
@@ -1421,25 +2145,24 @@
       "fact_usd": 933.76,
       "fact_uah": 39935.89,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "39 935,89",
       "raw_fact_usd": "933,76",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2028-04-01",
-      "exclude_from_summary": true,
-      "id": 50
+      "base_paid_usd": 933.76,
+      "base_paid_uah": 39935.89,
+      "exclude_from_summary": false,
+      "month_index": 77,
+      "id": 77
     },
     {
-      "invoice": null,
-      "title": "План: 01.05.2028",
+      "title": "План 01.05.2028",
       "due_label": "01.05.2028",
       "due_date": "2028-05-01",
       "payment_date": null,
@@ -1449,25 +2172,24 @@
       "fact_usd": 941.88,
       "fact_uah": 40283.17,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "40 283,17",
       "raw_fact_usd": "941,88",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2028-05-01",
-      "exclude_from_summary": true,
-      "id": 51
+      "base_paid_usd": 941.88,
+      "base_paid_uah": 40283.17,
+      "exclude_from_summary": false,
+      "month_index": 78,
+      "id": 78
     },
     {
-      "invoice": null,
-      "title": "План: 01.06.2028",
+      "title": "План 01.06.2028",
       "due_label": "01.06.2028",
       "due_date": "2028-06-01",
       "payment_date": null,
@@ -1477,25 +2199,24 @@
       "fact_usd": 950.07,
       "fact_uah": 40633.45,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "40 633,45",
       "raw_fact_usd": "950,07",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2028-06-01",
-      "exclude_from_summary": true,
-      "id": 52
+      "base_paid_usd": 950.07,
+      "base_paid_uah": 40633.45,
+      "exclude_from_summary": false,
+      "month_index": 79,
+      "id": 79
     },
     {
-      "invoice": null,
-      "title": "План: 01.07.2028",
+      "title": "План 01.07.2028",
       "due_label": "01.07.2028",
       "due_date": "2028-07-01",
       "payment_date": null,
@@ -1505,25 +2226,24 @@
       "fact_usd": 958.34,
       "fact_uah": 40987.15,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "40 987,15",
       "raw_fact_usd": "958,34",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2028-07-01",
-      "exclude_from_summary": true,
-      "id": 53
+      "base_paid_usd": 958.34,
+      "base_paid_uah": 40987.15,
+      "exclude_from_summary": false,
+      "month_index": 80,
+      "id": 80
     },
     {
-      "invoice": null,
-      "title": "План: 01.08.2028",
+      "title": "План 01.08.2028",
       "due_label": "01.08.2028",
       "due_date": "2028-08-01",
       "payment_date": null,
@@ -1533,25 +2253,24 @@
       "fact_usd": 966.68,
       "fact_uah": 41343.84,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "41 343,84",
       "raw_fact_usd": "966,68",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2028-08-01",
-      "exclude_from_summary": true,
-      "id": 54
+      "base_paid_usd": 966.68,
+      "base_paid_uah": 41343.84,
+      "exclude_from_summary": false,
+      "month_index": 81,
+      "id": 81
     },
     {
-      "invoice": null,
-      "title": "План: 01.09.2028",
+      "title": "План 01.09.2028",
       "due_label": "01.09.2028",
       "due_date": "2028-09-01",
       "payment_date": null,
@@ -1561,25 +2280,24 @@
       "fact_usd": 975.09,
       "fact_uah": 41703.53,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "41 703,53",
       "raw_fact_usd": "975,09",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2028-09-01",
-      "exclude_from_summary": true,
-      "id": 55
+      "base_paid_usd": 975.09,
+      "base_paid_uah": 41703.53,
+      "exclude_from_summary": false,
+      "month_index": 82,
+      "id": 82
     },
     {
-      "invoice": null,
-      "title": "План: 01.10.2028",
+      "title": "План 01.10.2028",
       "due_label": "01.10.2028",
       "due_date": "2028-10-01",
       "payment_date": null,
@@ -1589,25 +2307,24 @@
       "fact_usd": 983.57,
       "fact_uah": 42066.21,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "42 066,21",
       "raw_fact_usd": "983,57",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2028-10-01",
-      "exclude_from_summary": true,
-      "id": 56
+      "base_paid_usd": 983.57,
+      "base_paid_uah": 42066.21,
+      "exclude_from_summary": false,
+      "month_index": 83,
+      "id": 83
     },
     {
-      "invoice": null,
-      "title": "План: 01.11.2028",
+      "title": "План 01.11.2028",
       "due_label": "01.11.2028",
       "due_date": "2028-11-01",
       "payment_date": null,
@@ -1617,25 +2334,24 @@
       "fact_usd": 992.13,
       "fact_uah": 42432.31,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "42 432,31",
       "raw_fact_usd": "992,13",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2028-11-01",
-      "exclude_from_summary": true,
-      "id": 57
+      "base_paid_usd": 992.13,
+      "base_paid_uah": 42432.31,
+      "exclude_from_summary": false,
+      "month_index": 84,
+      "id": 84
     },
     {
-      "invoice": null,
-      "title": "План: 01.12.2028",
+      "title": "План 01.12.2028",
       "due_label": "01.12.2028",
       "due_date": "2028-12-01",
       "payment_date": null,
@@ -1645,25 +2361,24 @@
       "fact_usd": 1000.76,
       "fact_uah": 42801.4,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "42 801,40",
       "raw_fact_usd": "1 000,76",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2028-12-01",
-      "exclude_from_summary": true,
-      "id": 58
+      "base_paid_usd": 1000.76,
+      "base_paid_uah": 42801.4,
+      "exclude_from_summary": false,
+      "month_index": 85,
+      "id": 85
     },
     {
-      "invoice": null,
-      "title": "План: 01.01.2029",
+      "title": "План 01.01.2029",
       "due_label": "01.01.2029",
       "due_date": "2029-01-01",
       "payment_date": null,
@@ -1673,25 +2388,24 @@
       "fact_usd": 1009.47,
       "fact_uah": 43173.92,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "43 173,92",
       "raw_fact_usd": "1 009,47",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2029-01-01",
-      "exclude_from_summary": true,
-      "id": 59
+      "base_paid_usd": 1009.47,
+      "base_paid_uah": 43173.92,
+      "exclude_from_summary": false,
+      "month_index": 86,
+      "id": 86
     },
     {
-      "invoice": null,
-      "title": "План: 01.02.2029",
+      "title": "План 01.02.2029",
       "due_label": "01.02.2029",
       "due_date": "2029-02-01",
       "payment_date": null,
@@ -1701,25 +2415,24 @@
       "fact_usd": 1018.25,
       "fact_uah": 43549.43,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "43 549,43",
       "raw_fact_usd": "1 018,25",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2029-02-01",
-      "exclude_from_summary": true,
-      "id": 60
+      "base_paid_usd": 1018.25,
+      "base_paid_uah": 43549.43,
+      "exclude_from_summary": false,
+      "month_index": 87,
+      "id": 87
     },
     {
-      "invoice": null,
-      "title": "План: 01.03.2029",
+      "title": "План 01.03.2029",
       "due_label": "01.03.2029",
       "due_date": "2029-03-01",
       "payment_date": null,
@@ -1729,25 +2442,24 @@
       "fact_usd": 1027.11,
       "fact_uah": 43928.36,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "43 928,36",
       "raw_fact_usd": "1 027,11",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2029-03-01",
-      "exclude_from_summary": true,
-      "id": 61
+      "base_paid_usd": 1027.11,
+      "base_paid_uah": 43928.36,
+      "exclude_from_summary": false,
+      "month_index": 88,
+      "id": 88
     },
     {
-      "invoice": null,
-      "title": "План: 01.04.2029",
+      "title": "План 01.04.2029",
       "due_label": "01.04.2029",
       "due_date": "2029-04-01",
       "payment_date": null,
@@ -1757,25 +2469,24 @@
       "fact_usd": 1036.05,
       "fact_uah": 44310.72,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "44 310,72",
       "raw_fact_usd": "1 036,05",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2029-04-01",
-      "exclude_from_summary": true,
-      "id": 62
+      "base_paid_usd": 1036.05,
+      "base_paid_uah": 44310.72,
+      "exclude_from_summary": false,
+      "month_index": 89,
+      "id": 89
     },
     {
-      "invoice": null,
-      "title": "План: 01.05.2029",
+      "title": "План 01.05.2029",
       "due_label": "01.05.2029",
       "due_date": "2029-05-01",
       "payment_date": null,
@@ -1785,25 +2496,24 @@
       "fact_usd": 1045.06,
       "fact_uah": 44696.07,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "44 696,07",
       "raw_fact_usd": "1 045,06",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2029-05-01",
-      "exclude_from_summary": true,
-      "id": 63
+      "base_paid_usd": 1045.06,
+      "base_paid_uah": 44696.07,
+      "exclude_from_summary": false,
+      "month_index": 90,
+      "id": 90
     },
     {
-      "invoice": null,
-      "title": "План: 01.06.2029",
+      "title": "План 01.06.2029",
       "due_label": "01.06.2029",
       "due_date": "2029-06-01",
       "payment_date": null,
@@ -1813,25 +2523,24 @@
       "fact_usd": 1054.15,
       "fact_uah": 45084.84,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "45 084,84",
       "raw_fact_usd": "1 054,15",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2029-06-01",
-      "exclude_from_summary": true,
-      "id": 64
+      "base_paid_usd": 1054.15,
+      "base_paid_uah": 45084.84,
+      "exclude_from_summary": false,
+      "month_index": 91,
+      "id": 91
     },
     {
-      "invoice": null,
-      "title": "План: 01.07.2029",
+      "title": "План 01.07.2029",
       "due_label": "01.07.2029",
       "due_date": "2029-07-01",
       "payment_date": null,
@@ -1841,25 +2550,24 @@
       "fact_usd": 1063.32,
       "fact_uah": 45477.03,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "45 477,03",
       "raw_fact_usd": "1 063,32",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2029-07-01",
-      "exclude_from_summary": true,
-      "id": 65
+      "base_paid_usd": 1063.32,
+      "base_paid_uah": 45477.03,
+      "exclude_from_summary": false,
+      "month_index": 92,
+      "id": 92
     },
     {
-      "invoice": null,
-      "title": "План: 01.08.2029",
+      "title": "План 01.08.2029",
       "due_label": "01.08.2029",
       "due_date": "2029-08-01",
       "payment_date": null,
@@ -1869,25 +2577,24 @@
       "fact_usd": 1072.57,
       "fact_uah": 45872.64,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "45 872,64",
       "raw_fact_usd": "1 072,57",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2029-08-01",
-      "exclude_from_summary": true,
-      "id": 66
+      "base_paid_usd": 1072.57,
+      "base_paid_uah": 45872.64,
+      "exclude_from_summary": false,
+      "month_index": 93,
+      "id": 93
     },
     {
-      "invoice": null,
-      "title": "План: 01.09.2029",
+      "title": "План 01.09.2029",
       "due_label": "01.09.2029",
       "due_date": "2029-09-01",
       "payment_date": null,
@@ -1897,25 +2604,24 @@
       "fact_usd": 1081.9,
       "fact_uah": 46271.67,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "46 271,67",
       "raw_fact_usd": "1 081,90",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2029-09-01",
-      "exclude_from_summary": true,
-      "id": 67
+      "base_paid_usd": 1081.9,
+      "base_paid_uah": 46271.67,
+      "exclude_from_summary": false,
+      "month_index": 94,
+      "id": 94
     },
     {
-      "invoice": null,
-      "title": "План: 01.10.2029",
+      "title": "План 01.10.2029",
       "due_label": "01.10.2029",
       "due_date": "2029-10-01",
       "payment_date": null,
@@ -1925,25 +2631,24 @@
       "fact_usd": 1091.31,
       "fact_uah": 46674.13,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "46 674,13",
       "raw_fact_usd": "1 091,31",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2029-10-01",
-      "exclude_from_summary": true,
-      "id": 68
+      "base_paid_usd": 1091.31,
+      "base_paid_uah": 46674.13,
+      "exclude_from_summary": false,
+      "month_index": 95,
+      "id": 95
     },
     {
-      "invoice": null,
-      "title": "План: 01.11.2029",
+      "title": "План 01.11.2029",
       "due_label": "01.11.2029",
       "due_date": "2029-11-01",
       "payment_date": null,
@@ -1953,25 +2658,24 @@
       "fact_usd": 1100.8,
       "fact_uah": 47080.01,
       "rate": 42.7689,
-      "meters": 29.92,
+      "meters": null,
       "percent_increase": "0,87%",
       "raw_fact_uah": "47 080,01",
       "raw_fact_usd": "1 100,80",
-      "status": "unpaid",
+      "status": "partial",
       "flags": {
         "early": false,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
-      "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0,
-      "source_due_date": "2029-11-01",
-      "exclude_from_summary": true,
-      "id": 69
+      "base_paid_usd": 1100.8,
+      "base_paid_uah": 47080.01,
+      "exclude_from_summary": false,
+      "month_index": 96,
+      "id": 96
     },
     {
-      "invoice": null,
-      "title": "План: 01.12.2029",
+      "title": "План 01.12.2029",
       "due_label": "01.12.2029",
       "due_date": "2029-12-01",
       "payment_date": null,
@@ -1989,17 +2693,16 @@
       "flags": {
         "early": true,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
       "base_paid_usd": 0.0,
       "base_paid_uah": 0.0,
-      "source_due_date": "2029-12-01",
-      "exclude_from_summary": true,
-      "id": 70
+      "exclude_from_summary": false,
+      "month_index": 97,
+      "id": 97
     },
     {
-      "invoice": null,
-      "title": "План: 01.01.2030",
+      "title": "План 01.01.2030",
       "due_label": "01.01.2030",
       "due_date": "2030-01-01",
       "payment_date": null,
@@ -2017,17 +2720,16 @@
       "flags": {
         "early": true,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
       "base_paid_usd": 0.0,
       "base_paid_uah": 0.0,
-      "source_due_date": "2030-01-01",
-      "exclude_from_summary": true,
-      "id": 71
+      "exclude_from_summary": false,
+      "month_index": 98,
+      "id": 98
     },
     {
-      "invoice": null,
-      "title": "План: 01.02.2030",
+      "title": "План 01.02.2030",
       "due_label": "01.02.2030",
       "due_date": "2030-02-01",
       "payment_date": null,
@@ -2045,17 +2747,16 @@
       "flags": {
         "early": true,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
       "base_paid_usd": 0.0,
       "base_paid_uah": 0.0,
-      "source_due_date": "2030-02-01",
-      "exclude_from_summary": true,
-      "id": 72
+      "exclude_from_summary": false,
+      "month_index": 99,
+      "id": 99
     },
     {
-      "invoice": null,
-      "title": "План: 01.03.2030",
+      "title": "План 01.03.2030",
       "due_label": "01.03.2030",
       "due_date": "2030-03-01",
       "payment_date": null,
@@ -2073,17 +2774,16 @@
       "flags": {
         "early": true,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
       "base_paid_usd": 0.0,
       "base_paid_uah": 0.0,
-      "source_due_date": "2030-03-01",
-      "exclude_from_summary": true,
-      "id": 73
+      "exclude_from_summary": false,
+      "month_index": 100,
+      "id": 100
     },
     {
-      "invoice": null,
-      "title": "План: 01.04.2030",
+      "title": "План 01.04.2030",
       "due_label": "01.04.2030",
       "due_date": "2030-04-01",
       "payment_date": null,
@@ -2101,17 +2801,16 @@
       "flags": {
         "early": true,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
       "base_paid_usd": 0.0,
       "base_paid_uah": 0.0,
-      "source_due_date": "2030-04-01",
-      "exclude_from_summary": true,
-      "id": 74
+      "exclude_from_summary": false,
+      "month_index": 101,
+      "id": 101
     },
     {
-      "invoice": null,
-      "title": "План: 01.05.2030",
+      "title": "План 01.05.2030",
       "due_label": "01.05.2030",
       "due_date": "2030-05-01",
       "payment_date": null,
@@ -2129,14 +2828,13 @@
       "flags": {
         "early": true,
         "initial": false,
-        "plan_only": true
+        "source": "304"
       },
       "base_paid_usd": 0.0,
       "base_paid_uah": 0.0,
-      "source_due_date": "2030-05-01",
-      "exclude_from_summary": true,
-      "id": 75
+      "exclude_from_summary": false,
+      "month_index": 102,
+      "id": 102
     }
-  ],
-  "summary_basis": "summary excludes rows where exclude_from_summary=true"
+  ]
 }

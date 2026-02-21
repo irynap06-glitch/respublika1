@@ -29,8 +29,9 @@
   const $summaryTotal = document.getElementById("summaryTotal");
   const $summaryCount = document.getElementById("summaryCount");
 
-  const $yearList = document.getElementById("yearList");
-  const $monthLinks = document.getElementById("monthLinks");
+  const $yearSelect = document.getElementById("yearSelect");
+  const $monthSelect = document.getElementById("monthSelect");
+  const $monthInfo = document.getElementById("monthInfo");
   const $calendarGrid = document.getElementById("calendarGrid");
 
   const $detailEmpty = document.getElementById("detailEmpty");
@@ -90,6 +91,7 @@
     overrides: loadJson(STORAGE_OVERRIDES, {}),
     currency: "usd",
     selectedYear: "all",
+    selectedMonth: "all",
     selectedId: String(payments.length ? payments[0].id : ""),
     search: "",
     fxRate: defaultFx,
@@ -112,7 +114,7 @@
 
     $searchInput.addEventListener("input", () => {
       state.search = ($searchInput.value || "").trim().toLowerCase();
-      renderCalendar();
+      renderAll();
     });
 
     $fxRateInput.addEventListener("change", () => {
@@ -133,26 +135,17 @@
       }
     });
 
-    $yearList.addEventListener("click", (event) => {
-      const btn = event.target.closest(".year-btn");
-      if (!btn) return;
-      state.selectedYear = btn.dataset.year;
+    $yearSelect.addEventListener("change", () => {
+      state.selectedYear = $yearSelect.value || "all";
+      ensureSelectedMonthInRange();
       persistSettings();
-      renderCalendar();
-      renderYearButtons();
-      renderMonthLinks();
+      renderAll();
     });
 
-    $monthLinks.addEventListener("click", (event) => {
-      const btn = event.target.closest(".month-link-btn");
-      if (!btn) return;
-      const target = document.getElementById(btn.dataset.target);
-      if (!target) return;
-      target.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      target.classList.add("selected");
-      state.selectedId = target.dataset.id;
+    $monthSelect.addEventListener("change", () => {
+      state.selectedMonth = $monthSelect.value || "all";
       persistSettings();
-      renderDetail();
+      renderAll();
     });
 
     $calendarGrid.addEventListener("click", (event) => {
@@ -253,8 +246,8 @@
   function renderAll() {
     renderCurrencyControls();
     renderSummary();
-    renderYearButtons();
-    renderMonthLinks();
+    renderPeriodFilters();
+    syncSelectedWithVisible();
     renderCalendar();
     renderDetail();
   }
@@ -295,44 +288,81 @@
     }${saving > 0 ? `, економія: ${formatCurrency(saving, state.currency)}` : ""}`;
   }
 
-  function renderYearButtons() {
-    const counts = new Map();
+  function renderPeriodFilters() {
+    const yearCounts = new Map();
     payments.forEach((item) => {
       const year = getPaymentYear(item);
-      counts.set(year, (counts.get(year) || 0) + 1);
+      yearCounts.set(year, (yearCounts.get(year) || 0) + 1);
     });
 
-    const buttons = [
-      `<button class="year-btn ${state.selectedYear === "all" ? "active" : ""}" data-year="all">Всі (${payments.length})</button>`,
+    if (state.selectedYear !== "all" && !years.includes(Number(state.selectedYear))) {
+      state.selectedYear = "all";
+    }
+
+    const yearOptions = [
+      `<option value="all"${state.selectedYear === "all" ? " selected" : ""}>Всі роки (${payments.length})</option>`,
       ...years.map((year) => {
-        const active = state.selectedYear === String(year) ? "active" : "";
-        return `<button class="year-btn ${active}" data-year="${year}">${year} (${counts.get(year) || 0})</button>`;
+        const selected = state.selectedYear === String(year) ? " selected" : "";
+        return `<option value="${year}"${selected}>${year} (${yearCounts.get(year) || 0})</option>`;
       }),
     ];
+    $yearSelect.innerHTML = yearOptions.join("");
 
-    $yearList.innerHTML = buttons.join("");
+    ensureSelectedMonthInRange();
+    const monthOptionsData = getMonthCounts(state.selectedYear);
+    const totalInYear = monthOptionsData.reduce((sum, entry) => sum + entry.count, 0);
+    const monthOptions = [
+      `<option value="all"${state.selectedMonth === "all" ? " selected" : ""}>Всі місяці (${totalInYear})</option>`,
+      ...monthOptionsData.map((entry) => {
+        const selected = state.selectedMonth === String(entry.month) ? " selected" : "";
+        return `<option value="${entry.month}"${selected}>${escapeHtml(
+          monthLong(entry.month)
+        )} (${entry.count})</option>`;
+      }),
+    ];
+    $monthSelect.innerHTML = monthOptions.join("");
+
+    const visible = getVisiblePayments();
+    const yearLabel = state.selectedYear === "all" ? "усі роки" : state.selectedYear;
+    const monthLabel = state.selectedMonth === "all" ? "усі місяці" : monthLong(Number(state.selectedMonth));
+    const searchLabel = state.search ? `, пошук: “${state.search}”` : "";
+    $monthInfo.textContent = `Показано ${visible.length} періодів: ${yearLabel}, ${monthLabel}${searchLabel}`;
   }
 
-  function renderMonthLinks() {
-    const visible = getVisiblePayments();
-    const links = [];
-    const seen = new Set();
-
-    visible.forEach((item) => {
+  function getMonthCounts(yearValue) {
+    const bucket = new Map();
+    payments.forEach((item) => {
       const year = getPaymentYear(item);
+      if (yearValue !== "all" && year !== Number(yearValue)) return;
       const month = getPaymentMonth(item);
       if (!month) return;
-      const key = `${year}-${String(month).padStart(2, "0")}`;
-      if (seen.has(key)) return;
-      seen.add(key);
-
-      const label = state.selectedYear === "all" ? `${shortMonth(month)} ${year}` : shortMonth(month);
-      links.push(
-        `<button class="month-link-btn" type="button" data-target="payment-${item.id}">${escapeHtml(label)}</button>`
-      );
+      bucket.set(month, (bucket.get(month) || 0) + 1);
     });
 
-    $monthLinks.innerHTML = links.length ? links.join("") : "";
+    return [...bucket.entries()]
+      .map(([month, count]) => ({ month, count }))
+      .sort((a, b) => a.month - b.month);
+  }
+
+  function ensureSelectedMonthInRange() {
+    if (state.selectedMonth === "all") return;
+    const exists = getMonthCounts(state.selectedYear).some(
+      (entry) => String(entry.month) === String(state.selectedMonth)
+    );
+    if (!exists) {
+      state.selectedMonth = "all";
+    }
+  }
+
+  function syncSelectedWithVisible() {
+    const visible = getVisiblePayments();
+    if (!visible.length) {
+      state.selectedId = "";
+      return;
+    }
+    if (!state.selectedId || !visible.some((item) => String(item.id) === state.selectedId)) {
+      state.selectedId = String(visible[0].id);
+    }
   }
 
   function renderCalendar() {
@@ -364,6 +394,10 @@
           : "";
       const paymentDateText = view.paymentDate ? `Оплата: ${formatDate(view.paymentDate)}` : "Дата оплати не вказана";
       const note = view.note || (item.flags && item.flags.early ? "Позначено як достроково в джерелі." : "");
+      const monthIndexText =
+        typeof item.month_index === "number" && Number.isFinite(item.month_index)
+          ? `Місяць плану: №${item.month_index}`
+          : "";
 
       return `
         <article class="payment-card ${selected} ${overdue}" id="payment-${item.id}" data-id="${item.id}">
@@ -375,6 +409,7 @@
           </div>
           <div class="card-amount">${formatCurrency(amount, state.currency)}</div>
           <p class="card-meta">${plannedText}</p>
+          ${monthIndexText ? `<p class="card-meta">${monthIndexText}</p>` : ""}
           ${earlyText ? `<p class="card-meta">${earlyText}</p>` : ""}
           <p class="card-meta">${paymentDateText}</p>
           ${note ? `<p class="card-note">${escapeHtml(note)}</p>` : ""}
@@ -439,6 +474,10 @@
     if (state.selectedYear !== "all") {
       const year = Number(state.selectedYear);
       list = list.filter((item) => getPaymentYear(item) === year);
+    }
+    if (state.selectedMonth !== "all") {
+      const month = Number(state.selectedMonth);
+      list = list.filter((item) => getPaymentMonth(item) === month);
     }
 
     if (state.search) {
@@ -645,12 +684,6 @@
     return `${monthLong(date.getMonth() + 1)} ${date.getFullYear()}`;
   }
 
-  function shortMonth(month) {
-    return new Intl.DateTimeFormat("uk-UA", { month: "short" })
-      .format(new Date(2026, month - 1, 1))
-      .replace(".", "");
-  }
-
   function monthLong(month) {
     const label = new Intl.DateTimeFormat("uk-UA", { month: "long" }).format(
       new Date(2026, month - 1, 1)
@@ -761,6 +794,7 @@
     const payload = {
       currency: state.currency,
       selectedYear: state.selectedYear,
+      selectedMonth: state.selectedMonth,
       selectedId: state.selectedId,
       fxRate: state.fxRate,
       earlyTariffPercent: state.earlyTariffPercent,
@@ -788,6 +822,7 @@
       settings: {
         currency: state.currency,
         selectedYear: state.selectedYear,
+        selectedMonth: state.selectedMonth,
         selectedId: state.selectedId,
         fxRate: state.fxRate,
         earlyTariffPercent: state.earlyTariffPercent,
@@ -804,6 +839,9 @@
     }
     if (settings.selectedYear === "all" || years.includes(Number(settings.selectedYear))) {
       state.selectedYear = String(settings.selectedYear);
+    }
+    if (settings.selectedMonth === "all" || (toNumber(settings.selectedMonth) || 0) >= 1) {
+      state.selectedMonth = String(settings.selectedMonth);
     }
     if (settings.selectedId && idToPayment.has(String(settings.selectedId))) {
       state.selectedId = String(settings.selectedId);

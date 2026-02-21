@@ -84,17 +84,26 @@
       </section>
 
       <section class="workspace">
-        <aside class="panel years-panel" aria-label="Роки">
+        <aside class="panel years-panel" aria-label="Фільтри періоду">
           <div class="panel-head">
-            <h2>Роки</h2>
+            <h2>Фільтри</h2>
           </div>
-          <div id="yearList" class="year-list"></div>
+          <div class="filter-stack">
+            <label class="field compact-field">
+              <span>Рік</span>
+              <select id="yearSelect"></select>
+            </label>
+            <label class="field compact-field">
+              <span>Місяць</span>
+              <select id="monthSelect"></select>
+            </label>
+          </div>
         </aside>
 
         <section class="panel calendar-panel" aria-label="Календар">
           <div class="panel-head">
             <h2>Місяці</h2>
-            <div id="monthLinks" class="month-links"></div>
+            <p class="panel-subline" id="monthInfo">Оберіть період</p>
           </div>
 
           <div class="legend" aria-label="Легенда статусів">

@@ -50,7 +50,9 @@ window.PAYMENTS_DATA = {
         "initial": true
       },
       "base_paid_usd": 13328.94,
-      "base_paid_uah": 352500.0
+      "base_paid_uah": 352500.0,
+      "month_index": 1,
+      "exclude_from_summary": false
     },
     {
       "id": 1,
@@ -75,7 +77,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 734.01,
-      "base_paid_uah": 19975.0
+      "base_paid_uah": 19975.0,
+      "month_index": 2,
+      "exclude_from_summary": false
     },
     {
       "id": 2,
@@ -100,7 +104,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 712.14,
-      "base_paid_uah": 19926.45
+      "base_paid_uah": 19926.45,
+      "month_index": 3,
+      "exclude_from_summary": false
     },
     {
       "id": 3,
@@ -125,7 +131,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 699.59,
-      "base_paid_uah": 19877.9
+      "base_paid_uah": 19877.9,
+      "month_index": 4,
+      "exclude_from_summary": false
     },
     {
       "id": 4,
@@ -150,7 +158,9 @@ window.PAYMENTS_DATA = {
         "holiday": true
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 5,
+      "exclude_from_summary": false
     },
     {
       "id": 5,
@@ -175,7 +185,9 @@ window.PAYMENTS_DATA = {
         "holiday": true
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 6,
+      "exclude_from_summary": false
     },
     {
       "id": 6,
@@ -200,7 +212,9 @@ window.PAYMENTS_DATA = {
         "holiday": true
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 7,
+      "exclude_from_summary": false
     },
     {
       "id": 7,
@@ -225,7 +239,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 677.81,
-      "base_paid_uah": 19829.35
+      "base_paid_uah": 19829.35,
+      "month_index": 8,
+      "exclude_from_summary": false
     },
     {
       "id": 8,
@@ -250,7 +266,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 621.06,
-      "base_paid_uah": 19780.8
+      "base_paid_uah": 19780.8,
+      "month_index": 9,
+      "exclude_from_summary": false
     },
     {
       "id": 9,
@@ -275,7 +293,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 539.6,
-      "base_paid_uah": 19732.25
+      "base_paid_uah": 19732.25,
+      "month_index": 10,
+      "exclude_from_summary": false
     },
     {
       "id": 10,
@@ -300,7 +320,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 538.27,
-      "base_paid_uah": 19683.7
+      "base_paid_uah": 19683.7,
+      "month_index": 11,
+      "exclude_from_summary": false
     },
     {
       "id": 11,
@@ -325,7 +347,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 536.94,
-      "base_paid_uah": 19635.15
+      "base_paid_uah": 19635.15,
+      "month_index": 12,
+      "exclude_from_summary": false
     },
     {
       "id": 12,
@@ -350,7 +374,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 535.61,
-      "base_paid_uah": 19586.6
+      "base_paid_uah": 19586.6,
+      "month_index": 13,
+      "exclude_from_summary": false
     },
     {
       "id": 13,
@@ -375,7 +401,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 534.28,
-      "base_paid_uah": 19538.05
+      "base_paid_uah": 19538.05,
+      "month_index": 14,
+      "exclude_from_summary": false
     },
     {
       "id": 14,
@@ -400,7 +428,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 532.96,
-      "base_paid_uah": 19489.5
+      "base_paid_uah": 19489.5,
+      "month_index": 15,
+      "exclude_from_summary": false
     },
     {
       "id": 15,
@@ -425,7 +455,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 531.63,
-      "base_paid_uah": 19440.95
+      "base_paid_uah": 19440.95,
+      "month_index": 16,
+      "exclude_from_summary": false
     },
     {
       "id": 16,
@@ -450,7 +482,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 530.3,
-      "base_paid_uah": 19392.4
+      "base_paid_uah": 19392.4,
+      "month_index": 17,
+      "exclude_from_summary": false
     },
     {
       "id": 17,
@@ -475,7 +509,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 528.97,
-      "base_paid_uah": 19343.85
+      "base_paid_uah": 19343.85,
+      "month_index": 18,
+      "exclude_from_summary": false
     },
     {
       "id": 18,
@@ -500,7 +536,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 527.65,
-      "base_paid_uah": 19295.3
+      "base_paid_uah": 19295.3,
+      "month_index": 19,
+      "exclude_from_summary": false
     },
     {
       "id": 19,
@@ -525,7 +563,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 526.32,
-      "base_paid_uah": 19246.74
+      "base_paid_uah": 19246.74,
+      "month_index": 20,
+      "exclude_from_summary": false
     },
     {
       "id": 20,
@@ -550,7 +590,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 524.99,
-      "base_paid_uah": 19198.19
+      "base_paid_uah": 19198.19,
+      "month_index": 21,
+      "exclude_from_summary": false
     },
     {
       "id": 21,
@@ -575,7 +617,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 523.66,
-      "base_paid_uah": 19149.64
+      "base_paid_uah": 19149.64,
+      "month_index": 22,
+      "exclude_from_summary": false
     },
     {
       "id": 22,
@@ -600,7 +644,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 522.34,
-      "base_paid_uah": 19101.09
+      "base_paid_uah": 19101.09,
+      "month_index": 23,
+      "exclude_from_summary": false
     },
     {
       "id": 23,
@@ -625,7 +671,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 521.72,
-      "base_paid_uah": 19052.54
+      "base_paid_uah": 19052.54,
+      "month_index": 24,
+      "exclude_from_summary": false
     },
     {
       "id": 24,
@@ -650,7 +698,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 525.62,
-      "base_paid_uah": 19003.99
+      "base_paid_uah": 19003.99,
+      "month_index": 25,
+      "exclude_from_summary": false
     },
     {
       "id": 25,
@@ -675,7 +725,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 511.01,
-      "base_paid_uah": 18955.44
+      "base_paid_uah": 18955.44,
+      "month_index": 26,
+      "exclude_from_summary": false
     },
     {
       "id": 26,
@@ -700,7 +752,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 499.28,
-      "base_paid_uah": 18906.89
+      "base_paid_uah": 18906.89,
+      "month_index": 27,
+      "exclude_from_summary": false
     },
     {
       "id": 27,
@@ -725,7 +779,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 496.63,
-      "base_paid_uah": 18858.34
+      "base_paid_uah": 18858.34,
+      "month_index": 28,
+      "exclude_from_summary": false
     },
     {
       "id": 28,
@@ -750,7 +806,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 486.5,
-      "base_paid_uah": 18809.79
+      "base_paid_uah": 18809.79,
+      "month_index": 29,
+      "exclude_from_summary": false
     },
     {
       "id": 29,
@@ -775,7 +833,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 476.65,
-      "base_paid_uah": 18761.24
+      "base_paid_uah": 18761.24,
+      "month_index": 30,
+      "exclude_from_summary": false
     },
     {
       "id": 30,
@@ -800,7 +860,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 471.23,
-      "base_paid_uah": 18712.69
+      "base_paid_uah": 18712.69,
+      "month_index": 31,
+      "exclude_from_summary": false
     },
     {
       "id": 31,
@@ -825,7 +887,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 461.1,
-      "base_paid_uah": 18664.14
+      "base_paid_uah": 18664.14,
+      "month_index": 32,
+      "exclude_from_summary": false
     },
     {
       "id": 32,
@@ -850,7 +914,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 454.15,
-      "base_paid_uah": 18615.59
+      "base_paid_uah": 18615.59,
+      "month_index": 33,
+      "exclude_from_summary": false
     },
     {
       "id": 33,
@@ -875,7 +941,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 450.77,
-      "base_paid_uah": 18567.04
+      "base_paid_uah": 18567.04,
+      "month_index": 34,
+      "exclude_from_summary": false
     },
     {
       "id": 34,
@@ -900,7 +968,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 448.96,
-      "base_paid_uah": 18518.49
+      "base_paid_uah": 18518.49,
+      "month_index": 35,
+      "exclude_from_summary": false
     },
     {
       "id": 35,
@@ -925,7 +995,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 447.84,
-      "base_paid_uah": 18469.94
+      "base_paid_uah": 18469.94,
+      "month_index": 36,
+      "exclude_from_summary": false
     },
     {
       "id": 36,
@@ -950,7 +1022,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 445.5,
-      "base_paid_uah": 18421.39
+      "base_paid_uah": 18421.39,
+      "month_index": 37,
+      "exclude_from_summary": false
     },
     {
       "id": 37,
@@ -975,7 +1049,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 440.05,
-      "base_paid_uah": 18372.84
+      "base_paid_uah": 18372.84,
+      "month_index": 38,
+      "exclude_from_summary": false
     },
     {
       "id": 38,
@@ -1000,7 +1076,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 435.16,
-      "base_paid_uah": 18324.29
+      "base_paid_uah": 18324.29,
+      "month_index": 39,
+      "exclude_from_summary": false
     },
     {
       "id": 39,
@@ -1025,7 +1103,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 438.57,
-      "base_paid_uah": 18275.74
+      "base_paid_uah": 18275.74,
+      "month_index": 40,
+      "exclude_from_summary": false
     },
     {
       "id": 40,
@@ -1050,7 +1130,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 439.41,
-      "base_paid_uah": 18227.19
+      "base_paid_uah": 18227.19,
+      "month_index": 41,
+      "exclude_from_summary": false
     },
     {
       "id": 41,
@@ -1075,7 +1157,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 438.95,
-      "base_paid_uah": 18178.64
+      "base_paid_uah": 18178.64,
+      "month_index": 42,
+      "exclude_from_summary": false
     },
     {
       "id": 42,
@@ -1100,7 +1184,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 436.55,
-      "base_paid_uah": 18130.09
+      "base_paid_uah": 18130.09,
+      "month_index": 43,
+      "exclude_from_summary": false
     },
     {
       "id": 43,
@@ -1125,7 +1211,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 434.87,
-      "base_paid_uah": 18081.54
+      "base_paid_uah": 18081.54,
+      "month_index": 44,
+      "exclude_from_summary": false
     },
     {
       "id": 44,
@@ -1150,7 +1238,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 431.47,
-      "base_paid_uah": 18032.99
+      "base_paid_uah": 18032.99,
+      "month_index": 45,
+      "exclude_from_summary": false
     },
     {
       "id": 45,
@@ -1175,7 +1265,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 433.97,
-      "base_paid_uah": 17984.44
+      "base_paid_uah": 17984.44,
+      "month_index": 46,
+      "exclude_from_summary": false
     },
     {
       "id": 46,
@@ -1200,7 +1292,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 434.09,
-      "base_paid_uah": 17935.89
+      "base_paid_uah": 17935.89,
+      "month_index": 47,
+      "exclude_from_summary": false
     },
     {
       "id": 47,
@@ -1225,7 +1319,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 429.7,
-      "base_paid_uah": 17887.34
+      "base_paid_uah": 17887.34,
+      "month_index": 48,
+      "exclude_from_summary": false
     },
     {
       "id": 48,
@@ -1250,7 +1346,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 423.68,
-      "base_paid_uah": 17838.78
+      "base_paid_uah": 17838.78,
+      "month_index": 49,
+      "exclude_from_summary": false
     },
     {
       "id": 49,
@@ -1275,7 +1373,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 421.57,
-      "base_paid_uah": 17790.23
+      "base_paid_uah": 17790.23,
+      "month_index": 50,
+      "exclude_from_summary": false
     },
     {
       "id": 50,
@@ -1300,7 +1400,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 413.24,
-      "base_paid_uah": 17741.68
+      "base_paid_uah": 17741.68,
+      "month_index": 51,
+      "exclude_from_summary": false
     },
     {
       "id": 51,
@@ -1325,7 +1427,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 410.58,
-      "base_paid_uah": 17693.13
+      "base_paid_uah": 17693.13,
+      "month_index": 52,
+      "exclude_from_summary": false
     },
     {
       "id": 52,
@@ -1350,7 +1454,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 53,
+      "exclude_from_summary": false
     },
     {
       "id": 53,
@@ -1375,7 +1481,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 54,
+      "exclude_from_summary": false
     },
     {
       "id": 54,
@@ -1400,7 +1508,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 55,
+      "exclude_from_summary": false
     },
     {
       "id": 55,
@@ -1425,7 +1535,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 56,
+      "exclude_from_summary": false
     },
     {
       "id": 56,
@@ -1450,7 +1562,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 57,
+      "exclude_from_summary": false
     },
     {
       "id": 57,
@@ -1475,7 +1589,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 58,
+      "exclude_from_summary": false
     },
     {
       "id": 58,
@@ -1500,7 +1616,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 59,
+      "exclude_from_summary": false
     },
     {
       "id": 59,
@@ -1525,7 +1643,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 60,
+      "exclude_from_summary": false
     },
     {
       "id": 60,
@@ -1550,7 +1670,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 61,
+      "exclude_from_summary": false
     },
     {
       "id": 61,
@@ -1575,7 +1697,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 62,
+      "exclude_from_summary": false
     },
     {
       "id": 62,
@@ -1600,7 +1724,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 63,
+      "exclude_from_summary": false
     },
     {
       "id": 63,
@@ -1625,7 +1751,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 64,
+      "exclude_from_summary": false
     },
     {
       "id": 64,
@@ -1650,7 +1778,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 65,
+      "exclude_from_summary": false
     },
     {
       "id": 65,
@@ -1675,7 +1805,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 66,
+      "exclude_from_summary": false
     },
     {
       "id": 66,
@@ -1700,7 +1832,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 67,
+      "exclude_from_summary": false
     },
     {
       "id": 67,
@@ -1725,7 +1859,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 68,
+      "exclude_from_summary": false
     },
     {
       "id": 68,
@@ -1750,7 +1886,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 69,
+      "exclude_from_summary": false
     },
     {
       "id": 69,
@@ -1775,7 +1913,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 70,
+      "exclude_from_summary": false
     },
     {
       "id": 70,
@@ -1800,7 +1940,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 71,
+      "exclude_from_summary": false
     },
     {
       "id": 71,
@@ -1825,7 +1967,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 72,
+      "exclude_from_summary": false
     },
     {
       "id": 72,
@@ -1850,7 +1994,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 73,
+      "exclude_from_summary": false
     },
     {
       "id": 73,
@@ -1875,7 +2021,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 74,
+      "exclude_from_summary": false
     },
     {
       "id": 74,
@@ -1900,7 +2048,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 75,
+      "exclude_from_summary": false
     },
     {
       "id": 75,
@@ -1925,7 +2075,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 76,
+      "exclude_from_summary": false
     },
     {
       "id": 76,
@@ -1950,7 +2102,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 77,
+      "exclude_from_summary": false
     },
     {
       "id": 77,
@@ -1975,7 +2129,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 78,
+      "exclude_from_summary": false
     },
     {
       "id": 78,
@@ -2000,7 +2156,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 79,
+      "exclude_from_summary": false
     },
     {
       "id": 79,
@@ -2025,7 +2183,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 80,
+      "exclude_from_summary": false
     },
     {
       "id": 80,
@@ -2050,7 +2210,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 81,
+      "exclude_from_summary": false
     },
     {
       "id": 81,
@@ -2075,7 +2237,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 82,
+      "exclude_from_summary": false
     },
     {
       "id": 82,
@@ -2100,7 +2264,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 83,
+      "exclude_from_summary": false
     },
     {
       "id": 83,
@@ -2125,7 +2291,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 84,
+      "exclude_from_summary": false
     },
     {
       "id": 84,
@@ -2150,7 +2318,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 85,
+      "exclude_from_summary": false
     },
     {
       "id": 85,
@@ -2175,7 +2345,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 86,
+      "exclude_from_summary": false
     },
     {
       "id": 86,
@@ -2200,7 +2372,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 87,
+      "exclude_from_summary": false
     },
     {
       "id": 87,
@@ -2225,7 +2399,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 88,
+      "exclude_from_summary": false
     },
     {
       "id": 88,
@@ -2250,7 +2426,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 89,
+      "exclude_from_summary": false
     },
     {
       "id": 89,
@@ -2275,7 +2453,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 90,
+      "exclude_from_summary": false
     },
     {
       "id": 90,
@@ -2300,7 +2480,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 91,
+      "exclude_from_summary": false
     },
     {
       "id": 91,
@@ -2325,7 +2507,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 92,
+      "exclude_from_summary": false
     },
     {
       "id": 92,
@@ -2350,7 +2534,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 93,
+      "exclude_from_summary": false
     },
     {
       "id": 93,
@@ -2375,7 +2561,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 94,
+      "exclude_from_summary": false
     },
     {
       "id": 94,
@@ -2400,7 +2588,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 95,
+      "exclude_from_summary": false
     },
     {
       "id": 95,
@@ -2425,7 +2615,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 96,
+      "exclude_from_summary": false
     },
     {
       "id": 96,
@@ -2450,7 +2642,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 97,
+      "exclude_from_summary": false
     },
     {
       "id": 97,
@@ -2475,7 +2669,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 98,
+      "exclude_from_summary": false
     },
     {
       "id": 98,
@@ -2500,7 +2696,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 99,
+      "exclude_from_summary": false
     },
     {
       "id": 99,
@@ -2525,7 +2723,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 100,
+      "exclude_from_summary": false
     },
     {
       "id": 100,
@@ -2550,7 +2750,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 101,
+      "exclude_from_summary": false
     },
     {
       "id": 101,
@@ -2575,7 +2777,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 102,
+      "exclude_from_summary": false
     },
     {
       "id": 102,
@@ -2600,7 +2804,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 103,
+      "exclude_from_summary": false
     },
     {
       "id": 103,
@@ -2625,7 +2831,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 104,
+      "exclude_from_summary": false
     },
     {
       "id": 104,
@@ -2650,7 +2858,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 105,
+      "exclude_from_summary": false
     },
     {
       "id": 105,
@@ -2675,7 +2885,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 106,
+      "exclude_from_summary": false
     },
     {
       "id": 106,
@@ -2700,7 +2912,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 107,
+      "exclude_from_summary": false
     },
     {
       "id": 107,
@@ -2725,7 +2939,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 108,
+      "exclude_from_summary": false
     },
     {
       "id": 108,
@@ -2750,7 +2966,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 109,
+      "exclude_from_summary": false
     },
     {
       "id": 109,
@@ -2775,7 +2993,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 110,
+      "exclude_from_summary": false
     },
     {
       "id": 110,
@@ -2800,7 +3020,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 111,
+      "exclude_from_summary": false
     },
     {
       "id": 111,
@@ -2825,7 +3047,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 112,
+      "exclude_from_summary": false
     },
     {
       "id": 112,
@@ -2850,7 +3074,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 113,
+      "exclude_from_summary": false
     },
     {
       "id": 113,
@@ -2875,7 +3101,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 114,
+      "exclude_from_summary": false
     },
     {
       "id": 114,
@@ -2900,7 +3128,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 115,
+      "exclude_from_summary": false
     },
     {
       "id": 115,
@@ -2925,7 +3155,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 116,
+      "exclude_from_summary": false
     },
     {
       "id": 116,
@@ -2950,7 +3182,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 117,
+      "exclude_from_summary": false
     },
     {
       "id": 117,
@@ -2975,7 +3209,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 118,
+      "exclude_from_summary": false
     },
     {
       "id": 118,
@@ -3000,7 +3236,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 119,
+      "exclude_from_summary": false
     },
     {
       "id": 119,
@@ -3025,7 +3263,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 120,
+      "exclude_from_summary": false
     },
     {
       "id": 120,
@@ -3050,7 +3290,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 121,
+      "exclude_from_summary": false
     },
     {
       "id": 121,
@@ -3075,7 +3317,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 122,
+      "exclude_from_summary": false
     },
     {
       "id": 122,
@@ -3100,7 +3344,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 123,
+      "exclude_from_summary": false
     },
     {
       "id": 123,
@@ -3125,7 +3371,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 124,
+      "exclude_from_summary": false
     },
     {
       "id": 124,
@@ -3150,7 +3398,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 125,
+      "exclude_from_summary": false
     },
     {
       "id": 125,
@@ -3175,7 +3425,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 126,
+      "exclude_from_summary": false
     },
     {
       "id": 126,
@@ -3200,7 +3452,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 127,
+      "exclude_from_summary": false
     },
     {
       "id": 127,
@@ -3225,7 +3479,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 128,
+      "exclude_from_summary": false
     },
     {
       "id": 128,
@@ -3250,7 +3506,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 129,
+      "exclude_from_summary": false
     },
     {
       "id": 129,
@@ -3275,7 +3533,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 130,
+      "exclude_from_summary": false
     },
     {
       "id": 130,
@@ -3300,7 +3560,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 131,
+      "exclude_from_summary": false
     },
     {
       "id": 131,
@@ -3325,7 +3587,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 132,
+      "exclude_from_summary": false
     },
     {
       "id": 132,
@@ -3350,7 +3614,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 133,
+      "exclude_from_summary": false
     },
     {
       "id": 133,
@@ -3375,7 +3641,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 134,
+      "exclude_from_summary": false
     },
     {
       "id": 134,
@@ -3400,7 +3668,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 135,
+      "exclude_from_summary": false
     },
     {
       "id": 135,
@@ -3425,7 +3695,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 136,
+      "exclude_from_summary": false
     },
     {
       "id": 136,
@@ -3450,7 +3722,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 137,
+      "exclude_from_summary": false
     },
     {
       "id": 137,
@@ -3475,7 +3749,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 138,
+      "exclude_from_summary": false
     },
     {
       "id": 138,
@@ -3500,7 +3776,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 139,
+      "exclude_from_summary": false
     },
     {
       "id": 139,
@@ -3525,7 +3803,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 140,
+      "exclude_from_summary": false
     },
     {
       "id": 140,
@@ -3550,7 +3830,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 141,
+      "exclude_from_summary": false
     },
     {
       "id": 141,
@@ -3575,7 +3857,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 142,
+      "exclude_from_summary": false
     },
     {
       "id": 142,
@@ -3600,7 +3884,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 143,
+      "exclude_from_summary": false
     },
     {
       "id": 143,
@@ -3625,7 +3911,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 144,
+      "exclude_from_summary": false
     },
     {
       "id": 144,
@@ -3650,7 +3938,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 145,
+      "exclude_from_summary": false
     },
     {
       "id": 145,
@@ -3675,7 +3965,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 146,
+      "exclude_from_summary": false
     },
     {
       "id": 146,
@@ -3700,7 +3992,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 147,
+      "exclude_from_summary": false
     },
     {
       "id": 147,
@@ -3725,7 +4019,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 148,
+      "exclude_from_summary": false
     },
     {
       "id": 148,
@@ -3750,7 +4046,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 149,
+      "exclude_from_summary": false
     },
     {
       "id": 149,
@@ -3775,7 +4073,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 150,
+      "exclude_from_summary": false
     },
     {
       "id": 150,
@@ -3800,7 +4100,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 151,
+      "exclude_from_summary": false
     },
     {
       "id": 151,
@@ -3825,7 +4127,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 152,
+      "exclude_from_summary": false
     },
     {
       "id": 152,
@@ -3850,7 +4154,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 153,
+      "exclude_from_summary": false
     },
     {
       "id": 153,
@@ -3875,7 +4181,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 154,
+      "exclude_from_summary": false
     },
     {
       "id": 154,
@@ -3900,7 +4208,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 155,
+      "exclude_from_summary": false
     },
     {
       "id": 155,
@@ -3925,7 +4235,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 156,
+      "exclude_from_summary": false
     },
     {
       "id": 156,
@@ -3950,7 +4262,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 157,
+      "exclude_from_summary": false
     },
     {
       "id": 157,
@@ -3975,7 +4289,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 158,
+      "exclude_from_summary": false
     },
     {
       "id": 158,
@@ -4000,7 +4316,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 159,
+      "exclude_from_summary": false
     },
     {
       "id": 159,
@@ -4025,7 +4343,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 160,
+      "exclude_from_summary": false
     },
     {
       "id": 160,
@@ -4050,7 +4370,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 161,
+      "exclude_from_summary": false
     },
     {
       "id": 161,
@@ -4075,7 +4397,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 162,
+      "exclude_from_summary": false
     },
     {
       "id": 162,
@@ -4100,7 +4424,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 163,
+      "exclude_from_summary": false
     },
     {
       "id": 163,
@@ -4125,7 +4451,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 164,
+      "exclude_from_summary": false
     },
     {
       "id": 164,
@@ -4150,7 +4478,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 165,
+      "exclude_from_summary": false
     },
     {
       "id": 165,
@@ -4175,7 +4505,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 166,
+      "exclude_from_summary": false
     },
     {
       "id": 166,
@@ -4200,7 +4532,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 167,
+      "exclude_from_summary": false
     },
     {
       "id": 167,
@@ -4225,7 +4559,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 168,
+      "exclude_from_summary": false
     },
     {
       "id": 168,
@@ -4250,7 +4586,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 169,
+      "exclude_from_summary": false
     },
     {
       "id": 169,
@@ -4275,7 +4613,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 170,
+      "exclude_from_summary": false
     },
     {
       "id": 170,
@@ -4300,7 +4640,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 171,
+      "exclude_from_summary": false
     },
     {
       "id": 171,
@@ -4325,7 +4667,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 172,
+      "exclude_from_summary": false
     },
     {
       "id": 172,
@@ -4350,7 +4694,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 173,
+      "exclude_from_summary": false
     },
     {
       "id": 173,
@@ -4375,7 +4721,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 174,
+      "exclude_from_summary": false
     },
     {
       "id": 174,
@@ -4400,7 +4748,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 175,
+      "exclude_from_summary": false
     },
     {
       "id": 175,
@@ -4425,7 +4775,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 176,
+      "exclude_from_summary": false
     },
     {
       "id": 176,
@@ -4450,7 +4802,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 177,
+      "exclude_from_summary": false
     },
     {
       "id": 177,
@@ -4475,7 +4829,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 178,
+      "exclude_from_summary": false
     },
     {
       "id": 178,
@@ -4500,7 +4856,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 179,
+      "exclude_from_summary": false
     },
     {
       "id": 179,
@@ -4525,7 +4883,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 180,
+      "exclude_from_summary": false
     },
     {
       "id": 180,
@@ -4550,7 +4910,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 181,
+      "exclude_from_summary": false
     },
     {
       "id": 181,
@@ -4575,7 +4937,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 182,
+      "exclude_from_summary": false
     },
     {
       "id": 182,
@@ -4600,7 +4964,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 183,
+      "exclude_from_summary": false
     },
     {
       "id": 183,
@@ -4625,7 +4991,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 184,
+      "exclude_from_summary": false
     },
     {
       "id": 184,
@@ -4650,7 +5018,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 185,
+      "exclude_from_summary": false
     },
     {
       "id": 185,
@@ -4675,7 +5045,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 186,
+      "exclude_from_summary": false
     },
     {
       "id": 186,
@@ -4700,7 +5072,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 187,
+      "exclude_from_summary": false
     },
     {
       "id": 187,
@@ -4725,7 +5099,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 188,
+      "exclude_from_summary": false
     },
     {
       "id": 188,
@@ -4750,7 +5126,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 189,
+      "exclude_from_summary": false
     },
     {
       "id": 189,
@@ -4775,7 +5153,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 190,
+      "exclude_from_summary": false
     },
     {
       "id": 190,
@@ -4800,7 +5180,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 191,
+      "exclude_from_summary": false
     },
     {
       "id": 191,
@@ -4825,7 +5207,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 192,
+      "exclude_from_summary": false
     },
     {
       "id": 192,
@@ -4850,7 +5234,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 193,
+      "exclude_from_summary": false
     },
     {
       "id": 193,
@@ -4875,7 +5261,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 194,
+      "exclude_from_summary": false
     },
     {
       "id": 194,
@@ -4900,7 +5288,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 195,
+      "exclude_from_summary": false
     },
     {
       "id": 195,
@@ -4925,7 +5315,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 196,
+      "exclude_from_summary": false
     },
     {
       "id": 196,
@@ -4950,7 +5342,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 197,
+      "exclude_from_summary": false
     },
     {
       "id": 197,
@@ -4975,7 +5369,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 198,
+      "exclude_from_summary": false
     },
     {
       "id": 198,
@@ -5000,7 +5396,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 199,
+      "exclude_from_summary": false
     },
     {
       "id": 199,
@@ -5025,7 +5423,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 200,
+      "exclude_from_summary": false
     },
     {
       "id": 200,
@@ -5050,7 +5450,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 201,
+      "exclude_from_summary": false
     },
     {
       "id": 201,
@@ -5075,7 +5477,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 202,
+      "exclude_from_summary": false
     },
     {
       "id": 202,
@@ -5100,7 +5504,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 203,
+      "exclude_from_summary": false
     },
     {
       "id": 203,
@@ -5125,7 +5531,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 204,
+      "exclude_from_summary": false
     },
     {
       "id": 204,
@@ -5150,7 +5558,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 205,
+      "exclude_from_summary": false
     },
     {
       "id": 205,
@@ -5175,7 +5585,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 206,
+      "exclude_from_summary": false
     },
     {
       "id": 206,
@@ -5200,7 +5612,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 207,
+      "exclude_from_summary": false
     },
     {
       "id": 207,
@@ -5225,7 +5639,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 208,
+      "exclude_from_summary": false
     },
     {
       "id": 208,
@@ -5250,7 +5666,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 209,
+      "exclude_from_summary": false
     },
     {
       "id": 209,
@@ -5275,7 +5693,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 210,
+      "exclude_from_summary": false
     },
     {
       "id": 210,
@@ -5300,7 +5720,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 211,
+      "exclude_from_summary": false
     },
     {
       "id": 211,
@@ -5325,7 +5747,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 212,
+      "exclude_from_summary": false
     },
     {
       "id": 212,
@@ -5350,7 +5774,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 213,
+      "exclude_from_summary": false
     },
     {
       "id": 213,
@@ -5375,7 +5801,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 214,
+      "exclude_from_summary": false
     },
     {
       "id": 214,
@@ -5400,7 +5828,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 215,
+      "exclude_from_summary": false
     },
     {
       "id": 215,
@@ -5425,7 +5855,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 216,
+      "exclude_from_summary": false
     },
     {
       "id": 216,
@@ -5450,7 +5882,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 217,
+      "exclude_from_summary": false
     },
     {
       "id": 217,
@@ -5475,7 +5909,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 218,
+      "exclude_from_summary": false
     },
     {
       "id": 218,
@@ -5500,7 +5936,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 219,
+      "exclude_from_summary": false
     },
     {
       "id": 219,
@@ -5525,7 +5963,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 220,
+      "exclude_from_summary": false
     },
     {
       "id": 220,
@@ -5550,7 +5990,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 221,
+      "exclude_from_summary": false
     },
     {
       "id": 221,
@@ -5575,7 +6017,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 222,
+      "exclude_from_summary": false
     },
     {
       "id": 222,
@@ -5600,7 +6044,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 223,
+      "exclude_from_summary": false
     },
     {
       "id": 223,
@@ -5625,7 +6071,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 224,
+      "exclude_from_summary": false
     },
     {
       "id": 224,
@@ -5650,7 +6098,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 225,
+      "exclude_from_summary": false
     },
     {
       "id": 225,
@@ -5675,7 +6125,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 226,
+      "exclude_from_summary": false
     },
     {
       "id": 226,
@@ -5700,7 +6152,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 227,
+      "exclude_from_summary": false
     },
     {
       "id": 227,
@@ -5725,7 +6179,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 228,
+      "exclude_from_summary": false
     },
     {
       "id": 228,
@@ -5750,7 +6206,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 229,
+      "exclude_from_summary": false
     },
     {
       "id": 229,
@@ -5775,7 +6233,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 230,
+      "exclude_from_summary": false
     },
     {
       "id": 230,
@@ -5800,7 +6260,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 231,
+      "exclude_from_summary": false
     },
     {
       "id": 231,
@@ -5825,7 +6287,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 232,
+      "exclude_from_summary": false
     },
     {
       "id": 232,
@@ -5850,7 +6314,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 233,
+      "exclude_from_summary": false
     },
     {
       "id": 233,
@@ -5875,7 +6341,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 234,
+      "exclude_from_summary": false
     },
     {
       "id": 234,
@@ -5900,7 +6368,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 235,
+      "exclude_from_summary": false
     },
     {
       "id": 235,
@@ -5925,7 +6395,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 236,
+      "exclude_from_summary": false
     },
     {
       "id": 236,
@@ -5950,7 +6422,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 237,
+      "exclude_from_summary": false
     },
     {
       "id": 237,
@@ -5975,7 +6449,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 238,
+      "exclude_from_summary": false
     },
     {
       "id": 238,
@@ -6000,7 +6476,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 239,
+      "exclude_from_summary": false
     },
     {
       "id": 239,
@@ -6025,7 +6503,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 240,
+      "exclude_from_summary": false
     },
     {
       "id": 240,
@@ -6050,7 +6530,9 @@ window.PAYMENTS_DATA = {
         "holiday": false
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 241,
+      "exclude_from_summary": false
     },
     {
       "id": 241,
@@ -6075,7 +6557,9 @@ window.PAYMENTS_DATA = {
         "catchup": true
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 242,
+      "exclude_from_summary": false
     },
     {
       "id": 242,
@@ -6100,7 +6584,9 @@ window.PAYMENTS_DATA = {
         "catchup": true
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 243,
+      "exclude_from_summary": false
     },
     {
       "id": 243,
@@ -6125,7 +6611,10 @@ window.PAYMENTS_DATA = {
         "catchup": true
       },
       "base_paid_usd": 0.0,
-      "base_paid_uah": 0.0
+      "base_paid_uah": 0.0,
+      "month_index": 244,
+      "exclude_from_summary": false
     }
-  ]
+  ],
+  "summary_basis": "summary excludes rows where exclude_from_summary=true"
 };
