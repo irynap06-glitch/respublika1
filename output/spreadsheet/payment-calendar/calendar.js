@@ -245,7 +245,7 @@
     $monthSelect.addEventListener("input", onPeriodChange);
 
     $calendarGrid.addEventListener("click", (event) => {
-      if (state.viewMode !== "month") return;
+      if (isAggregatedView()) return;
       const toggle = event.target.closest(".status-toggle");
       if (toggle) {
         const id = toggle.dataset.id;
@@ -621,11 +621,12 @@
     $monthSelect.innerHTML = monthOptions.join("");
 
     const visible = getVisiblePayments();
-    const groupCount = state.viewMode === "month" ? visible.length : buildAggregateGroups(visible, state.viewMode).length;
+    const modeForCount = aggregateModeForView();
+    const groupCount = isAggregatedView() ? buildAggregateGroups(visible, modeForCount).length : visible.length;
     const yearLabel = state.selectedYear === "all" ? "усі роки" : state.selectedYear;
     const periodLabel = describeSelectedPeriod(state.selectedMonth, state.selectedYear, state.viewMode);
     const searchLabel = state.search ? `, пошук: “${state.search}”` : "";
-    const countLabel = state.viewMode === "month" ? "місяців" : state.viewMode === "quarter" ? "кварталів" : "років";
+    const countLabel = modeForCount === "month" ? "місяців" : modeForCount === "quarter" ? "кварталів" : "років";
     $monthInfo.textContent = `Показано ${groupCount} ${countLabel}: ${yearLabel}, ${periodLabel}${searchLabel}`;
   }
 
@@ -700,7 +701,7 @@
   }
 
   function syncSelectedWithVisible() {
-    if (state.viewMode !== "month") {
+    if (isAggregatedView()) {
       state.selectedId = "";
       return;
     }
@@ -722,8 +723,8 @@
       return;
     }
 
-    if (state.viewMode !== "month") {
-      renderAggregateCalendar(visible, state.viewMode);
+    if (isAggregatedView()) {
+      renderAggregateCalendar(visible, aggregateModeForView());
       return;
     }
 
@@ -819,7 +820,11 @@
       let label = "";
       let sortA = year;
       let sortB = 0;
-      if (mode === "quarter") {
+      if (mode === "month") {
+        key = `${year}-${String(month).padStart(2, "0")}`;
+        label = `${monthLong(month)} ${year}`;
+        sortB = month;
+      } else if (mode === "quarter") {
         key = `${year}-Q${quarter}`;
         label = `Q${quarter} ${year}`;
         sortB = quarter;
@@ -875,10 +880,11 @@
   }
 
   function renderDetail() {
-    if (state.viewMode !== "month") {
+    if (isAggregatedView()) {
       $detailForm.hidden = true;
       $detailEmpty.hidden = false;
-      $detailEmpty.textContent = "У режимі кварталів/років картки агреговані. Для редагування відкрийте режим «Місяці».";
+      $detailEmpty.textContent =
+        "У цьому режимі картки агреговані. Для редагування відкрийте один проєкт у режимі «Місяці».";
       return;
     }
 
@@ -1520,6 +1526,14 @@
     if (!state.selectedCategories.length) {
       state.selectedCategories = [...categoryKeys];
     }
+  }
+
+  function isAggregatedView() {
+    return state.viewMode !== "month" || state.selectedProjects.length > 1;
+  }
+
+  function aggregateModeForView() {
+    return state.viewMode === "month" && state.selectedProjects.length > 1 ? "month" : state.viewMode;
   }
 
   function inferInitialProjectKey(keys) {
