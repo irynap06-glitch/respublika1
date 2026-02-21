@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Календар залишку оплат</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="payments-data.js"></script>
+    <script src="calendar.js" defer></script>
+  </head>
+  <body>
+    <div class="bg-orb bg-orb-a" aria-hidden="true"></div>
+    <div class="bg-orb bg-orb-b" aria-hidden="true"></div>
+
+    <main class="app">
+      <header class="hero">
+        <p class="eyebrow">Інтерактивний графік</p>
+        <h1>Календар оплат</h1>
+        <p class="subtitle">
+          Клікайте по місяцях, змінюйте статус, додавайте нотатки і контролюйте залишок оплат у
+          гривнях або доларах.
+        </p>
+
+        <div class="controls-row">
+          <div class="currency-switch" role="group" aria-label="Валюта">
+            <button type="button" class="currency-btn" data-currency="usd">USD</button>
+            <button type="button" class="currency-btn" data-currency="uah">UAH</button>
+          </div>
+
+          <label class="field fx-field">
+            <span>Курс USD -> UAH</span>
+            <input id="fxRateInput" type="number" step="0.0001" min="0.01" />
+          </label>
+
+          <label class="field tariff-field">
+            <span>Тариф достроково (%)</span>
+            <input id="earlyTariffInput" type="number" step="0.01" min="1" max="200" />
+          </label>
+
+          <label class="field search-field">
+            <span>Пошук</span>
+            <input id="searchInput" type="search" placeholder="Місяць, дата, статус, нотатка" />
+          </label>
+
+          <button id="exportBackupBtn" class="ghost-btn" type="button">Експорт backup</button>
+          <button id="importBackupBtn" class="ghost-btn" type="button">Імпорт backup</button>
+          <button id="resetAllBtn" class="ghost-btn" type="button">Скинути мої зміни</button>
+          <input id="importBackupFile" type="file" accept="application/json" hidden />
+        </div>
+      </header>
+
+      <section class="summary" aria-label="Підсумки">
+        <article class="summary-card">
+          <p>Оплачено</p>
+          <strong id="summaryPaid">-</strong>
+        </article>
+        <article class="summary-card">
+          <p>Залишок по плану</p>
+          <strong id="summaryRemainingPlan">-</strong>
+        </article>
+        <article class="summary-card">
+          <p id="summaryRemainingEarlyLabel">Залишок достроково</p>
+          <strong id="summaryRemainingEarly">-</strong>
+        </article>
+        <article class="summary-card">
+          <p>Всього</p>
+          <strong id="summaryTotal">-</strong>
+        </article>
+        <article class="summary-card">
+          <p>Платежі</p>
+          <strong id="summaryCount">-</strong>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <aside class="panel years-panel" aria-label="Роки">
+          <div class="panel-head">
+            <h2>Роки</h2>
+          </div>
+          <div id="yearList" class="year-list"></div>
+        </aside>
+
+        <section class="panel calendar-panel" aria-label="Календар">
+          <div class="panel-head">
+            <h2>Місяці</h2>
+            <div id="monthLinks" class="month-links"></div>
+          </div>
+
+          <div class="legend" aria-label="Легенда статусів">
+            <span class="legend-dot paid"></span>Оплачено
+            <span class="legend-dot unpaid"></span>Не оплачено
+            <span class="legend-dot partial"></span>Частково
+            <span class="legend-dot early"></span>Достроково
+          </div>
+
+          <div id="calendarGrid" class="calendar-grid"></div>
+        </section>
+
+        <aside class="panel detail-panel" aria-label="Редагування">
+          <div class="panel-head">
+            <h2>Деталі платежу</h2>
+          </div>
+
+          <div id="detailEmpty" class="detail-empty">
+            Виберіть місяць або перший внесок, щоб змінити статус/суму.
+          </div>
+
+          <form id="detailForm" class="detail-form" hidden>
+            <h3 id="detailTitle"></h3>
+            <p id="detailMeta" class="detail-meta"></p>
+
+            <label class="field">
+              <span>Статус</span>
+              <select id="statusInput">
+                <option value="unpaid">Не оплачено</option>
+                <option value="partial">Частково</option>
+                <option value="paid">Оплачено</option>
+                <option value="early">Достроково</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Оплачено (USD)</span>
+              <input id="paidUsdInput" type="number" step="0.01" min="0" placeholder="Авто" />
+            </label>
+
+            <label class="field">
+              <span>Оплачено (UAH)</span>
+              <input id="paidUahInput" type="number" step="0.01" min="0" placeholder="Авто" />
+            </label>
+
+            <label class="field">
+              <span>Дата оплати</span>
+              <input id="paymentDateInput" type="date" />
+            </label>
+
+            <label class="field">
+              <span>Нотатка</span>
+              <textarea id="noteInput" rows="3" placeholder="Наприклад: підтверджено квитанцією"></textarea>
+            </label>
+
+            <div class="detail-actions">
+              <button type="submit" class="solid-btn">Зберегти</button>
+              <button type="button" id="clearItemBtn" class="ghost-btn">Скинути по платежу</button>
+            </div>
+          </form>
+        </aside>
+      </section>
+    </main>
+  </body>
+</html>
