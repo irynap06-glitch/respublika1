@@ -13,6 +13,7 @@
   const STORAGE_SNAPSHOT = `payment_calendar_snapshot_v1_${PROJECT_KEY}`;
   const STORAGE_SNAPSHOT_HISTORY = `payment_calendar_snapshot_history_v1_${PROJECT_KEY}`;
   const MAX_SNAPSHOT_HISTORY = 40;
+  const NIVKI_ANNUAL_RATE = 0.07;
 
   const STATUS_ORDER = ["unpaid", "paid", "early"];
   const STATUS_LABELS = {
@@ -272,30 +273,98 @@
       0
     );
 
-    const earlyBaseRow = getEarliestPayableRow(payableFutureRows);
-    const earlyUnitUsd = earlyBaseRow ? earlyBaseRow.view.scheduleUsd : 0;
-    const earlyUnitUah = earlyBaseRow ? earlyBaseRow.view.scheduleUah : 0;
-    state.earlyUnitUsd = earlyUnitUsd;
-    state.earlyUnitUah = earlyUnitUah;
+    const earlyCalc = computeEarlySettlement(payableFutureRows);
+    state.earlyUnitUsd = earlyCalc.unitUsd;
+    state.earlyUnitUah = earlyCalc.unitUah;
 
     const futureCount = payableFutureRows.length;
-    const remainingEarlyUsd = futureCount * earlyUnitUsd;
-    const remainingEarlyUah = futureCount * earlyUnitUah;
+    const remainingEarlyUsd = earlyCalc.totalUsd;
+    const remainingEarlyUah = earlyCalc.totalUah;
     const remainingEarly = state.currency === "usd" ? remainingEarlyUsd : remainingEarlyUah;
     const total = paid + remainingPlan;
 
     const paidCount = paidRows.length;
     const allCount = rows.length;
-    const baseLabel = earlyBaseRow
-      ? readablePaymentTitle(earlyBaseRow.payment)
-      : "немає базового місяця";
-
     $summaryPaid.textContent = formatCurrency(paid, state.currency);
     $summaryRemainingPlan.textContent = formatCurrency(remainingPlan, state.currency);
     $summaryRemainingEarly.textContent = formatCurrency(remainingEarly, state.currency);
-    $summaryRemainingEarlyLabel.textContent = `Залишок достроково (${futureCount} платежів, база: ${baseLabel})`;
+    $summaryRemainingEarlyLabel.textContent = earlyCalc.label || `Залишок достроково (${futureCount} платежів)`;
     $summaryTotal.textContent = formatCurrency(total, state.currency);
     $summaryCount.textContent = `${paidCount}/${allCount} оплачено, майбутніх неоплачених: ${futureUnpaidRows.length}`;
+  }
+
+  function computeEarlySettlement(payableFutureRows) {
+    if (isNivkiProject()) {
+      return computeNivkiEarlySettlement(payableFutureRows);
+    }
+    const earlyBaseRow = getEarliestPayableRow(payableFutureRows);
+    const unitUsd = earlyBaseRow ? earlyBaseRow.view.scheduleUsd : 0;
+    const unitUah = earlyBaseRow ? earlyBaseRow.view.scheduleUah : 0;
+    const futureCount = payableFutureRows.length;
+    const baseLabel = earlyBaseRow
+      ? readablePaymentTitle(earlyBaseRow.payment)
+      : "немає базового місяця";
+    return {
+      unitUsd,
+      unitUah,
+      totalUsd: futureCount * unitUsd,
+      totalUah: futureCount * unitUah,
+      label: `Залишок достроково (${futureCount} платежів, база: ${baseLabel})`,
+    };
+  }
+
+  function computeNivkiEarlySettlement(payableFutureRows) {
+    const monthlyRate = NIVKI_ANNUAL_RATE / 12;
+    const sortedRows = [...payableFutureRows].sort((a, b) => {
+      const da = parseDate(a.payment.due_date);
+      const db = parseDate(b.payment.due_date);
+      if (da && db) return da - db;
+      return a.payment.id - b.payment.id;
+    });
+    const count = sortedRows.length;
+
+    if (!count) {
+      return {
+        unitUsd: 0,
+        unitUah: 0,
+        totalUsd: 0,
+        totalUah: 0,
+        label: "Залишок достроково (без майбутніх платежів)",
+      };
+    }
+
+    const scheduleUah = sortedRows.map((row) => numberOr(row.view.scheduleUah, 0));
+    let principalPerMonthUah = 0;
+    for (let i = 0; i < scheduleUah.length - 1; i += 1) {
+      const diff = scheduleUah[i] - scheduleUah[i + 1];
+      if (diff > 0.0001) {
+        principalPerMonthUah = diff / monthlyRate;
+        break;
+      }
+    }
+    if (principalPerMonthUah <= 0) {
+      const firstPaymentUah = scheduleUah[0];
+      principalPerMonthUah = firstPaymentUah / (1 + count * monthlyRate);
+    }
+
+    const totalUah = Math.max(principalPerMonthUah, 0) * count;
+    const firstRate = effectiveRate(sortedRows[0].payment);
+    const totalUsd = firstRate > 0 ? totalUah / firstRate : 0;
+
+    const unitUah = principalPerMonthUah;
+    const unitUsd = count > 0 ? totalUsd / count : 0;
+
+    return {
+      unitUsd,
+      unitUah,
+      totalUsd,
+      totalUah,
+      label: `Залишок достроково (тіло кредиту без 7%: ${count} міс.)`,
+    };
+  }
+
+  function isNivkiProject() {
+    return PROJECT_KEY.includes("nivki");
   }
 
   function renderPeriodFilters() {
