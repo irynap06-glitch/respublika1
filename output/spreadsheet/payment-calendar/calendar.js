@@ -49,6 +49,11 @@
   const $summaryRemainingEarlyLabel = document.getElementById("summaryRemainingEarlyLabel");
   const $summaryTotal = document.getElementById("summaryTotal");
   const $summaryCount = document.getElementById("summaryCount");
+  const $cashIncomeActual = document.getElementById("cashIncomeActual");
+  const $cashExpenseActual = document.getElementById("cashExpenseActual");
+  const $cashNetActual = document.getElementById("cashNetActual");
+  const $cashFutureNet = document.getElementById("cashFutureNet");
+  const $cashCumulativeNet = document.getElementById("cashCumulativeNet");
 
   const $projectFilter = document.getElementById("projectFilter");
   const $categoryFilter = document.getElementById("categoryFilter");
@@ -575,9 +580,12 @@
         isEarlySettlementEligible(payment) && (view.scheduleUsd > 0.009 || view.scheduleUah > 0.009)
     );
 
-    const paid = paidRows.reduce((sum, row) => sum + selectByCurrencyMode(row.view.paidUsd, row.view.paidUah), 0);
+    const paid = paidRows.reduce(
+      (sum, row) => sum + signedByItem(row.payment, row.view.paidUsd, row.view.paidUah),
+      0
+    );
     const remainingPlan = futureUnpaidRows.reduce(
-      (sum, row) => sum + selectByCurrencyMode(row.view.scheduleUsd, row.view.scheduleUah),
+      (sum, row) => sum + signedByItem(row.payment, row.view.scheduleUsd, row.view.scheduleUah),
       0
     );
 
@@ -587,17 +595,40 @@
 
     const remainingEarlyUsd = earlyCalc.totalUsd;
     const remainingEarlyUah = earlyCalc.totalUah;
-    const remainingEarly = selectByCurrencyMode(remainingEarlyUsd, remainingEarlyUah);
+    const remainingEarly = -selectByCurrencyMode(remainingEarlyUsd, remainingEarlyUah);
     const total = paid + remainingPlan;
 
     const paidCount = paidRows.length;
     const allCount = rows.length;
-    $summaryPaid.textContent = formatCurrency(paid, state.currency);
-    $summaryRemainingPlan.textContent = formatCurrency(remainingPlan, state.currency);
-    $summaryRemainingEarly.textContent = formatCurrency(remainingEarly, state.currency);
+    setSignedMetric($summaryPaid, paid);
+    setSignedMetric($summaryRemainingPlan, remainingPlan);
+    setSignedMetric($summaryRemainingEarly, remainingEarly);
     $summaryRemainingEarlyLabel.textContent = "Залишок достроково";
-    $summaryTotal.textContent = formatCurrency(total, state.currency);
+    setSignedMetric($summaryTotal, total);
     $summaryCount.textContent = `${paidCount}/${allCount} оплачено, майбутніх неоплачених: ${futureUnpaidRows.length}`;
+
+    renderCashflowSummary(paidRows, futureUnpaidRows);
+  }
+
+  function renderCashflowSummary(paidRows, futureUnpaidRows) {
+    const actualIncome = paidRows
+      .filter((row) => isIncomeItem(row.payment))
+      .reduce((sum, row) => sum + selectByCurrencyMode(row.view.paidUsd, row.view.paidUah), 0);
+    const actualExpense = paidRows
+      .filter((row) => !isIncomeItem(row.payment))
+      .reduce((sum, row) => sum - selectByCurrencyMode(row.view.paidUsd, row.view.paidUah), 0);
+    const actualNet = actualIncome + actualExpense;
+    const futureNet = futureUnpaidRows.reduce(
+      (sum, row) => sum + signedByItem(row.payment, row.view.scheduleUsd, row.view.scheduleUah),
+      0
+    );
+    const cumulativeNet = actualNet + futureNet;
+
+    setSignedMetric($cashIncomeActual, actualIncome);
+    setSignedMetric($cashExpenseActual, actualExpense);
+    setSignedMetric($cashNetActual, actualNet);
+    setSignedMetric($cashFutureNet, futureNet);
+    setSignedMetric($cashCumulativeNet, cumulativeNet);
   }
 
   function computeEarlySettlement(payableFutureRows) {
@@ -879,20 +910,23 @@
       return;
     }
 
+    const cumulativeById = buildCumulativeScheduleMap(visible);
+
     const cards = visible.map((item) => {
       const view = buildView(item);
       const selected = state.selectedId === item.uid ? "selected" : "";
       const overdue = view.overdue ? "overdue" : "";
-      const incomeCategory = normalizeCategoryKey(item.category_key) === "income";
-      const amount = selectByCurrencyMode(view.amountUsd, view.amountUah);
-      const amountText = formatCurrency(amount, state.currency, { alwaysSign: incomeCategory });
+      const amount = signedByItem(item, view.amountUsd, view.amountUah);
+      const amountText = formatCurrency(amount, state.currency, { alwaysSign: true });
       const projectText =
         state.selectedProjects.length > 1 ? `Проєкт: ${escapeHtml(item.project_name || item.project_key)}` : "";
       const categoryText = `Категорія: ${escapeHtml(item.category_name || categoryLabelFromKey(item.category_key))}`;
-      const plannedAmount = selectByCurrencyMode(view.scheduleUsd, view.scheduleUah);
-      const paidAmount = selectByCurrencyMode(view.paidUsd, view.paidUah);
-      const plannedText = `По графіку: ${formatCurrency(plannedAmount, state.currency, { alwaysSign: incomeCategory })}`;
-      const paidText = `Оплачено: ${formatCurrency(paidAmount, state.currency, { alwaysSign: incomeCategory })}`;
+      const plannedAmount = signedByItem(item, view.scheduleUsd, view.scheduleUah);
+      const paidAmount = signedByItem(item, view.paidUsd, view.paidUah);
+      const cumulative = cumulativeById.get(item.uid) || 0;
+      const plannedText = `По графіку: ${formatCurrency(plannedAmount, state.currency, { alwaysSign: true })}`;
+      const paidText = `Оплачено: ${formatCurrency(paidAmount, state.currency, { alwaysSign: true })}`;
+      const cumulativeText = `Кумулятивно (план): ${formatCurrency(cumulative, state.currency, { alwaysSign: true })}`;
       const paymentDateText = view.paymentDate ? `Оплата: ${formatDate(view.paymentDate)}` : "Дата оплати не вказана";
       const note = view.note || (item.flags && item.flags.early ? "Позначено як достроково в джерелі." : "");
       const monthIndexText =
@@ -908,11 +942,12 @@
               <span class="status-pill ${view.status}">${escapeHtml(STATUS_LABELS[view.status])}</span>
             </button>
           </div>
-          <div class="card-amount">${amountText}</div>
+          <div class="card-amount ${signedClassName(amount)}">${amountText}</div>
           <p class="card-meta">${categoryText}</p>
           ${projectText ? `<p class="card-meta">${projectText}</p>` : ""}
           <p class="card-meta">${plannedText}</p>
           <p class="card-meta">${paidText}</p>
+          <p class="card-meta">${cumulativeText}</p>
           ${monthIndexText ? `<p class="card-meta">${monthIndexText}</p>` : ""}
           <p class="card-meta">${paymentDateText}</p>
           ${note ? `<p class="card-note">${escapeHtml(note)}</p>` : ""}
@@ -926,12 +961,13 @@
   function renderAggregateCalendar(items, mode) {
     const groups = buildAggregateGroups(items, mode);
     const cards = groups.map((group) => {
-      const scheduleAmount = selectByCurrencyMode(group.scheduleUsd, group.scheduleUah);
-      const paidAmount = selectByCurrencyMode(group.paidUsd, group.paidUah);
-      const remainingAmount = selectByCurrencyMode(group.remainingUsd, group.remainingUah);
+      const scheduleAmount = selectByCurrencyMode(group.scheduleNetUsd, group.scheduleNetUah);
+      const paidAmount = selectByCurrencyMode(group.paidNetUsd, group.paidNetUah);
+      const remainingAmount = selectByCurrencyMode(group.remainingNetUsd, group.remainingNetUah);
+      const cumulativeAmount = selectByCurrencyMode(group.cumulativeNetUsd, group.cumulativeNetUah);
       const primaryIsPaid = group.unpaidCount === 0;
       const selectedAmount = primaryIsPaid ? paidAmount : remainingAmount;
-      const primaryLabel = primaryIsPaid ? "Оплачено" : "Залишок";
+      const primaryLabel = primaryIsPaid ? "Чистий факт" : "Чистий залишок";
       let statusClass = "unpaid";
       if (group.unpaidCount === 0 && group.paidCount > 0) {
         statusClass = "paid";
@@ -947,11 +983,24 @@
               statusClass === "paid" ? "Оплачено" : statusClass === "early" ? "Достроково" : "Не оплачено"
             }</span>
           </div>
-          <div class="card-amount">${formatCurrency(selectedAmount, state.currency)}</div>
-          <p class="card-meta">${primaryLabel}: ${formatCurrency(selectedAmount, state.currency)}</p>
-          <p class="card-meta">По графіку: ${formatCurrency(scheduleAmount, state.currency)}</p>
-          <p class="card-meta">Оплачено: ${formatCurrency(paidAmount, state.currency)}</p>
-          <p class="card-meta">Залишок: ${formatCurrency(remainingAmount, state.currency)}</p>
+          <div class="card-amount ${signedClassName(selectedAmount)}">${formatCurrency(selectedAmount, state.currency, {
+            alwaysSign: true,
+          })}</div>
+          <p class="card-meta">${primaryLabel}: ${formatCurrency(selectedAmount, state.currency, {
+            alwaysSign: true,
+          })}</p>
+          <p class="card-meta">По графіку: ${formatCurrency(scheduleAmount, state.currency, {
+            alwaysSign: true,
+          })}</p>
+          <p class="card-meta">Оплачено: ${formatCurrency(paidAmount, state.currency, {
+            alwaysSign: true,
+          })}</p>
+          <p class="card-meta">Залишок: ${formatCurrency(remainingAmount, state.currency, {
+            alwaysSign: true,
+          })}</p>
+          <p class="card-meta">Кумулятивно (план): ${formatCurrency(cumulativeAmount, state.currency, {
+            alwaysSign: true,
+          })}</p>
           <p class="card-meta">Періодів у групі: ${group.count}</p>
         </article>
       `;
@@ -990,44 +1039,53 @@
         sortA,
         sortB,
         count: 0,
-        scheduleUsd: 0,
-        scheduleUah: 0,
-        paidUsd: 0,
-        paidUah: 0,
-        remainingUsd: 0,
-        remainingUah: 0,
+        scheduleNetUsd: 0,
+        scheduleNetUah: 0,
+        paidNetUsd: 0,
+        paidNetUah: 0,
+        remainingNetUsd: 0,
+        remainingNetUah: 0,
         paidCount: 0,
         unpaidCount: 0,
         earlyCount: 0,
       };
 
       const includeInRemaining = view.status !== "paid" && view.status !== "early";
+      const sign = flowDirection(item);
       entry.count += 1;
       if (view.status === "paid") entry.paidCount += 1;
       else if (view.status === "early") entry.earlyCount += 1;
       else entry.unpaidCount += 1;
-      entry.scheduleUsd += view.scheduleUsd;
-      entry.scheduleUah += view.scheduleUah;
-      entry.paidUsd += view.paidUsd;
-      entry.paidUah += view.paidUah;
+      entry.scheduleNetUsd += sign * view.scheduleUsd;
+      entry.scheduleNetUah += sign * view.scheduleUah;
+      entry.paidNetUsd += sign * view.paidUsd;
+      entry.paidNetUah += sign * view.paidUah;
       if (includeInRemaining) {
-        entry.remainingUsd += view.scheduleUsd;
-        entry.remainingUah += view.scheduleUah;
+        entry.remainingNetUsd += sign * view.scheduleUsd;
+        entry.remainingNetUah += sign * view.scheduleUah;
       }
       bucket.set(key, entry);
     });
 
+    let cumulativeNetUsd = 0;
+    let cumulativeNetUah = 0;
     return [...bucket.values()]
       .sort((a, b) => (a.sortA !== b.sortA ? a.sortA - b.sortA : a.sortB - b.sortB))
-      .map((entry) => ({
-        ...entry,
-        scheduleUsd: round2(entry.scheduleUsd),
-        scheduleUah: round2(entry.scheduleUah),
-        paidUsd: round2(entry.paidUsd),
-        paidUah: round2(entry.paidUah),
-        remainingUsd: round2(entry.remainingUsd),
-        remainingUah: round2(entry.remainingUah),
-      }));
+      .map((entry) => {
+        cumulativeNetUsd += entry.scheduleNetUsd;
+        cumulativeNetUah += entry.scheduleNetUah;
+        return {
+          ...entry,
+          scheduleNetUsd: round2(entry.scheduleNetUsd),
+          scheduleNetUah: round2(entry.scheduleNetUah),
+          paidNetUsd: round2(entry.paidNetUsd),
+          paidNetUah: round2(entry.paidNetUah),
+          remainingNetUsd: round2(entry.remainingNetUsd),
+          remainingNetUah: round2(entry.remainingNetUah),
+          cumulativeNetUsd: round2(cumulativeNetUsd),
+          cumulativeNetUah: round2(cumulativeNetUah),
+        };
+      });
   }
 
   function renderDetail() {
@@ -1056,22 +1114,21 @@
 
     const view = buildView(item);
     const override = state.overrides[state.selectedId] || {};
-    const incomeCategory = normalizeCategoryKey(item.category_key) === "income";
     const selectedRemainingUsd = Math.max(numberOr(view.scheduleUsd, 0) - numberOr(view.paidUsd, 0), 0);
     const selectedRemainingUah = Math.max(numberOr(view.scheduleUah, 0) - numberOr(view.paidUah, 0), 0);
-    const selectedSchedule = selectByCurrencyMode(view.scheduleUsd, view.scheduleUah);
-    const selectedPaid = selectByCurrencyMode(view.paidUsd, view.paidUah);
-    const selectedRemaining = selectByCurrencyMode(selectedRemainingUsd, selectedRemainingUah);
+    const selectedSchedule = signedByItem(item, view.scheduleUsd, view.scheduleUah);
+    const selectedPaid = signedByItem(item, view.paidUsd, view.paidUah);
+    const selectedRemaining = signedByItem(item, selectedRemainingUsd, selectedRemainingUah);
 
     const projectPrefix = state.selectedProjects.length > 1 ? `[${item.project_name}] ` : "";
     const categoryPrefix = categoryKeys.length > 1 ? `[${item.category_name || categoryLabelFromKey(item.category_key)}] ` : "";
     $detailTitle.textContent = `${projectPrefix}${categoryPrefix}${readablePaymentTitle(item)}`;
     $detailMeta.textContent = `По графіку: ${formatCurrency(selectedSchedule, state.currency, {
-      alwaysSign: incomeCategory,
+      alwaysSign: true,
     })}, оплачено: ${formatCurrency(selectedPaid, state.currency, {
-      alwaysSign: incomeCategory,
+      alwaysSign: true,
     })}, залишок: ${formatCurrency(selectedRemaining, state.currency, {
-      alwaysSign: incomeCategory,
+      alwaysSign: true,
     })}${item.rate ? `, курс: ${item.rate}` : ""}, категорія: ${item.category_name || categoryLabelFromKey(item.category_key)}`;
 
     $statusInput.value = view.status;
@@ -1501,6 +1558,45 @@
     const normalized = normalizeCurrencyMode(mode);
     const meta = CURRENCY_MODES[normalized] || CURRENCY_MODES.usd;
     return meta.base === "uah" ? numberOr(uahValue, 0) : numberOr(usdValue, 0);
+  }
+
+  function isIncomeItem(item) {
+    return normalizeCategoryKey(item && item.category_key) === "income";
+  }
+
+  function flowDirection(item) {
+    return isIncomeItem(item) ? 1 : -1;
+  }
+
+  function signedByItem(item, usdValue, uahValue, mode = state.currency) {
+    return flowDirection(item) * selectByCurrencyMode(usdValue, uahValue, mode);
+  }
+
+  function signedClassName(value) {
+    if (numberOr(value, 0) > 0.009) return "positive";
+    if (numberOr(value, 0) < -0.009) return "negative";
+    return "neutral";
+  }
+
+  function setSignedMetric(element, value) {
+    if (!element) return;
+    element.textContent = formatCurrency(value, state.currency, { alwaysSign: true });
+    element.classList.remove("positive", "negative", "neutral");
+    element.classList.add(signedClassName(value));
+  }
+
+  function buildCumulativeScheduleMap(items) {
+    const out = new Map();
+    let runningUsd = 0;
+    let runningUah = 0;
+    items.forEach((item) => {
+      const view = buildView(item);
+      const direction = flowDirection(item);
+      runningUsd += direction * numberOr(view.scheduleUsd, 0);
+      runningUah += direction * numberOr(view.scheduleUah, 0);
+      out.set(item.uid, selectByCurrencyMode(runningUsd, runningUah));
+    });
+    return out;
   }
 
   function convertDisplayAmount(value, mode = state.currency) {

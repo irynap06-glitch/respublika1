@@ -289,6 +289,10 @@ h1 {
   gap: 12px;
 }
 
+.cashflow-summary {
+  margin-top: -4px;
+}
+
 .summary-card {
   border-radius: var(--radius-md);
   padding: 14px 16px;
@@ -304,6 +308,16 @@ h1 {
   display: block;
   margin-top: 8px;
   font-size: clamp(1rem, 2vw, 1.35rem);
+}
+
+.summary-card strong.positive,
+.card-amount.positive {
+  color: var(--paid);
+}
+
+.summary-card strong.negative,
+.card-amount.negative {
+  color: var(--unpaid);
 }
 
 .workspace {
