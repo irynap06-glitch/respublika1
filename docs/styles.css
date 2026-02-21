@@ -145,6 +145,8 @@ h1 {
 .project-tab {
   text-decoration: none;
   border: 1px solid var(--line);
+  appearance: none;
+  cursor: pointer;
   background: #fff;
   color: var(--ink);
   border-radius: 999px;
