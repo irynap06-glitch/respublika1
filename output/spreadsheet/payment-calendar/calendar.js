@@ -1,17 +1,16 @@
 (() => {
-  const sources = Array.isArray(window.PAYMENTS_SOURCES) && window.PAYMENTS_SOURCES.length
-    ? window.PAYMENTS_SOURCES
-    : [window.PAYMENTS_DATA].filter(Boolean);
-  if (!sources.length || !sources.some((entry) => Array.isArray(entry.payments))) {
+  const datasets = resolveDatasets();
+  const datasetKeys = orderProjectKeys(Object.keys(datasets || {}));
+  if (!datasetKeys.length) {
     document.body.innerHTML = '<p style="padding:24px">Не знайдено дані платежів.</p>';
     return;
   }
 
-  const PROJECT_KEY = "multi";
-  const STORAGE_OVERRIDES = `payment_calendar_overrides_v1_${PROJECT_KEY}`;
-  const STORAGE_SETTINGS = `payment_calendar_settings_v1_${PROJECT_KEY}`;
-  const STORAGE_SNAPSHOT = `payment_calendar_snapshot_v1_${PROJECT_KEY}`;
-  const STORAGE_SNAPSHOT_HISTORY = `payment_calendar_snapshot_history_v1_${PROJECT_KEY}`;
+  const PROJECT_KEY = "multi-projects-v1";
+  const STORAGE_OVERRIDES = `payment_calendar_overrides_v2_${PROJECT_KEY}`;
+  const STORAGE_SETTINGS = `payment_calendar_settings_v2_${PROJECT_KEY}`;
+  const STORAGE_SNAPSHOT = `payment_calendar_snapshot_v2_${PROJECT_KEY}`;
+  const STORAGE_SNAPSHOT_HISTORY = `payment_calendar_snapshot_history_v2_${PROJECT_KEY}`;
   const MAX_SNAPSHOT_HISTORY = 40;
   const NIVKI_ANNUAL_RATE = 0.07;
   const VIEW_MODE_LABELS = {
@@ -35,6 +34,7 @@
   const $summaryTotal = document.getElementById("summaryTotal");
   const $summaryCount = document.getElementById("summaryCount");
 
+  const $projectFilter = document.getElementById("projectFilter");
   const $viewModeSelect = document.getElementById("viewModeSelect");
   const $viewModeButtons = [...document.querySelectorAll(".mode-btn")];
   const $yearSelect = document.getElementById("yearSelect");
@@ -64,32 +64,28 @@
   const $importBackupFile = document.getElementById("importBackupFile");
   const $resetAllBtn = document.getElementById("resetAllBtn");
   const $currencyButtons = [...document.querySelectorAll(".currency-btn")];
-  const $projectFilterButtons = [...document.querySelectorAll(".project-filter")];
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const startOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
-  const defaultSelectedProjects = ($projectFilterButtons.length
-    ? $projectFilterButtons.filter((btn) => btn.dataset.projectKey).map((btn) => btn.dataset.projectKey)
-    : sources.map((entry) => normalizeProjectKey(entry.project_key || entry.project_name || "project"))
-  ).filter((value, index, arr) => value && arr.indexOf(value) === index);
-
-  const payments = sources.flatMap((entry) => {
-    const projectKey = normalizeProjectKey(entry.project_key || entry.project_name || "project");
-    const projectName = entry.project_name || projectKey;
-    return (Array.isArray(entry.payments) ? entry.payments : []).map((item, index) => {
-      const rawId = item.id !== undefined && item.id !== null ? item.id : index;
-      return {
+  const payments = [];
+  datasetKeys.forEach((projectKey) => {
+    const dataset = datasets[projectKey];
+    const rows = Array.isArray(dataset && dataset.payments) ? dataset.payments : [];
+    rows.forEach((item, idx) => {
+      const rawId = item && item.id !== undefined && item.id !== null ? String(item.id) : String(idx);
+      const uid = `${projectKey}:${rawId}`;
+      payments.push({
         ...item,
-        source_id: rawId,
-        id: `${projectKey}:${rawId}`,
+        uid,
+        raw_id: rawId,
         project_key: projectKey,
-        project_name: projectName,
-      };
+        project_name: dataset.project_name || projectKey,
+      });
     });
   });
-  const idToPayment = new Map(payments.map((item) => [String(item.id), item]));
+  const idToPayment = new Map(payments.map((item) => [item.uid, item]));
 
   const years = [
     ...new Set(
@@ -105,16 +101,18 @@
   const fallbackYear = years[0] || new Date().getFullYear();
 
   const defaultFx = computeDefaultFx();
+  const initialProject = inferInitialProjectKey(datasetKeys);
+  const initialSelection = payments.find((item) => item.project_key === initialProject) || payments[0];
 
   const state = {
     overrides: loadJson(STORAGE_OVERRIDES, {}),
     currency: "usd",
+    selectedProjects: [initialProject],
     viewMode: "month",
     selectedYear: "all",
     selectedMonth: "all",
-    selectedId: String(payments.length ? payments[0].id : ""),
+    selectedId: initialSelection ? initialSelection.uid : "",
     search: "",
-    selectedProjects: [...defaultSelectedProjects],
     fxRate: defaultFx,
     earlyUnitUsd: 0,
     earlyUnitUah: 0,
@@ -139,24 +137,6 @@
       renderAll();
     });
 
-    $projectFilterButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const key = btn.dataset.projectKey;
-        if (!key) return;
-        const selected = new Set(state.selectedProjects);
-        if (selected.has(key)) {
-          selected.delete(key);
-          if (!selected.size) selected.add(key);
-        } else {
-          selected.add(key);
-        }
-        state.selectedProjects = [...selected];
-        ensureSelectedMonthInRange();
-        persistSettings();
-        renderAll();
-      });
-    });
-
     $fxRateInput.addEventListener("change", () => {
       const next = toNumber($fxRateInput.value);
       if (next !== null && next > 0) {
@@ -165,6 +145,31 @@
         renderAll();
       }
     });
+
+    if ($projectFilter) {
+      $projectFilter.addEventListener("click", (event) => {
+        const btn = event.target.closest(".project-chip");
+        if (!btn) return;
+        const project = btn.dataset.project;
+        if (!project) return;
+        if (project === "all") {
+          state.selectedProjects = [...datasetKeys];
+        } else {
+          const current = new Set(state.selectedProjects);
+          if (current.has(project)) {
+            if (current.size === 1) return;
+            current.delete(project);
+          } else {
+            current.add(project);
+          }
+          state.selectedProjects = [...current].filter((key) => datasetKeys.includes(key));
+        }
+        ensureProjectSelection();
+        ensureSelectedMonthInRange();
+        persistSettings();
+        renderAll();
+      });
+    }
 
     if ($viewModeSelect) {
       const onModeSelect = () => applyViewMode($viewModeSelect.value);
@@ -289,6 +294,7 @@
   }
 
   function renderAll() {
+    ensureProjectSelection();
     renderProjectFilters();
     renderCurrencyControls();
     renderSummary();
@@ -299,18 +305,20 @@
   }
 
   function renderProjectFilters() {
+    if (!$projectFilter) return;
     const selected = new Set(state.selectedProjects);
-    $projectFilterButtons.forEach((btn) => {
-      const key = btn.dataset.projectKey;
-      const active = selected.has(key);
-      btn.classList.toggle("active", active);
-      btn.setAttribute("aria-pressed", active ? "true" : "false");
-    });
-  }
-
-  function getActivePayments() {
-    const selected = new Set(state.selectedProjects);
-    return payments.filter((item) => selected.has(item.project_key));
+    const allActive = datasetKeys.every((key) => selected.has(key));
+    const chips = [
+      `<button type="button" class="project-chip ${allActive ? "active" : ""}" data-project="all">Всі</button>`,
+      ...datasetKeys.map((key) => {
+        const name = datasets[key] && datasets[key].project_name ? datasets[key].project_name : key;
+        const count = payments.filter((item) => item.project_key === key).length;
+        return `<button type="button" class="project-chip ${selected.has(key) ? "active" : ""}" data-project="${key}">${escapeHtml(
+          name
+        )} (${count})</button>`;
+      }),
+    ];
+    $projectFilter.innerHTML = chips.join("");
   }
 
   function renderCurrencyControls() {
@@ -327,7 +335,7 @@
   }
 
   function renderSummary() {
-    const rows = getActivePayments()
+    const rows = getSelectedPayments()
       .filter((payment) => !payment.exclude_from_summary)
       .map((payment) => ({ payment, view: buildView(payment) }));
 
@@ -372,9 +380,47 @@
   }
 
   function computeEarlySettlement(payableFutureRows) {
-    if (isNivkiProject()) {
-      return computeNivkiEarlySettlement(payableFutureRows);
+    const groups = new Map();
+    payableFutureRows.forEach((row) => {
+      const key = row.payment.project_key || "default";
+      const list = groups.get(key) || [];
+      list.push(row);
+      groups.set(key, list);
+    });
+
+    let totalUsd = 0;
+    let totalUah = 0;
+    let unitUsd = 0;
+    let unitUah = 0;
+    const labels = [];
+    const multipleProjects = groups.size > 1;
+
+    groups.forEach((rows, projectKey) => {
+      const calc = projectKey === "nivki" ? computeNivkiEarlySettlement(rows) : computeGenericEarlySettlement(rows);
+      totalUsd += numberOr(calc.totalUsd, 0);
+      totalUah += numberOr(calc.totalUah, 0);
+      if (groups.size === 1) {
+        unitUsd = numberOr(calc.unitUsd, 0);
+        unitUah = numberOr(calc.unitUah, 0);
+      }
+      const projectName = datasets[projectKey] && datasets[projectKey].project_name ? datasets[projectKey].project_name : projectKey;
+      labels.push(multipleProjects ? `${projectName}: ${calc.label}` : calc.label);
+    });
+
+    if (!groups.size) {
+      labels.push("без майбутніх платежів");
     }
+
+    return {
+      unitUsd,
+      unitUah,
+      totalUsd,
+      totalUah,
+      label: `Залишок достроково (${labels.join("; ")})`,
+    };
+  }
+
+  function computeGenericEarlySettlement(payableFutureRows) {
     const earlyBaseRow = getEarliestPayableRow(payableFutureRows);
     const unitUsd = earlyBaseRow ? earlyBaseRow.view.scheduleUsd : 0;
     const unitUah = earlyBaseRow ? earlyBaseRow.view.scheduleUah : 0;
@@ -387,7 +433,7 @@
       unitUah,
       totalUsd: futureCount * unitUsd,
       totalUah: futureCount * unitUah,
-      label: `Залишок достроково (${futureCount} платежів, база: ${baseLabel})`,
+      label: `${futureCount} платежів, база: ${baseLabel}`,
     };
   }
 
@@ -397,7 +443,7 @@
       const da = parseDate(a.payment.due_date);
       const db = parseDate(b.payment.due_date);
       if (da && db) return da - db;
-      return a.payment.id - b.payment.id;
+      return String(a.payment.uid).localeCompare(String(b.payment.uid), "uk");
     });
     const count = sortedRows.length;
 
@@ -441,12 +487,9 @@
     };
   }
 
-  function isNivkiProject() {
-    const selected = new Set(state.selectedProjects);
-    return selected.size === 1 && selected.has("nivki");
-  }
-
   function renderPeriodFilters() {
+    const scopedPayments = getSelectedPayments();
+
     if ($calendarTitle) {
       $calendarTitle.textContent = VIEW_MODE_LABELS[state.viewMode] || VIEW_MODE_LABELS.month;
     }
@@ -462,23 +505,23 @@
       btn.classList.toggle("active", btn.dataset.viewMode === state.viewMode);
     });
 
-    const activePayments = getActivePayments();
     const yearCounts = new Map();
-    activePayments.forEach((item) => {
+    scopedPayments.forEach((item) => {
       const year = getPaymentYear(item);
       yearCounts.set(year, (yearCounts.get(year) || 0) + 1);
     });
+    const scopedYears = [...yearCounts.keys()].sort((a, b) => a - b);
 
     if (state.viewMode === "year") {
       state.selectedYear = "all";
     }
-    if (state.selectedYear !== "all" && !years.includes(Number(state.selectedYear))) {
+    if (state.selectedYear !== "all" && !scopedYears.includes(Number(state.selectedYear))) {
       state.selectedYear = "all";
     }
 
     const yearOptions = [
-      `<option value="all"${state.selectedYear === "all" ? " selected" : ""}>Всі роки (${activePayments.length})</option>`,
-      ...years.map((year) => {
+      `<option value="all"${state.selectedYear === "all" ? " selected" : ""}>Всі роки (${scopedPayments.length})</option>`,
+      ...scopedYears.map((year) => {
         const selected = state.selectedYear === String(year) ? " selected" : "";
         return `<option value="${year}"${selected}>${year} (${yearCounts.get(year) || 0})</option>`;
       }),
@@ -487,7 +530,7 @@
     $yearSelect.disabled = state.viewMode === "year";
 
     ensureSelectedMonthInRange();
-    const periodOptionsData = getPeriodOptions(state.selectedYear, state.viewMode);
+    const periodOptionsData = getPeriodOptions(scopedPayments, state.selectedYear, state.viewMode);
     const totalInMode = periodOptionsData.reduce((sum, entry) => sum + entry.count, 0);
     const allLabel =
       state.viewMode === "month"
@@ -524,9 +567,9 @@
     renderAll();
   }
 
-  function getPeriodOptions(yearValue, mode) {
+  function getPeriodOptions(items, yearValue, mode) {
     const bucket = new Map();
-    getActivePayments().forEach((item) => {
+    items.forEach((item) => {
       const year = getPaymentYear(item);
       if (mode !== "year" && yearValue !== "all" && year !== Number(yearValue)) return;
 
@@ -575,7 +618,7 @@
 
   function ensureSelectedMonthInRange() {
     if (state.selectedMonth === "all") return;
-    const exists = getPeriodOptions(state.selectedYear, state.viewMode).some(
+    const exists = getPeriodOptions(getSelectedPayments(), state.selectedYear, state.viewMode).some(
       (entry) => String(entry.key) === String(state.selectedMonth)
     );
     if (!exists) {
@@ -593,8 +636,8 @@
       state.selectedId = "";
       return;
     }
-    if (!state.selectedId || !visible.some((item) => String(item.id) === state.selectedId)) {
-      state.selectedId = String(visible[0].id);
+    if (!state.selectedId || !visible.some((item) => item.uid === state.selectedId)) {
+      state.selectedId = visible[0].uid;
     }
   }
 
@@ -613,9 +656,11 @@
 
     const cards = visible.map((item) => {
       const view = buildView(item);
-      const selected = state.selectedId === String(item.id) ? "selected" : "";
+      const selected = state.selectedId === item.uid ? "selected" : "";
       const overdue = view.overdue ? "overdue" : "";
       const amount = state.currency === "usd" ? view.amountUsd : view.amountUah;
+      const projectText =
+        state.selectedProjects.length > 1 ? `Проєкт: ${escapeHtml(item.project_name || item.project_key)}` : "";
       const plannedText = `По графіку: ${formatCurrency(view.scheduleUsd, "usd")} / ${formatCurrency(
         view.scheduleUah,
         "uah"
@@ -632,14 +677,15 @@
           : "";
 
       return `
-        <article class="payment-card ${selected} ${overdue}" id="payment-${item.id}" data-id="${item.id}">
+        <article class="payment-card ${selected} ${overdue}" id="payment-${safeDomId(item.uid)}" data-id="${item.uid}">
           <div class="card-top">
             <h3 class="card-title">${escapeHtml(readablePaymentTitle(item))}</h3>
-            <button class="status-toggle" type="button" data-id="${item.id}" title="Змінити статус">
+            <button class="status-toggle" type="button" data-id="${item.uid}" title="Змінити статус">
               <span class="status-pill ${view.status}">${escapeHtml(STATUS_LABELS[view.status])}</span>
             </button>
           </div>
           <div class="card-amount">${formatCurrency(amount, state.currency)}</div>
+          ${projectText ? `<p class="card-meta">${projectText}</p>` : ""}
           <p class="card-meta">${plannedText}</p>
           <p class="card-meta">${paidText}</p>
           ${monthIndexText ? `<p class="card-meta">${monthIndexText}</p>` : ""}
@@ -655,7 +701,7 @@
   function renderAggregateCalendar(items, mode) {
     const groups = buildAggregateGroups(items, mode);
     const cards = groups.map((group) => {
-      const selectedAmount = state.currency === "usd" ? group.scheduleUsd : group.scheduleUah;
+      const selectedAmount = state.currency === "usd" ? group.remainingUsd : group.remainingUah;
       let statusClass = "unpaid";
       if (group.unpaidCount === 0 && group.paidCount > 0) {
         statusClass = "paid";
@@ -786,7 +832,8 @@
     const selectedRemainingUsd = Math.max(numberOr(view.scheduleUsd, 0) - numberOr(view.paidUsd, 0), 0);
     const selectedRemainingUah = Math.max(numberOr(view.scheduleUah, 0) - numberOr(view.paidUah, 0), 0);
 
-    $detailTitle.textContent = readablePaymentTitle(item);
+    const projectPrefix = state.selectedProjects.length > 1 ? `[${item.project_name}] ` : "";
+    $detailTitle.textContent = `${projectPrefix}${readablePaymentTitle(item)}`;
     $detailMeta.textContent = `По графіку: ${formatCurrency(view.scheduleUsd, "usd")} / ${formatCurrency(
       view.scheduleUah,
       "uah"
@@ -821,8 +868,14 @@
     $detailForm.hidden = false;
   }
 
+  function getSelectedPayments() {
+    ensureProjectSelection();
+    const selected = new Set(state.selectedProjects);
+    return payments.filter((item) => selected.has(item.project_key));
+  }
+
   function getVisiblePayments() {
-    let list = getActivePayments();
+    let list = getSelectedPayments();
 
     if (state.viewMode !== "year" && state.selectedYear !== "all") {
       const year = Number(state.selectedYear);
@@ -856,6 +909,7 @@
       list = list.filter((item) => {
         const view = buildView(item);
         const text = [
+          item.project_name,
           readablePaymentTitle(item),
           item.due_label,
           view.paymentDate,
@@ -872,7 +926,7 @@
       const da = parseDate(a.due_date);
       const db = parseDate(b.due_date);
       if (da && db) return da - db;
-      return a.id - b.id;
+      return String(a.uid).localeCompare(String(b.uid), "uk");
     });
   }
 
@@ -910,13 +964,13 @@
       const da = parseDate(a.payment.due_date);
       const db = parseDate(b.payment.due_date);
       if (da && db) return da - db;
-      return a.payment.id - b.payment.id;
+      return String(a.payment.uid).localeCompare(String(b.payment.uid), "uk");
     });
     return sorted[0] || null;
   }
 
   function buildView(item) {
-    const key = String(item.id);
+    const key = String(item.uid);
     const override = state.overrides[key] || {};
 
     const status = normalizeStatus(override.status || item.status || "unpaid", item);
@@ -1046,14 +1100,19 @@
   }
 
   function computeDefaultFx() {
-    const summaryUah = sources.reduce((sum, entry) => sum + numberOr(getSummaryValue(entry, "total", "fact_uah"), 0), 0);
-    const summaryUsd = sources.reduce((sum, entry) => sum + numberOr(getSummaryValue(entry, "total", "fact_usd"), 0), 0);
-    const fromSummary = summaryUsd > 0 ? summaryUah / summaryUsd : 0;
-    if (Number.isFinite(fromSummary) && fromSummary > 0) return round4(fromSummary);
-
     const rates = payments.map((p) => p.rate).filter((v) => typeof v === "number" && v > 0);
-    if (!rates.length) return 42;
-    return round4(rates.reduce((sum, v) => sum + v, 0) / rates.length);
+    if (rates.length) return round4(rates.reduce((sum, v) => sum + v, 0) / rates.length);
+
+    const implied = payments
+      .map((p) => {
+        if (numberOr(p.fact_uah, 0) > 0 && numberOr(p.fact_usd, 0) > 0) {
+          return p.fact_uah / p.fact_usd;
+        }
+        return null;
+      })
+      .filter((v) => typeof v === "number" && Number.isFinite(v) && v > 0);
+    if (implied.length) return round4(implied.reduce((sum, v) => sum + v, 0) / implied.length);
+    return 42;
   }
 
   function usdToUah(item, usd) {
@@ -1081,7 +1140,7 @@
     if (item.flags && item.flags.initial) return "Перший внесок";
     const date = parseDate(item.due_date);
     if (!date) return item.due_label || `Платіж #${item.id}`;
-    return `${item.project_name}: ${monthLong(date.getMonth() + 1)} ${date.getFullYear()}`;
+    return `${monthLong(date.getMonth() + 1)} ${date.getFullYear()}`;
   }
 
   function quarterOfMonth(month) {
@@ -1167,15 +1226,6 @@
       .replace(/'/g, "&#039;");
   }
 
-  function getSummaryValue(sourceEntry, group, key) {
-    const summary = sourceEntry && sourceEntry.summary;
-    if (!summary || typeof summary !== "object") return null;
-    const section = summary[group];
-    if (!section || typeof section !== "object") return null;
-    const value = section[key];
-    return typeof value === "number" && Number.isFinite(value) ? value : null;
-  }
-
   function round2(value) {
     return Math.round(numberOr(value, 0) * 100) / 100;
   }
@@ -1200,11 +1250,11 @@
   function persistSettings() {
     const payload = {
       currency: state.currency,
+      selectedProjects: state.selectedProjects,
       viewMode: state.viewMode,
       selectedYear: state.selectedYear,
       selectedMonth: state.selectedMonth,
       selectedId: state.selectedId,
-      selectedProjects: state.selectedProjects,
       fxRate: state.fxRate,
     };
     localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(payload));
@@ -1215,6 +1265,7 @@
     const settings = loadJson(STORAGE_SETTINGS, {});
     applySettings(settings);
     applySnapshot(loadJson(STORAGE_SNAPSHOT, null));
+    migrateLegacyOverrides();
 
     $searchInput.value = "";
     $fxRateInput.value = state.fxRate.toFixed(4);
@@ -1225,17 +1276,17 @@
 
   function buildSnapshot() {
     const snapshot = {
-      version: 3,
+      version: 4,
       projectKey: PROJECT_KEY,
-      sourcePdf: sources.map((entry) => entry.source_pdf).filter(Boolean).join(", "),
+      sourceProjects: state.selectedProjects,
       savedAt: new Date().toISOString(),
       settings: {
         currency: state.currency,
+        selectedProjects: state.selectedProjects,
         viewMode: state.viewMode,
         selectedYear: state.selectedYear,
         selectedMonth: state.selectedMonth,
         selectedId: state.selectedId,
-        selectedProjects: state.selectedProjects,
         fxRate: state.fxRate,
       },
       overrides: state.overrides,
@@ -1247,6 +1298,10 @@
     if (!settings || typeof settings !== "object") return;
     if (settings.currency === "usd" || settings.currency === "uah") {
       state.currency = settings.currency;
+    }
+    if (Array.isArray(settings.selectedProjects)) {
+      state.selectedProjects = settings.selectedProjects.filter((key) => datasetKeys.includes(String(key)));
+      ensureProjectSelection();
     }
     if (settings.viewMode === "month" || settings.viewMode === "quarter" || settings.viewMode === "year") {
       state.viewMode = settings.viewMode;
@@ -1263,10 +1318,6 @@
     }
     if (settings.selectedId && idToPayment.has(String(settings.selectedId))) {
       state.selectedId = String(settings.selectedId);
-    }
-    if (Array.isArray(settings.selectedProjects)) {
-      const valid = settings.selectedProjects.filter((key) => defaultSelectedProjects.includes(String(key)));
-      if (valid.length) state.selectedProjects = [...new Set(valid.map(String))];
     }
     if (toNumber(settings.fxRate) && toNumber(settings.fxRate) > 0) {
       state.fxRate = toNumber(settings.fxRate);
@@ -1312,13 +1363,77 @@
     }
   }
 
-  function normalizeProjectKey(input) {
-    return (
-      String(input || "default")
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "")
-        .slice(0, 80) || "default"
-    );
+  function migrateLegacyOverrides() {
+    if (Object.keys(state.overrides || {}).length) return;
+    const merged = {};
+    datasetKeys.forEach((projectKey) => {
+      const legacyKey = `payment_calendar_overrides_v1_${projectKey}`;
+      const legacy = loadJson(legacyKey, {});
+      if (!legacy || typeof legacy !== "object") return;
+      Object.keys(legacy).forEach((id) => {
+        merged[`${projectKey}:${id}`] = legacy[id];
+      });
+    });
+    if (Object.keys(merged).length) {
+      state.overrides = merged;
+      localStorage.setItem(STORAGE_OVERRIDES, JSON.stringify(state.overrides));
+    }
+  }
+
+  function ensureProjectSelection() {
+    state.selectedProjects = (state.selectedProjects || []).filter((key) => datasetKeys.includes(key));
+    if (!state.selectedProjects.length) {
+      state.selectedProjects = [datasetKeys[0]];
+    }
+  }
+
+  function inferInitialProjectKey(keys) {
+    const path = String(window.location.pathname || "").toLowerCase();
+    if (path.includes("respublika2") && keys.includes("respublika2")) return "respublika2";
+    if (path.includes("nivki") && keys.includes("nivki")) return "nivki";
+    if (keys.includes("respublika1")) return "respublika1";
+    return keys[0];
+  }
+
+  function orderProjectKeys(keys) {
+    const preferred = ["respublika1", "respublika2", "nivki"];
+    const set = new Set(keys);
+    const ordered = preferred.filter((k) => set.has(k));
+    keys.forEach((k) => {
+      if (!ordered.includes(k)) ordered.push(k);
+    });
+    return ordered;
+  }
+
+  function resolveDatasets() {
+    const out = {};
+    const primary = window.PAYMENTS_DATA;
+    const existing = window.PAYMENTS_DATASETS;
+    if (existing && typeof existing === "object") {
+      Object.keys(existing).forEach((key) => {
+        const item = existing[key];
+        if (item && Array.isArray(item.payments)) out[key] = item;
+      });
+    }
+    if (primary && Array.isArray(primary.payments)) {
+      const key = primary.project_key || inferKeyFromName(primary.project_name) || "default";
+      if (!out[key]) out[key] = primary;
+    }
+    return out;
+  }
+
+  function inferKeyFromName(name) {
+    const text = String(name || "").toLowerCase();
+    if (text.includes("республіка 1") || text.includes("respublika 1")) return "respublika1";
+    if (text.includes("республіка 2") || text.includes("respublika 2")) return "respublika2";
+    if (text.includes("нивки") || text.includes("nivki")) return "nivki";
+    return "default";
+  }
+
+  function safeDomId(value) {
+    return String(value || "item")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
   }
 })();

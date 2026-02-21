@@ -11,20 +11,21 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
-    <script>
-      window.PAYMENTS_SOURCES = [];
-    </script>
     <script src="payments-data.js"></script>
     <script>
-      window.PAYMENTS_SOURCES.push(window.PAYMENTS_DATA);
+      window.PAYMENTS_DATASETS = window.PAYMENTS_DATASETS || {};
+      window.PAYMENTS_DATASETS.respublika1 = window.PAYMENTS_DATA;
     </script>
     <script src="payments-data-republika2.js"></script>
     <script>
-      window.PAYMENTS_SOURCES.push(window.PAYMENTS_DATA);
+      window.PAYMENTS_DATASETS = window.PAYMENTS_DATASETS || {};
+      window.PAYMENTS_DATASETS.respublika2 = window.PAYMENTS_DATA;
     </script>
     <script src="payments-data-nivki.js"></script>
     <script>
-      window.PAYMENTS_SOURCES.push(window.PAYMENTS_DATA);
+      window.PAYMENTS_DATASETS = window.PAYMENTS_DATASETS || {};
+      window.PAYMENTS_DATASETS.nivki = window.PAYMENTS_DATA;
+      window.PAYMENTS_DATA = window.PAYMENTS_DATASETS.respublika1 || window.PAYMENTS_DATA;
     </script>
     <script src="calendar.js" defer></script>
   </head>
@@ -40,10 +41,10 @@
           Клікайте по місяцях, змінюйте статус, додавайте нотатки і контролюйте залишок оплат у
           гривнях або доларах.
         </p>
-        <nav class="project-tabs" aria-label="Фільтр об'єктів">
-          <button class="project-tab project-filter active" type="button" data-project-key="respublika1" aria-pressed="true">Республіка 1</button>
-          <button class="project-tab project-filter active" type="button" data-project-key="respublika2" aria-pressed="true">Республіка 2</button>
-          <button class="project-tab project-filter active" type="button" data-project-key="nivki" aria-pressed="true">Нивки</button>
+        <nav class="project-tabs" aria-label="Вибір об'єкта">
+          <a class="project-tab active" href="./index.html">Республіка 1</a>
+          <a class="project-tab" href="./respublika2.html">Республіка 2</a>
+          <a class="project-tab" href="./nivki.html">Нивки</a>
         </nav>
 
         <div class="controls-row">
@@ -103,6 +104,10 @@
             <h2>Фільтри</h2>
           </div>
           <div class="filter-stack">
+            <label class="field compact-field">
+              <span>Проєкти</span>
+              <div id="projectFilter" class="project-filter"></div>
+            </label>
             <label class="field compact-field">
               <span>Режим</span>
               <div class="mode-switch" role="group" aria-label="Режим перегляду">
