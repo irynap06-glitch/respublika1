@@ -214,6 +214,8 @@
     $periodScopeButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
         state.periodScope = normalizePeriodScope(btn.dataset.scope);
+        state.selectedYear = "all";
+        state.selectedMonth = "all";
         ensureSelectedMonthInRange();
         persistSettings();
         renderAll();
@@ -901,7 +903,7 @@
 
   function ensureSelectedMonthInRange() {
     if (state.selectedMonth === "all") return;
-    const exists = getPeriodOptions(getSelectedPayments(), state.selectedYear, state.viewMode).some(
+    const exists = getPeriodOptions(applyPeriodScope(getSelectedPayments()), state.selectedYear, state.viewMode).some(
       (entry) => String(entry.key) === String(state.selectedMonth)
     );
     if (!exists) {
