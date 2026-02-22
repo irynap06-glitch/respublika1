@@ -224,6 +224,9 @@
 
     const onYearChange = () => {
       state.selectedYear = $yearSelect.value || "all";
+      if (state.selectedYear !== "all") {
+        state.periodScope = "all";
+      }
       ensureSelectedMonthInRange();
       persistSettings();
       renderAll();
@@ -574,22 +577,25 @@
       .filter((payment) => !payment.exclude_from_summary)
       .map((payment) => ({ payment, view: buildView(payment) }));
 
-    const paidRows = rows.filter(({ view }) => isSettledStatus(view.status));
-    const futureUnpaidRows = rows.filter(({ payment, view }) => {
+    const settledRows = rows.filter(({ view }) => isSettledStatus(view.status));
+    const futureUnpaidRowsAll = rows.filter(({ payment, view }) => {
       if (!isCurrentOrFuturePeriod(payment)) return false;
       if (view.status === "paid") return false;
       if (view.status === "early") return false;
       return true;
     });
+    const futureUnpaidRows = futureUnpaidRowsAll.filter(({ payment }) => !isIncomeItem(payment));
+    const incomePlannedRows = futureUnpaidRowsAll.filter(({ payment }) => isIncomeItem(payment));
     const payableFutureRows = futureUnpaidRows.filter(
       ({ payment, view }) =>
         isEarlySettlementEligible(payment) && (view.scheduleUsd > 0.009 || view.scheduleUah > 0.009)
     );
 
-    const paid = paidRows.reduce(
-      (sum, row) => sum + signedByItem(row.payment, row.view.paidUsd, row.view.paidUah),
-      0
-    );
+    const paid = settledRows.reduce((sum, row) => sum + signedByItem(row.payment, row.view.paidUsd, row.view.paidUah), 0) +
+      incomePlannedRows.reduce(
+        (sum, row) => sum + signedByItem(row.payment, row.view.scheduleUsd, row.view.scheduleUah),
+        0
+      );
     const remainingPlan = futureUnpaidRows.reduce(
       (sum, row) => sum + signedByItem(row.payment, row.view.scheduleUsd, row.view.scheduleUah),
       0
@@ -604,16 +610,16 @@
     const remainingEarly = -selectByCurrencyMode(remainingEarlyUsd, remainingEarlyUah);
     const total = paid + remainingPlan;
 
-    const paidCount = paidRows.length;
+    const paidCount = settledRows.length + incomePlannedRows.length;
     const allCount = rows.length;
     setSignedMetric($summaryPaid, paid);
     setSignedMetric($summaryRemainingPlan, remainingPlan);
     setSignedMetric($summaryRemainingEarly, remainingEarly);
     $summaryRemainingEarlyLabel.textContent = "Залишок достроково";
     setSignedMetric($summaryTotal, total);
-    $summaryCount.textContent = `${paidCount}/${allCount} оплачено, майбутніх неоплачених: ${futureUnpaidRows.length}`;
+    $summaryCount.textContent = `${paidCount}/${allCount} оплачено/заплановано, майбутніх неоплачених: ${futureUnpaidRows.length}`;
 
-    renderCashflowSummary(paidRows, futureUnpaidRows);
+    renderCashflowSummary(settledRows, futureUnpaidRowsAll);
   }
 
   function renderCashflowSummary(paidRows, futureUnpaidRows) {
@@ -945,13 +951,18 @@
       const view = buildView(item);
       const selected = state.selectedId === item.uid ? "selected" : "";
       const overdue = view.overdue ? "overdue" : "";
+      const plannedPaidForIncome = isIncomeItem(item) && view.status === "unpaid";
       const amount = signedByItem(item, view.amountUsd, view.amountUah);
       const amountText = formatCurrency(amount, state.currency, { alwaysSign: true });
       const projectText =
         state.selectedProjects.length > 1 ? `Проєкт: ${escapeHtml(item.project_name || item.project_key)}` : "";
       const categoryText = `Категорія: ${escapeHtml(item.category_name || categoryLabelFromKey(item.category_key))}`;
       const plannedAmount = signedByItem(item, view.scheduleUsd, view.scheduleUah);
-      const paidAmount = signedByItem(item, view.paidUsd, view.paidUah);
+      const paidAmount = signedByItem(
+        item,
+        plannedPaidForIncome ? view.scheduleUsd : view.paidUsd,
+        plannedPaidForIncome ? view.scheduleUah : view.paidUah
+      );
       const cumulative = cumulativeById.get(item.uid) || 0;
       const plannedText = `По графіку: ${formatCurrency(plannedAmount, state.currency, { alwaysSign: true })}`;
       const paidText = `Оплачено: ${formatCurrency(paidAmount, state.currency, { alwaysSign: true })}`;
@@ -1079,16 +1090,20 @@
         earlyCount: 0,
       };
 
-      const includeInRemaining = view.status !== "paid" && view.status !== "early";
+      const plannedPaidForIncome = isIncomeItem(item) && view.status === "unpaid";
+      const includeInRemaining = view.status !== "paid" && view.status !== "early" && !plannedPaidForIncome;
       const sign = flowDirection(item);
+      const paidUsdForGroup = plannedPaidForIncome ? view.scheduleUsd : view.paidUsd;
+      const paidUahForGroup = plannedPaidForIncome ? view.scheduleUah : view.paidUah;
       entry.count += 1;
       if (view.status === "paid") entry.paidCount += 1;
       else if (view.status === "early") entry.earlyCount += 1;
+      else if (plannedPaidForIncome) entry.paidCount += 1;
       else entry.unpaidCount += 1;
       entry.scheduleNetUsd += sign * view.scheduleUsd;
       entry.scheduleNetUah += sign * view.scheduleUah;
-      entry.paidNetUsd += sign * view.paidUsd;
-      entry.paidNetUah += sign * view.paidUah;
+      entry.paidNetUsd += sign * paidUsdForGroup;
+      entry.paidNetUah += sign * paidUahForGroup;
       if (includeInRemaining) {
         entry.remainingNetUsd += sign * view.scheduleUsd;
         entry.remainingNetUah += sign * view.scheduleUah;
@@ -1143,10 +1158,19 @@
 
     const view = buildView(item);
     const override = state.overrides[state.selectedId] || {};
-    const selectedRemainingUsd = Math.max(numberOr(view.scheduleUsd, 0) - numberOr(view.paidUsd, 0), 0);
-    const selectedRemainingUah = Math.max(numberOr(view.scheduleUah, 0) - numberOr(view.paidUah, 0), 0);
+    const plannedPaidForIncome = isIncomeItem(item) && view.status === "unpaid";
+    const selectedRemainingUsd = plannedPaidForIncome
+      ? 0
+      : Math.max(numberOr(view.scheduleUsd, 0) - numberOr(view.paidUsd, 0), 0);
+    const selectedRemainingUah = plannedPaidForIncome
+      ? 0
+      : Math.max(numberOr(view.scheduleUah, 0) - numberOr(view.paidUah, 0), 0);
     const selectedSchedule = signedByItem(item, view.scheduleUsd, view.scheduleUah);
-    const selectedPaid = signedByItem(item, view.paidUsd, view.paidUah);
+    const selectedPaid = signedByItem(
+      item,
+      plannedPaidForIncome ? view.scheduleUsd : view.paidUsd,
+      plannedPaidForIncome ? view.scheduleUah : view.paidUah
+    );
     const selectedRemaining = signedByItem(item, selectedRemainingUsd, selectedRemainingUah);
 
     const projectPrefix = state.selectedProjects.length > 1 ? `[${item.project_name}] ` : "";
