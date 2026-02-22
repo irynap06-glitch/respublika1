@@ -172,7 +172,8 @@ h1 {
     minmax(220px, 1fr)
     minmax(250px, 1.1fr)
     minmax(250px, 1.1fr)
-    170px;
+    170px
+    190px;
   align-items: end;
 }
 
@@ -401,7 +402,8 @@ h1 {
   gap: 6px;
 }
 
-.mode-btn {
+.mode-btn,
+.scope-btn {
   border: 1px solid var(--line);
   border-radius: 9px;
   background: #fff;
@@ -413,7 +415,8 @@ h1 {
   cursor: pointer;
 }
 
-.mode-btn.active {
+.mode-btn.active,
+.scope-btn.active {
   background: #0f786b;
   border-color: #0f786b;
   color: #fff;
@@ -604,7 +607,8 @@ h1 {
   .search-field,
   .project-top-field,
   .category-top-field,
-  .mode-top-field {
+  .mode-top-field,
+  .scope-top-field {
     grid-column: 1 / -1;
   }
 
@@ -630,7 +634,8 @@ h1 {
   .search-field,
   .project-top-field,
   .category-top-field,
-  .mode-top-field {
+  .mode-top-field,
+  .scope-top-field {
     grid-column: 1 / -1;
   }
 
@@ -681,7 +686,8 @@ h1 {
   .search-field,
   .project-top-field,
   .category-top-field,
-  .mode-top-field {
+  .mode-top-field,
+  .scope-top-field {
     grid-column: auto;
   }
 
@@ -703,7 +709,8 @@ h1 {
     grid-template-columns: 1fr;
   }
 
-  .mode-btn {
+  .mode-btn,
+  .scope-btn {
     font-size: 0.8rem;
     padding: 8px 4px;
   }

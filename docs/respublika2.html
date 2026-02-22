@@ -42,11 +42,6 @@
           Клікайте по місяцях, змінюйте статус, додавайте нотатки і контролюйте залишок оплат у
           гривнях або доларах.
         </p>
-        <nav class="project-tabs" aria-label="Вибір об'єкта">
-          <a class="project-tab" href="./index.html">Республіка 1</a>
-          <a class="project-tab active" href="./respublika2.html">Республіка 2</a>
-          <a class="project-tab" href="./nivki.html">Нивки</a>
-        </nav>
 
         <div class="controls-row">
           <div class="currency-switch" role="group" aria-label="Валюта">
@@ -79,14 +74,22 @@
             <span>Категорії</span>
             <div id="categoryFilter" class="category-filter"></div>
           </div>
-          <label class="field mode-top-field">
+          <div class="field mode-top-field">
             <span>Режим</span>
-            <select id="viewModeSelect">
-              <option value="month">Місяці</option>
-              <option value="quarter">Квартали</option>
-              <option value="year">Роки</option>
-            </select>
-          </label>
+            <div class="mode-switch" role="group" aria-label="Режим">
+              <button type="button" class="mode-btn" data-view-mode="month">Місяці</button>
+              <button type="button" class="mode-btn" data-view-mode="quarter">Квартали</button>
+              <button type="button" class="mode-btn" data-view-mode="year">Роки</button>
+            </div>
+          </div>
+          <div class="field scope-top-field">
+            <span>Періоди</span>
+            <div id="periodScopeFilter" class="mode-switch" role="group" aria-label="Фільтр періодів">
+              <button type="button" class="scope-btn" data-scope="all">Усі</button>
+              <button type="button" class="scope-btn" data-scope="current">Теперішні</button>
+              <button type="button" class="scope-btn" data-scope="future">Майбутні</button>
+            </div>
+          </div>
         </div>
       </header>
 

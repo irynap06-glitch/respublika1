@@ -88,10 +88,12 @@
   const $exportDbCsvBtn = document.getElementById("exportDbCsvBtn");
   const $exportDbTxtBtn = document.getElementById("exportDbTxtBtn");
   const $currencyButtons = [...document.querySelectorAll(".currency-btn")];
+  const $periodScopeButtons = [...document.querySelectorAll(".scope-btn")];
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const startOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const startOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
 
   const idToPayment = new Map(payments.map((item) => [item.uid, item]));
   const categoryKeys = orderCategoryKeys([
@@ -121,6 +123,7 @@
     selectedProjects: [initialProject],
     selectedCategories: [...categoryKeys],
     viewMode: "month",
+    periodScope: "all",
     selectedYear: "all",
     selectedMonth: "all",
     selectedId: initialSelection ? initialSelection.uid : "",
@@ -164,18 +167,14 @@
         if (!btn) return;
         const project = btn.dataset.project;
         if (!project) return;
-        if (project === "all") {
-          state.selectedProjects = [...datasetKeys];
+        const current = new Set(state.selectedProjects);
+        if (current.has(project)) {
+          if (current.size === 1) return;
+          current.delete(project);
         } else {
-          const current = new Set(state.selectedProjects);
-          if (current.has(project)) {
-            if (current.size === 1) return;
-            current.delete(project);
-          } else {
-            current.add(project);
-          }
-          state.selectedProjects = [...current].filter((key) => datasetKeys.includes(key));
+          current.add(project);
         }
+        state.selectedProjects = [...current].filter((key) => datasetKeys.includes(key));
         ensureProjectSelection();
         ensureSelectedMonthInRange();
         persistSettings();
@@ -189,18 +188,14 @@
         if (!btn) return;
         const category = btn.dataset.category;
         if (!category) return;
-        if (category === "all") {
-          state.selectedCategories = [...categoryKeys];
+        const current = new Set(state.selectedCategories);
+        if (current.has(category)) {
+          if (current.size === 1) return;
+          current.delete(category);
         } else {
-          const current = new Set(state.selectedCategories);
-          if (current.has(category)) {
-            if (current.size === 1) return;
-            current.delete(category);
-          } else {
-            current.add(category);
-          }
-          state.selectedCategories = [...current].filter((key) => categoryKeys.includes(key));
+          current.add(category);
         }
+        state.selectedCategories = [...current].filter((key) => categoryKeys.includes(key));
         ensureCategorySelection();
         ensureSelectedMonthInRange();
         persistSettings();
@@ -215,6 +210,14 @@
     }
     $viewModeButtons.forEach((btn) => {
       btn.addEventListener("click", () => applyViewMode(btn.dataset.viewMode));
+    });
+    $periodScopeButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.periodScope = normalizePeriodScope(btn.dataset.scope);
+        ensureSelectedMonthInRange();
+        persistSettings();
+        renderAll();
+      });
     });
 
     const onYearChange = () => {
@@ -499,6 +502,7 @@
     renderProjectFilters();
     renderCategoryFilters();
     renderCurrencyControls();
+    renderPeriodScopeControls();
     renderSummary();
     renderPeriodFilters();
     syncSelectedWithVisible();
@@ -509,17 +513,13 @@
   function renderProjectFilters() {
     if (!$projectFilter) return;
     const selected = new Set(state.selectedProjects);
-    const allActive = datasetKeys.every((key) => selected.has(key));
-    const chips = [
-      `<button type="button" class="project-chip ${allActive ? "active" : ""}" data-project="all">Всі</button>`,
-      ...datasetKeys.map((key) => {
-        const name = projectsByKey[key] && projectsByKey[key].project_name ? projectsByKey[key].project_name : key;
-        const count = payments.filter((item) => item.project_key === key).length;
-        return `<button type="button" class="project-chip ${selected.has(key) ? "active" : ""}" data-project="${key}">${escapeHtml(
-          name
-        )} (${count})</button>`;
-      }),
-    ];
+    const chips = datasetKeys.map((key) => {
+      const name = projectsByKey[key] && projectsByKey[key].project_name ? projectsByKey[key].project_name : key;
+      const count = payments.filter((item) => item.project_key === key).length;
+      return `<button type="button" class="project-chip ${selected.has(key) ? "active" : ""}" data-project="${key}">${escapeHtml(
+        name
+      )} (${count})</button>`;
+    });
     $projectFilter.innerHTML = chips.join("");
   }
 
@@ -533,17 +533,21 @@
     });
 
     const selected = new Set(state.selectedCategories);
-    const allActive = categoryKeys.every((key) => selected.has(key));
-    const chips = [
-      `<button type="button" class="category-chip ${allActive ? "active" : ""}" data-category="all">Всі</button>`,
-      ...categoryKeys.map((key) => {
-        const count = counts.get(key) || 0;
-        return `<button type="button" class="category-chip ${selected.has(key) ? "active" : ""}" data-category="${key}">${escapeHtml(
-          categoryLabelFromKey(key)
-        )} (${count})</button>`;
-      }),
-    ];
+    const chips = categoryKeys.map((key) => {
+      const count = counts.get(key) || 0;
+      return `<button type="button" class="category-chip ${selected.has(key) ? "active" : ""}" data-category="${key}">${escapeHtml(
+        categoryLabelFromKey(key)
+      )} (${count})</button>`;
+    });
     $categoryFilter.innerHTML = chips.join("");
+  }
+
+  function renderPeriodScopeControls() {
+    const scope = normalizePeriodScope(state.periodScope);
+    state.periodScope = scope;
+    $periodScopeButtons.forEach((btn) => {
+      btn.classList.toggle("active", normalizePeriodScope(btn.dataset.scope) === scope);
+    });
   }
 
   function renderCurrencyControls() {
@@ -564,7 +568,7 @@
   }
 
   function renderSummary() {
-    const rows = getSelectedPayments()
+    const rows = applyPeriodScope(getSelectedPayments())
       .filter((payment) => !payment.exclude_from_summary)
       .map((payment) => ({ payment, view: buildView(payment) }));
 
@@ -765,7 +769,7 @@
   }
 
   function renderPeriodFilters() {
-    const scopedPayments = getSelectedPayments();
+    const scopedPayments = applyPeriodScope(getSelectedPayments());
 
     if ($calendarTitle) {
       $calendarTitle.textContent = VIEW_MODE_LABELS[state.viewMode] || VIEW_MODE_LABELS.month;
@@ -829,9 +833,10 @@
     const groupCount = isAggregatedView() ? buildAggregateGroups(visible, modeForCount).length : visible.length;
     const yearLabel = state.selectedYear === "all" ? "усі роки" : state.selectedYear;
     const periodLabel = describeSelectedPeriod(state.selectedMonth, state.selectedYear, state.viewMode);
+    const scopeLabel = periodScopeLabel(state.periodScope);
     const searchLabel = state.search ? `, пошук: “${state.search}”` : "";
     const countLabel = modeForCount === "month" ? "місяців" : modeForCount === "quarter" ? "кварталів" : "років";
-    $monthInfo.textContent = `Показано ${groupCount} ${countLabel}: ${yearLabel}, ${periodLabel}${searchLabel}`;
+    $monthInfo.textContent = `Показано ${groupCount} ${countLabel}: ${yearLabel}, ${periodLabel}, періоди: ${scopeLabel}${searchLabel}`;
   }
 
   function applyViewMode(nextMode) {
@@ -1185,7 +1190,7 @@
   }
 
   function getVisiblePayments() {
-    let list = getSelectedPayments();
+    let list = applyPeriodScope(getSelectedPayments());
 
     if (state.viewMode !== "year" && state.selectedYear !== "all") {
       const year = Number(state.selectedYear);
@@ -1239,6 +1244,29 @@
       if (da && db) return da - db;
       return String(a.uid).localeCompare(String(b.uid), "uk");
     });
+  }
+
+  function applyPeriodScope(items) {
+    const scope = normalizePeriodScope(state.periodScope);
+    if (scope === "future") {
+      return items.filter((item) => isFuturePeriod(item));
+    }
+    if (scope === "current") {
+      return items.filter((item) => !isFuturePeriod(item));
+    }
+    return items;
+  }
+
+  function isFuturePeriod(item) {
+    const dueDate = parseDate(item.due_date);
+    if (dueDate) return dueDate >= startOfNextMonth;
+    const year = getPaymentYear(item);
+    const month = getPaymentMonth(item) || 1;
+    const currentYear = startOfCurrentMonth.getFullYear();
+    const currentMonth = startOfCurrentMonth.getMonth() + 1;
+    if (year > currentYear) return true;
+    if (year === currentYear && month > currentMonth) return true;
+    return false;
   }
 
   function normalizeStatus(rawStatus, item) {
@@ -1566,6 +1594,22 @@
     return CURRENCY_MODES[key] ? key : "usd";
   }
 
+  function normalizePeriodScope(raw) {
+    const key = String(raw || "")
+      .trim()
+      .toLowerCase();
+    if (key === "current") return "current";
+    if (key === "future") return "future";
+    return "all";
+  }
+
+  function periodScopeLabel(scope) {
+    const normalized = normalizePeriodScope(scope);
+    if (normalized === "current") return "теперішні";
+    if (normalized === "future") return "майбутні";
+    return "усі";
+  }
+
   function currencyModeLabel(mode) {
     const normalized = normalizeCurrencyMode(mode);
     if (normalized === "usd") return "USD";
@@ -1646,6 +1690,7 @@
       selectedProjects: state.selectedProjects,
       selectedCategories: state.selectedCategories,
       viewMode: state.viewMode,
+      periodScope: state.periodScope,
       selectedYear: state.selectedYear,
       selectedMonth: state.selectedMonth,
       selectedId: state.selectedId,
@@ -1679,6 +1724,7 @@
         selectedProjects: state.selectedProjects,
         selectedCategories: state.selectedCategories,
         viewMode: state.viewMode,
+        periodScope: state.periodScope,
         selectedYear: state.selectedYear,
         selectedMonth: state.selectedMonth,
         selectedId: state.selectedId,
@@ -1706,6 +1752,13 @@
     }
     if (settings.viewMode === "month" || settings.viewMode === "quarter" || settings.viewMode === "year") {
       state.viewMode = settings.viewMode;
+    }
+    if (
+      settings.periodScope === "all" ||
+      settings.periodScope === "current" ||
+      settings.periodScope === "future"
+    ) {
+      state.periodScope = settings.periodScope;
     }
     if (settings.selectedYear === "all" || years.includes(Number(settings.selectedYear))) {
       state.selectedYear = String(settings.selectedYear);
