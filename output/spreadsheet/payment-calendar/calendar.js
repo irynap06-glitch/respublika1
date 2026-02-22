@@ -579,6 +579,7 @@
       .filter((payment) => !payment.exclude_from_summary)
       .map((payment) => ({ payment, view: buildView(payment) }));
 
+    const treatPlannedIncomeAsPaid = shouldTreatPlannedIncomeAsPaid();
     const settledRows = rows.filter(({ view }) => isSettledStatus(view.status));
     const futureUnpaidRowsAll = rows.filter(({ payment, view }) => {
       if (!isCurrentOrFuturePeriod(payment)) return false;
@@ -586,18 +587,25 @@
       if (view.status === "early") return false;
       return true;
     });
-    const futureUnpaidRows = futureUnpaidRowsAll.filter(({ payment }) => !isIncomeItem(payment));
     const incomePlannedRows = futureUnpaidRowsAll.filter(({ payment }) => isIncomeItem(payment));
+    const futureUnpaidRows = treatPlannedIncomeAsPaid
+      ? futureUnpaidRowsAll.filter(({ payment }) => !isIncomeItem(payment))
+      : futureUnpaidRowsAll;
     const payableFutureRows = futureUnpaidRows.filter(
       ({ payment, view }) =>
         isEarlySettlementEligible(payment) && (view.scheduleUsd > 0.009 || view.scheduleUah > 0.009)
     );
 
-    const paid = settledRows.reduce((sum, row) => sum + signedByItem(row.payment, row.view.paidUsd, row.view.paidUah), 0) +
-      incomePlannedRows.reduce(
+    let paid = settledRows.reduce(
+      (sum, row) => sum + signedByItem(row.payment, row.view.paidUsd, row.view.paidUah),
+      0
+    );
+    if (treatPlannedIncomeAsPaid) {
+      paid += incomePlannedRows.reduce(
         (sum, row) => sum + signedByItem(row.payment, row.view.scheduleUsd, row.view.scheduleUah),
         0
       );
+    }
     const remainingPlan = futureUnpaidRows.reduce(
       (sum, row) => sum + signedByItem(row.payment, row.view.scheduleUsd, row.view.scheduleUah),
       0
@@ -612,14 +620,16 @@
     const remainingEarly = -selectByCurrencyMode(remainingEarlyUsd, remainingEarlyUah);
     const total = paid + remainingPlan;
 
-    const paidCount = settledRows.length + incomePlannedRows.length;
+    const paidCount = treatPlannedIncomeAsPaid ? settledRows.length + incomePlannedRows.length : settledRows.length;
     const allCount = rows.length;
     setSignedMetric($summaryPaid, paid);
     setSignedMetric($summaryRemainingPlan, remainingPlan);
     setSignedMetric($summaryRemainingEarly, remainingEarly);
     $summaryRemainingEarlyLabel.textContent = "Залишок достроково";
     setSignedMetric($summaryTotal, total);
-    $summaryCount.textContent = `${paidCount}/${allCount} оплачено/заплановано, майбутніх неоплачених: ${futureUnpaidRows.length}`;
+    $summaryCount.textContent = treatPlannedIncomeAsPaid
+      ? `${paidCount}/${allCount} оплачено/заплановано, майбутніх неоплачених: ${futureUnpaidRows.length}`
+      : `${paidCount}/${allCount} оплачено, майбутніх неоплачених: ${futureUnpaidRows.length}`;
 
     renderCashflowSummary(settledRows, futureUnpaidRowsAll);
   }
@@ -953,7 +963,7 @@
       const view = buildView(item);
       const selected = state.selectedId === item.uid ? "selected" : "";
       const overdue = view.overdue ? "overdue" : "";
-      const plannedPaidForIncome = isIncomeItem(item) && view.status === "unpaid";
+      const plannedPaidForIncome = shouldTreatPlannedIncomeAsPaid() && isIncomeItem(item) && view.status === "unpaid";
       const amount = signedByItem(item, view.amountUsd, view.amountUah);
       const amountText = formatCurrency(amount, state.currency, { alwaysSign: true });
       const projectText =
@@ -1007,9 +1017,18 @@
       const paidAmount = selectByCurrencyMode(group.paidNetUsd, group.paidNetUah);
       const remainingAmount = selectByCurrencyMode(group.remainingNetUsd, group.remainingNetUah);
       const cumulativeAmount = selectByCurrencyMode(group.cumulativeNetUsd, group.cumulativeNetUah);
+      const showNetScheduleAsPrimary = state.selectedCategories.length > 1;
       const primaryIsPaid = group.unpaidCount === 0;
-      const selectedAmount = primaryIsPaid ? paidAmount : remainingAmount;
-      const primaryLabel = primaryIsPaid ? "Чистий факт" : "Чистий залишок";
+      const selectedAmount = showNetScheduleAsPrimary
+        ? scheduleAmount
+        : primaryIsPaid
+          ? paidAmount
+          : remainingAmount;
+      const primaryLabel = showNetScheduleAsPrimary
+        ? "Чистий по графіку"
+        : primaryIsPaid
+          ? "Чистий факт"
+          : "Чистий залишок";
       let statusClass = "unpaid";
       if (group.unpaidCount === 0 && group.paidCount > 0) {
         statusClass = "paid";
@@ -1092,7 +1111,7 @@
         earlyCount: 0,
       };
 
-      const plannedPaidForIncome = isIncomeItem(item) && view.status === "unpaid";
+      const plannedPaidForIncome = shouldTreatPlannedIncomeAsPaid() && isIncomeItem(item) && view.status === "unpaid";
       const includeInRemaining = view.status !== "paid" && view.status !== "early" && !plannedPaidForIncome;
       const sign = flowDirection(item);
       const paidUsdForGroup = plannedPaidForIncome ? view.scheduleUsd : view.paidUsd;
@@ -1160,7 +1179,7 @@
 
     const view = buildView(item);
     const override = state.overrides[state.selectedId] || {};
-    const plannedPaidForIncome = isIncomeItem(item) && view.status === "unpaid";
+    const plannedPaidForIncome = shouldTreatPlannedIncomeAsPaid() && isIncomeItem(item) && view.status === "unpaid";
     const selectedRemainingUsd = plannedPaidForIncome
       ? 0
       : Math.max(numberOr(view.scheduleUsd, 0) - numberOr(view.paidUsd, 0), 0);
@@ -1665,6 +1684,11 @@
 
   function flowDirection(item) {
     return isIncomeItem(item) ? 1 : -1;
+  }
+
+  function shouldTreatPlannedIncomeAsPaid() {
+    const selected = Array.isArray(state.selectedCategories) ? state.selectedCategories : [];
+    return selected.length === 1 && normalizeCategoryKey(selected[0]) === "income";
   }
 
   function signedByItem(item, usdValue, uahValue, mode = state.currency) {
