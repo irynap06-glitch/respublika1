@@ -25,6 +25,8 @@
     mortgage: "Іпотека",
     repair: "Ремонт",
     tax_notary: "Податки і нотаріус",
+    vacancy: "Простій оренди",
+    amortization: "Амортизація",
     income: "Доходи",
   };
   const CURRENCY_MODES = {
@@ -1570,12 +1572,13 @@
     const meta = CURRENCY_MODES[mode] || CURRENCY_MODES.usd;
     const code = meta.base === "uah" ? "UAH" : "USD";
     const scaledValue = convertDisplayAmount(value, mode);
-    const roundedValue = round0(scaledValue);
+    const fractionDigits = mode === "uah_million" ? 1 : 0;
+    const roundedValue = mode === "uah_million" ? round1(scaledValue) : round0(scaledValue);
     const formatted = new Intl.NumberFormat("uk-UA", {
       style: "currency",
       currency: code,
-      maximumFractionDigits: 0,
-      minimumFractionDigits: 0,
+      maximumFractionDigits: fractionDigits,
+      minimumFractionDigits: fractionDigits,
       signDisplay: alwaysSign ? "always" : "auto",
     }).format(roundedValue);
     return meta.suffix ? `${formatted}${meta.suffix}` : formatted;
@@ -1613,6 +1616,10 @@
 
   function round0(value) {
     return Math.round(numberOr(value, 0));
+  }
+
+  function round1(value) {
+    return Math.round(numberOr(value, 0) * 10) / 10;
   }
 
   function normalizeCurrencyMode(raw) {
@@ -1903,7 +1910,7 @@
   }
 
   function orderCategoryKeys(keys) {
-    const preferred = ["mortgage", "repair", "tax_notary", "income"];
+    const preferred = ["mortgage", "repair", "tax_notary", "vacancy", "amortization", "income"];
     const normalized = keys.map((key) => normalizeCategoryKey(key));
     const set = new Set(normalized);
     const ordered = preferred.filter((key) => set.has(key));
@@ -1929,6 +1936,17 @@
       text === "податки і нотаріус"
     ) {
       return "tax_notary";
+    }
+    if (text === "vacancy" || text === "простій" || text === "простій оренди" || text === "простій_оренди") {
+      return "vacancy";
+    }
+    if (
+      text === "amortization" ||
+      text === "амортизація" ||
+      text === "амортизаційний резерв" ||
+      text === "амортизаційний_резерв"
+    ) {
+      return "amortization";
     }
     if (text === "income" || text === "дохід" || text === "доходи") return "income";
     return text.replace(/\s+/g, "_");
